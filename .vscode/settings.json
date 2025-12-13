@@ -1,0 +1,8 @@
+{
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "[java]": {
+        "editor.formatOnPaste": true,
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "redhat.java"
+    }
+}
