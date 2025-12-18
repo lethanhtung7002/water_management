@@ -18,11 +18,11 @@ abstract class WaterBill {
     abstract double calc_total();
 }
 
-class WaterBillFamily extends WaterBill {
+class WaterBillLevel3 extends WaterBill {
     private double giaBac1; // 0 - 10
     private double giaBac2; // 11 - 30
 
-    public WaterBillFamily(double khoi_nuoc, double thueVAT,
+    public WaterBillLevel3(double khoi_nuoc, double thueVAT,
             double giaBac1, double giaBac2, double giaMAX) {
         super(khoi_nuoc, thueVAT, giaMAX);
         this.giaBac1 = giaBac1;
