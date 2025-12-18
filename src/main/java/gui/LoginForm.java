@@ -1,10 +1,8 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,14 +11,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import java.awt.GridBagConstraints;
 
 public class LoginForm extends JFrame {
 
     JLabel userLabel = new JLabel("Username:");
-    JTextField userTextField = new JTextField(15);
+    JTextField userTextField = new JTextField(20);
 
     JLabel passLabel = new JLabel("Password:");
-    JPasswordField passField = new JPasswordField(15);
+    JPasswordField passField = new JPasswordField(20);
 
     JButton loginButton = new JButton("Login");
 
@@ -36,17 +35,34 @@ public class LoginForm extends JFrame {
         Image img = icon.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH);
         JLabel logoLabel = new JLabel(new ImageIcon(img));
         logoLabel.setHorizontalAlignment(JLabel.CENTER);
-
         add(logoLabel, BorderLayout.NORTH);
 
         /* ===== FORM ===== */
-        JPanel formPanel = new JPanel(new GridLayout(2, 2, 5, 10));
-        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        JPanel formPanel = new JPanel(new java.awt.GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new java.awt.Insets(5, 5, 5, 5); // Khoảng cách giữa các ô
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        formPanel.add(userLabel);
-        formPanel.add(userTextField);
-        formPanel.add(passLabel);
-        formPanel.add(passField);
+        // Dòng 1: Username
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        formPanel.add(userLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0; // Cho phép ô nhập chiếm thêm không gian thừa
+        formPanel.add(userTextField, gbc);
+
+        // Dòng 2: Password
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 0;
+        formPanel.add(passLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.weightx = 1.0;
+        formPanel.add(passField, gbc);
 
         add(formPanel, BorderLayout.CENTER);
 
@@ -80,7 +96,7 @@ public class LoginForm extends JFrame {
     }
 
     public static void main(String[] args) {
-        new LoginForm();
+        javax.swing.SwingUtilities.invokeLater(LoginForm::new);
 
     }
 }
