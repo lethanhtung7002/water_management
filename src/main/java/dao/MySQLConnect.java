@@ -1,28 +1,68 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class MySQLConnect {
-    public static void main(String[] args) {
-        // 1. Thông tin cấu hình
-        String host = "localhost";
-        String port = "3306"; // Cổng mặc định của MySQL
-        String dbName = "water_management";
-        String user = "root"; // Mặc định thường là root
-        String password = "1234";
+    Connection con = null;
+    Statement stmt = null;
 
-        // 2. Chuỗi kết nối (Thêm múi giờ serverTimezone để tránh lỗi)
-        String url = "jdbc:mysql://" + host + ":" + port + "/" + dbName + "?useSSL=false&serverTimezone=UTC";
+    public MySQLConnect() {
+        try {
+            // 1. Thông tin cấu hình
+            String host = "localhost";
+            String port = "3306"; // Cổng mặc định của MySQL
+            String dbName = "water_management";
+            String user = "root"; // Mặc định thường là root
+            String password = "1234";
 
-        // 3. Thực hiện kết nối
-        try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            if (conn != null) {
-                System.out.println("Kết nối MySQL thành công!");
+            String url = "jdbc:mysql://" + host + ":" + port + "/" + dbName + "?useSSL=false&serverTimezone=UTC";
+
+            con = DriverManager.getConnection(url, user, password);
+
+            if (con != null) {
+                System.out.println("Kết nối thành công đến cơ sở dữ liệu MySQL!");
             }
         } catch (SQLException e) {
-            System.err.println("Lỗi kết nối: " + e.getMessage());
+            // TODO: handle exception
+            System.out.println("Kết nối thất bại: " + e.getMessage());
+            throw new RuntimeException(e);
+
         }
+    }
+
+    // Upate insert delete
+    public int ExcuteDB(String query) {
+        int result = 0;
+        try {
+            stmt = con.createStatement();
+            result = stmt.executeUpdate(query);
+        } catch (SQLException e) {
+            System.out.println("Lỗi thực thi câu lệnh SQL: " + e.getMessage());
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("Lỗi đóng Statement: " + e.getMessage());
+            }
+        }
+        return result;
+    }
+
+    // Select
+    public ResultSet getDB(String query) {
+        ResultSet rs = null;
+        try {
+            stmt = con.createStatement();
+            rs = stmt.executeQuery(query);
+        } catch (SQLException e) {
+            System.out.println("Lỗi thực thi câu lệnh SQL: " + e.getMessage());
+        }
+        return rs;
+    }
+
+    public static void main(String[] args) {
+        new MySQLConnect();
     }
 }

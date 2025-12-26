@@ -31,7 +31,7 @@ public class LoginForm extends JFrame {
         setLayout(new BorderLayout(20, 20));
 
         /* ===== LOGO ===== */
-        ImageIcon icon = new ImageIcon("src\\main\\java\\assets\\login_logo.jpg");
+        ImageIcon icon = new ImageIcon("src\\main\\resources\\assets\\login_logo.jpg");
         Image img = icon.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH);
         JLabel logoLabel = new JLabel(new ImageIcon(img));
         logoLabel.setHorizontalAlignment(JLabel.CENTER);
