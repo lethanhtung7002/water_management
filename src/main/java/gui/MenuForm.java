@@ -16,17 +16,18 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import gui.User.UserManagement;
+
 public class MenuForm extends JFrame {
 
-    private JFrame frame;
     private JPanel contentPanel;
     private CardLayout cardLayout;
 
     public MenuForm() {
-        frame = new JFrame("Water Manager");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1000, 650);
-        frame.setLayout(new BorderLayout());
+        setTitle("Water Manager");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(1000, 650);
+        setLayout(new BorderLayout());
 
         // --- 1. SIDEBAR (THANH BÊN) ---
         JPanel sidebar = new JPanel();
@@ -42,7 +43,7 @@ public class MenuForm extends JFrame {
         sidebar.add(userLabel);
 
         // menu buttons
-        sidebar.add(createMenuButton("User Management", "👤"));
+        sidebar.add(createMenuButton("Khach hang", "👤"));
         sidebar.add(createMenuButton("GiaNuoc", "💧"));
 
         // --- 2. VÙNG NỘI DUNG (Dùng CardLayout để chuyển trang) ---
@@ -50,16 +51,16 @@ public class MenuForm extends JFrame {
         contentPanel = new JPanel(cardLayout);
         contentPanel.setBackground(new Color(26, 26, 26)); // Màu nền tối
 
-        // Thêm các trang nội dung mẫu
-        contentPanel.add(createPage("User Management Page"), "User Management");
+        // Thêm các trang nội dung
+        contentPanel.add(new UserManagement(), "Khach hang");
         contentPanel.add(createPage("GiaNuoc Page"), "GiaNuoc");
 
         // --- GHÉP NỐI ---
-        frame.add(sidebar, BorderLayout.WEST);
-        frame.add(contentPanel, BorderLayout.CENTER);
+        add(sidebar, BorderLayout.WEST);
+        add(contentPanel, BorderLayout.CENTER);
 
-        frame.setLocationRelativeTo(null); // Canh giữa
-        frame.setVisible(true);
+        setLocationRelativeTo(null); // Canh giữa
+        setVisible(true);
     }
 
     // Hàm tạo nút Menu với hiệu ứng Hover
@@ -69,7 +70,7 @@ public class MenuForm extends JFrame {
         btn.setFocusPainted(false); // Bỏ viền khi bấm
         btn.setContentAreaFilled(false); // Bỏ nền mặc định
         btn.setBorderPainted(false); // Bỏ viền nút
-        btn.setForeground(Color.WHITE);  // Màu chữ trắng
+        btn.setForeground(Color.WHITE); // Màu chữ trắng
         btn.setHorizontalAlignment(SwingConstants.LEFT); // Canh trái
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR)); // Con trỏ tay
 
@@ -93,6 +94,7 @@ public class MenuForm extends JFrame {
         return btn;
     }
 
+    // Tạo trang mẫu cho các menu chưa làm
     private JPanel createPage(String title) {
         JPanel p = new JPanel(new GridBagLayout());
         p.setBackground(new Color(26, 26, 26));
@@ -103,6 +105,14 @@ public class MenuForm extends JFrame {
     }
 
     public static void main(String[] args) {
+        // Set look and feel (tùy chọn)
+        try {
+            javax.swing.UIManager.setLookAndFeel(
+                    javax.swing.UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         new MenuForm();
     }
 }

@@ -12,7 +12,7 @@ public class UserDao {
     public ArrayList<User> getUsers() {
         ArrayList<User> userList = new ArrayList<>();
         try {
-            String query = "SELECT * FROM users";
+            String query = "SELECT * FROM user";
             ResultSet rs = mySQLConnect.getDB(query);
             while (rs.next()) {
                 User user = new User();
@@ -22,36 +22,38 @@ public class UserDao {
                 user.setCCCD(rs.getString("CCCD"));
                 user.setPhoneUser(rs.getString("phoneNumber"));
                 user.setEmailUser(rs.getString("email"));
+
                 userList.add(user);
             }
         } catch (SQLException e) {
             System.out.println("Lỗi lấy người dùng: " + e.getMessage());
         }
-            return userList;
+        return userList;
+    }
+
+    public boolean addUser(User user) {
+        int result = 0;
+        String query = "INSERT INTO user (loaiUser, Name, CCCD, phoneNumber, email) VALUES ('"
+                + user.getIdUser() + "', '"
+                + user.getLoaiUser() + "', '"
+                + user.getNameUser() + "', '"
+                + user.getCCCD() + "', '"
+                + user.getPhoneUser() + "', '"
+                + user.getEmailUser() + "')";
+
+        try {
+            result = mySQLConnect.ExcuteDB(query);
+
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.out.println("Lỗi thêm người dùng: " + e.getMessage());
         }
-    
-        public boolean addUser(User user){
-            int result =0;
-            String query = "INSERT INTO users (loaiUser, Name, CCCD, phoneNumber, email) VALUES ('"
-                    + user.getLoaiUser() + "', '"
-                    + user.getNameUser() + "', '"
-                    + user.getCCCD() + "', '"
-                    + user.getPhoneUser() + "', '"
-                    + user.getEmailUser() + "')";
-
-            try {
-                result = mySQLConnect.ExcuteDB(query);
-
-            } catch (Exception e) {
-                // TODO: handle exception
-                System.out.println("Lỗi thêm người dùng: " + e.getMessage());
-            }
         return result > 0;
     }
 
-    public boolean updateUser(User user){
-        int result =0;
-        String query = "UPDATE users SET "
+    public boolean updateUser(User user) {
+        int result = 0;
+        String query = "UPDATE user SET "
                 + "loaiUser = '" + user.getLoaiUser() + "', "
                 + "Name = '" + user.getNameUser() + "', "
                 + "CCCD = '" + user.getCCCD() + "', "
@@ -68,10 +70,10 @@ public class UserDao {
         return result > 0;
     }
 
-    public User getUserById(int idUser){
+    public User getUserById(int idUser) {
         User user = null;
         try {
-            String query = "SELECT * FROM users WHERE idUser = " + idUser;
+            String query = "SELECT * FROM user WHERE idUser = " + idUser;
             ResultSet rs = mySQLConnect.getDB(query);
             if (rs.next()) {
                 user = new User();
@@ -89,9 +91,9 @@ public class UserDao {
         return null;
     }
 
-    public boolean deleteUserById(int idUser){
-        int result =0;
-        String query = "DELETE FROM users WHERE idUser = " + idUser;
+    public boolean deleteUserById(int idUser) {
+        int result = 0;
+        String query = "DELETE FROM user WHERE idUser = " + idUser;
 
         try {
             result = mySQLConnect.ExcuteDB(query);
