@@ -1,9 +1,12 @@
 package dao;
 
-import model.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.*;
+
+import model.Customer;
+import model.LoaiCustomer;
 
 public class UserDao {
     MySQLConnect mySQLConnect = new MySQLConnect();
@@ -17,7 +20,7 @@ public class UserDao {
             while (rs.next()) {
                 Customer user = new Customer();
                 user.setIdCustomer(rs.getInt(DB_CustomerCol.ID));
-                user.setLoaiCustomer(rs.getString(DB_CustomerCol.Loai));
+                user.setLoaiCustomer(rs.getInt(DB_CustomerCol.Loai));
                 user.setNameCustomer(rs.getString(DB_CustomerCol.Name));
                 user.setCCCD(rs.getString(DB_CustomerCol.CCCD));
                 user.setPhoneCustomer(rs.getString(DB_CustomerCol.PhoneNumber));
@@ -54,13 +57,21 @@ public class UserDao {
     // cập nhật người dùng
     public boolean updateUser(Customer user) {
         int result = 0;
-        String query = "UPDATE %s SET ".formatted(DB_CustomerCol.TableName)
-                + DB_CustomerCol.Loai + " = '" + user.getLoaiCustomer() + "', "
-                + DB_CustomerCol.Name + " = '" + user.getNameCustomer() + "', "
-                + DB_CustomerCol.CCCD + " = '" + user.getCCCD() + "', "
-                + DB_CustomerCol.PhoneNumber + " = '" + user.getPhoneCustomer() + "', "
-                + DB_CustomerCol.Email + " = '" + user.getEmail() + "' "
-                + "WHERE " + DB_CustomerCol.ID + " = " + user.getIdCustomer();
+        String query = """
+                UPDATE %s SET
+                        %s = '%s',
+                        %s = '%s',
+                        %s = '%s',
+                        %s = '%s',
+                        %s = '%s'
+                WHERE %s = %d""".formatted(
+                DB_CustomerCol.TableName,
+                DB_CustomerCol.Loai, user.getLoaiCustomer(),
+                DB_CustomerCol.Name, user.getNameCustomer(),
+                DB_CustomerCol.CCCD, user.getCCCD(),
+                DB_CustomerCol.PhoneNumber, user.getPhoneCustomer(),
+                DB_CustomerCol.Email, user.getEmail(),
+                DB_CustomerCol.ID, user.getIdCustomer());
         System.out.println(query);
         try {
             result = mySQLConnect.executeUpdate(query);
@@ -75,13 +86,13 @@ public class UserDao {
     public Customer getUserById(int idUser) {
         Customer user = null;
         try {
-            String query = "SELECT * FROM %s WHERE %s = ".formatted(DB_CustomerCol.TableName, DB_CustomerCol.ID)
-                    + idUser;
+            String query = "SELECT * FROM %s WHERE %s = %d"
+                    .formatted(DB_CustomerCol.TableName, DB_CustomerCol.ID, idUser);
             ResultSet rs = mySQLConnect.executeQuery(query);
             if (rs.next()) {
                 user = new Customer();
                 user.setIdCustomer(rs.getInt(DB_CustomerCol.ID));
-                user.setLoaiCustomer(rs.getString(DB_CustomerCol.Loai));
+                user.setLoaiCustomer(rs.getInt(DB_CustomerCol.Loai));
                 user.setNameCustomer(rs.getString(DB_CustomerCol.Name));
                 user.setCCCD(rs.getString(DB_CustomerCol.CCCD));
                 user.setPhoneCustomer(rs.getString(DB_CustomerCol.PhoneNumber));
@@ -96,8 +107,8 @@ public class UserDao {
     // xóa người dùng theo ID
     public boolean deleteUserById(int idUser) {
         int result = 0;
-        String query = "DELETE FROM %s WHERE %s = ".formatted(DB_CustomerCol.TableName, DB_CustomerCol.ID)
-                + idUser;
+        String query = "DELETE FROM %s WHERE %s = %d"
+                .formatted(DB_CustomerCol.TableName, DB_CustomerCol.ID, idUser);
         try {
             result = mySQLConnect.executeUpdate(query);
         } catch (Exception e) {
@@ -110,7 +121,8 @@ public class UserDao {
     public List<LoaiCustomer> getLoaiKhachHang() {
         List<LoaiCustomer> loaiNguoiDungList = new ArrayList<>();
         try {
-            String query = "SELECT * FROM %s".formatted(DB_CustomerTypeCol.TableName);
+            String query = "SELECT * FROM %s"
+                    .formatted(DB_CustomerTypeCol.TableName);
             ResultSet rs = mySQLConnect.executeQuery(query);
             while (rs.next()) {
                 LoaiCustomer loaiNguoiDung = new LoaiCustomer(

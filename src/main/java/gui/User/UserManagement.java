@@ -19,7 +19,7 @@ import model.Customer;
 public class UserManagement extends JPanel {
 
     JLabel lbTitle = new JLabel("User Management");
-    JTable table = new JTable();
+    JTable table;
     DefaultTableModel tableModel;
     JScrollPane scrollPane;
 
@@ -27,13 +27,12 @@ public class UserManagement extends JPanel {
     JButton btnEdit = new JButton("Edit User");
     JButton btnDelete = new JButton("Delete User");
     JButton btnRefresh = new JButton("Refresh");
+    JButton btnInfo = new JButton("Info");
 
     ArrayList<Customer> UserArr = new ArrayList<Customer>();
     UserDao userDao = new UserDao();
 
     public UserManagement() {
-        // BỎ setTitle, setDefaultCloseOperation, setLocationRelativeTo, setSize
-        // CHỈ GIỮ LẠI setLayout và các thành phần UI
 
         setLayout(new BorderLayout(5, 5));
         setBackground(new Color(26, 26, 26)); // Thêm màu nền cho phù hợp với MenuForm
@@ -50,10 +49,13 @@ public class UserManagement extends JPanel {
         topPanel.add(btnAdd);
         topPanel.add(btnEdit);
         topPanel.add(btnDelete);
+        topPanel.add(btnInfo);
 
         String[] columnNames = { "ID", "Name", "Loai User", "CCCD", "Phone Number", "Email" };
         tableModel = new DefaultTableModel(columnNames, 0);
-        table.setModel(tableModel);
+        table = new JTable(tableModel);
+        table.setRowHeight(25);
+        table.getTableHeader().setBackground(new Color(130, 240, 130));
         table.setFillsViewportHeight(true);
 
         scrollPane = new JScrollPane(table);
@@ -69,10 +71,10 @@ public class UserManagement extends JPanel {
             // Tìm parent JFrame để truyền vào AddUserForm
             java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
             if (window instanceof javax.swing.JFrame) {
-                AddUserForm addUserForm = new AddUserForm();
+                AddCustomerForm addUserForm = new AddCustomerForm();
                 addUserForm.setVisible(true);
             } else {
-                AddUserForm addUserForm = new AddUserForm(null);
+                AddCustomerForm addUserForm = new AddCustomerForm(null);
                 addUserForm.setVisible(true);
             }
         });
@@ -94,10 +96,10 @@ public class UserManagement extends JPanel {
                 // Tìm parent JFrame
                 java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
                 if (window instanceof javax.swing.JFrame) {
-                    AddUserForm editForm = new AddUserForm(selectedUser);
+                    AddCustomerForm editForm = new AddCustomerForm(selectedUser);
                     editForm.setVisible(true);
                 } else {
-                    AddUserForm editForm = new AddUserForm(selectedUser);
+                    AddCustomerForm editForm = new AddCustomerForm(selectedUser);
                     editForm.setVisible(true);
                 }
             }
@@ -134,6 +136,25 @@ public class UserManagement extends JPanel {
                             "Error",
                             JOptionPane.ERROR_MESSAGE);
                 }
+            }
+        });
+
+        btnInfo.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(this,
+                        "Please select a user to view info.",
+                        "No User Selected",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            Customer selectedUser = userDao.getUserById((Integer) tableModel.getValueAt(selectedRow, 0));
+
+            if (selectedUser != null) {
+                InfoCustomerform infoForm = new InfoCustomerform(selectedUser);
+                infoForm.setVisible(true);
             }
         });
     }

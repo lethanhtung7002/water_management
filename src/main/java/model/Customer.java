@@ -3,7 +3,7 @@ package model;
 public class Customer {
     private int idCustomer;
     private String nameCustomer;
-    private String LoaiCustomer;
+    private int LoaiCustomer;
     private String CCCD;
     private String phoneCustomer;
     private String email;
@@ -11,7 +11,7 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(int idCustomer, String nameCustomer, String loaiCustomer, String CCCD, String phoneCustomer, String email) {
+    public Customer(int idCustomer, String nameCustomer, int loaiCustomer, String CCCD, String phoneCustomer, String email) {
         this.idCustomer = idCustomer;
         this.nameCustomer = nameCustomer;
         this.LoaiCustomer = loaiCustomer;
@@ -36,11 +36,11 @@ public class Customer {
         this.nameCustomer = nameCustomer;
     }
 
-    public String getLoaiCustomer() {
+    public int getLoaiCustomer() {
         return LoaiCustomer;
     }
 
-    public void setLoaiCustomer(String loaiCustomer) {
+    public void setLoaiCustomer(int loaiCustomer) {
         this.LoaiCustomer = loaiCustomer;
     }
 

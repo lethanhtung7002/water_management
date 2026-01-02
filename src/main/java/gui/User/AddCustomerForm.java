@@ -13,9 +13,8 @@ import dao.UserDao;
 import model.LoaiCustomer;
 import model.Customer;
 
-public class AddUserForm extends JFrame {
+public class AddCustomerForm extends JFrame {
     JLabel lbAdd = new JLabel("Thêm Khách Hàng");
-
     JLabel lbName = new JLabel("Name:");
     JLabel lbLoaiUser = new JLabel("Loại Khách Hàng:");
     JLabel lbCCCD = new JLabel("CCCD:");
@@ -23,7 +22,7 @@ public class AddUserForm extends JFrame {
     JLabel lbEmail = new JLabel("Email:");
 
     JTextField tfName = new JTextField();
-    JComboBox<LoaiCustomer> tfLoaiUser;
+    JComboBox<LoaiCustomer> cbLoaiUser;
     JTextField tfCCCD = new JTextField();
     JTextField tfPhone = new JTextField();
     JTextField tfEmail = new JTextField();
@@ -33,7 +32,7 @@ public class AddUserForm extends JFrame {
 
     UserDao userDao = new UserDao();
 
-    public AddUserForm() {
+    public AddCustomerForm() {
         setTitle("Thêm Khách Hàng");
         init();
 
@@ -41,21 +40,21 @@ public class AddUserForm extends JFrame {
         btnCancel.addActionListener(e -> dispose());
     }
 
-    public AddUserForm(Customer user) {
+    public AddCustomerForm(Customer user) {
         setTitle("Sửa thông tin Khách Hàng");
         init();
 
-        // diền thông tin người dùng vào form
+        // Điền thông tin người dùng vào form
         tfName.setText(user.getNameCustomer());
         tfCCCD.setText(user.getCCCD());
         tfPhone.setText(user.getPhoneCustomer());
         tfEmail.setText(user.getEmail());
 
-        // chọn loại người dùng dựa trên thông tin hiện có
-        for (int i = 0; i < tfLoaiUser.getItemCount(); i++) {
-            LoaiCustomer lnd = tfLoaiUser.getItemAt(i);
-            if (lnd.getTenLoaiCustomer().equals(user.getLoaiCustomer())) {
-                tfLoaiUser.setSelectedIndex(i);
+        // Chọn loại người dùng dựa trên ID (không phải tên)
+        for (int i = 0; i < cbLoaiUser.getItemCount(); i++) {
+            LoaiCustomer lnd = cbLoaiUser.getItemAt(i);
+            if (lnd.getIdLoaiCustomer() == user.getIdCustomer()) { // So sánh ID
+                cbLoaiUser.setSelectedIndex(i);
                 break;
             }
         }
@@ -66,7 +65,7 @@ public class AddUserForm extends JFrame {
 
     private void saveUser() {
         // Lấy LoaiCustomer đã chọn
-        LoaiCustomer selectedLoaiCustomer = (LoaiCustomer) tfLoaiUser.getSelectedItem();
+        LoaiCustomer selectedLoaiCustomer = (LoaiCustomer) cbLoaiUser.getSelectedItem();
         if (selectedLoaiCustomer == null) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn loại người dùng hợp lệ.", "Error",
                     JOptionPane.ERROR_MESSAGE);
@@ -76,7 +75,7 @@ public class AddUserForm extends JFrame {
         Customer user = new Customer(
                 0,
                 tfName.getText(),
-                selectedLoaiCustomer.getTenLoaiCustomer(),
+                selectedLoaiCustomer.getIdLoaiCustomer(), // Lưu ID thay vì tên
                 tfCCCD.getText(),
                 tfPhone.getText(),
                 tfEmail.getText());
@@ -89,9 +88,9 @@ public class AddUserForm extends JFrame {
         }
     }
 
-    private void saveUser(Customer ID_KhachHang){
+    private void saveUser(Customer ID_KhachHang) {
         // Lấy LoaiCustomer đã chọn
-        LoaiCustomer selectedLoaiCustomer = (LoaiCustomer) tfLoaiUser.getSelectedItem();
+        LoaiCustomer selectedLoaiCustomer = (LoaiCustomer) cbLoaiUser.getSelectedItem();
         if (selectedLoaiCustomer == null) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn loại người dùng hợp lệ.", "Error",
                     JOptionPane.ERROR_MESSAGE);
@@ -101,7 +100,7 @@ public class AddUserForm extends JFrame {
         Customer user = new Customer(
                 ID_KhachHang.getIdCustomer(),
                 tfName.getText(),
-                selectedLoaiCustomer.getTenLoaiCustomer(),
+                selectedLoaiCustomer.getIdLoaiCustomer(), // Lưu ID thay vì tên
                 tfCCCD.getText(),
                 tfPhone.getText(),
                 tfEmail.getText());
@@ -114,32 +113,32 @@ public class AddUserForm extends JFrame {
         }
     }
 
-    private void loadLoaiNguoiDung() {
-        List<LoaiCustomer> loaiNguoiDung = userDao.getLoaiKhachHang();
-        for (LoaiCustomer lnd : loaiNguoiDung) {
-            tfLoaiUser.addItem(lnd);
-        }
-    }
-
     public void init() {
         setSize(400, 400);
         setLayout(null);
         setLocationRelativeTo(null);
 
-        tfLoaiUser = new JComboBox<>();
-        loadLoaiNguoiDung();
+        cbLoaiUser = new JComboBox<>();
+        List<LoaiCustomer> loaiNguoiDung = userDao.getLoaiKhachHang();
+        for (LoaiCustomer lnd : loaiNguoiDung) {
+            cbLoaiUser.addItem(lnd);
+        }
 
-        lbAdd.setBounds(150, 10, 200, 30);
-        lbName.setBounds(50, 60, 100, 25);
-        tfName.setBounds(150, 60, 200, 25);
-        lbLoaiUser.setBounds(50, 100, 100, 25);
-        tfLoaiUser.setBounds(150, 100, 200, 25);
-        lbCCCD.setBounds(50, 140, 100, 25);
-        tfCCCD.setBounds(150, 140, 200, 25);
-        lbPhone.setBounds(50, 180, 100, 25);
-        tfPhone.setBounds(150, 180, 200, 25);
-        lbEmail.setBounds(50, 220, 100, 25);
-        tfEmail.setBounds(150, 220, 200, 25);
+        int height = 30;
+        int x_lb = 50;
+        int x_tf_cb = 150;
+
+        lbAdd.setBounds(x_tf_cb, 10, 200, 30);
+        lbName.setBounds(x_lb, 60, 100, height);
+        tfName.setBounds(x_tf_cb, 60, 200, height);
+        lbLoaiUser.setBounds(x_lb, 100, 100, height);
+        cbLoaiUser.setBounds(x_tf_cb, 100, 200, height);
+        lbCCCD.setBounds(x_lb, 140, 100, height);
+        tfCCCD.setBounds(x_tf_cb, 140, 200, height);
+        lbPhone.setBounds(x_lb, 180, 100, height);
+        tfPhone.setBounds(x_tf_cb, 180, 200, height);
+        lbEmail.setBounds(x_lb, 220, 100, height);
+        tfEmail.setBounds(x_tf_cb, 220, 200, height);
         btnSave.setBounds(80, 280, 100, 30);
         btnCancel.setBounds(220, 280, 100, 30);
 
@@ -147,7 +146,7 @@ public class AddUserForm extends JFrame {
         add(lbName);
         add(tfName);
         add(lbLoaiUser);
-        add(tfLoaiUser);
+        add(cbLoaiUser);
         add(lbCCCD);
         add(tfCCCD);
         add(lbPhone);
@@ -156,11 +155,11 @@ public class AddUserForm extends JFrame {
         add(tfEmail);
         add(btnSave);
         add(btnCancel);
-
     }
+}
 
-    // public static void main(String[] args) {
-    //     AddUserForm addUserForm = new AddUserForm();
-    //     addUserForm.setVisible(true);
-    // }
+class run_test {
+    public static void main(String[] args) {
+        new AddCustomerForm().setVisible(true);
+    }
 }
