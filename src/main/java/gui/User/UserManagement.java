@@ -14,9 +14,9 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import dao.UserDao;
-import model.User;
+import model.Customer;
 
-public class UserManagement extends JPanel { // ĐỔI TỪ JFrame → JPanel
+public class UserManagement extends JPanel {
 
     JLabel lbTitle = new JLabel("User Management");
     JTable table = new JTable();
@@ -28,7 +28,7 @@ public class UserManagement extends JPanel { // ĐỔI TỪ JFrame → JPanel
     JButton btnDelete = new JButton("Delete User");
     JButton btnRefresh = new JButton("Refresh");
 
-    ArrayList<User> UserArr = new ArrayList<User>();
+    ArrayList<Customer> UserArr = new ArrayList<Customer>();
     UserDao userDao = new UserDao();
 
     public UserManagement() {
@@ -88,7 +88,7 @@ public class UserManagement extends JPanel { // ĐỔI TỪ JFrame → JPanel
                 return;
             }
 
-            User selectedUser = userDao.getUserById((Integer) tableModel.getValueAt(selectedRow, 0));
+            Customer selectedUser = userDao.getUserById((Integer) tableModel.getValueAt(selectedRow, 0));
 
             if (selectedUser != null) {
                 // Tìm parent JFrame
@@ -143,14 +143,14 @@ public class UserManagement extends JPanel { // ĐỔI TỪ JFrame → JPanel
         tableModel.setRowCount(0);
         this.UserArr = userDao.getUsers();
 
-        for (User user : UserArr) {
+        for (Customer user : UserArr) {
             tableModel.addRow(new Object[] {
-                    user.getIdUser(),
-                    user.getNameUser(),
-                    user.getLoaiUser(),
+                    user.getIdCustomer(),
+                    user.getNameCustomer(),
+                    user.getLoaiCustomer(),
                     user.getCCCD(),
-                    user.getPhoneUser(),
-                    user.getEmailUser()
+                    user.getPhoneCustomer(),
+                    user.getEmail()
             });
         }
     }

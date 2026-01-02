@@ -44,9 +44,9 @@ public class LoginForm extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Dòng 1: Username
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        formPanel.add(userLabel, gbc);
+        gbc.gridx = 0; // Cột 0
+        gbc.gridy = 0; // Dòng 0
+        formPanel.add(userLabel, gbc); // Thêm nhãn Username
 
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -64,7 +64,7 @@ public class LoginForm extends JFrame {
         gbc.weightx = 1.0;
         formPanel.add(passField, gbc);
 
-        add(formPanel, BorderLayout.CENTER);
+        add(formPanel, BorderLayout.CENTER); // Thêm panel form vào giữa
 
         /* ===== BUTTON ===== */
         JPanel buttonPanel = new JPanel();
@@ -76,9 +76,8 @@ public class LoginForm extends JFrame {
             String username = userTextField.getText();
             String password = new String(passField.getPassword());
             if (checkLogin(username, password)) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Login successful!");
+                new MenuForm();
+                dispose(); // Đóng LoginForm sau khi đăng nhập thành công
             } else {
                 JOptionPane.showMessageDialog(
                         this,

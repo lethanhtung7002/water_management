@@ -13,7 +13,6 @@ public class Main {
             e.printStackTrace();
         }
         
-        // Chạy giao diện
         new LoginForm();
     }
 }

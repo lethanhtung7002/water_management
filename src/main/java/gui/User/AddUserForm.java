@@ -1,5 +1,7 @@
 package gui.User;
 
+import java.util.List;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -8,19 +10,20 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import dao.UserDao;
-import model.User;
+import model.LoaiCustomer;
+import model.Customer;
 
 public class AddUserForm extends JFrame {
-    JLabel lbAdd = new JLabel("Add New User");
+    JLabel lbAdd = new JLabel("Thêm Khách Hàng");
 
     JLabel lbName = new JLabel("Name:");
-    JLabel lbLoaiUser = new JLabel("Loai User:");
+    JLabel lbLoaiUser = new JLabel("Loại Khách Hàng:");
     JLabel lbCCCD = new JLabel("CCCD:");
     JLabel lbPhone = new JLabel("Phone Number:");
     JLabel lbEmail = new JLabel("Email:");
 
     JTextField tfName = new JTextField();
-    JComboBox<String> tfLoaiUser;
+    JComboBox<LoaiCustomer> tfLoaiUser;
     JTextField tfCCCD = new JTextField();
     JTextField tfPhone = new JTextField();
     JTextField tfEmail = new JTextField();
@@ -31,36 +34,49 @@ public class AddUserForm extends JFrame {
     UserDao userDao = new UserDao();
 
     public AddUserForm() {
-        setTitle("Add User");
-        
+        setTitle("Thêm Khách Hàng");
         init();
 
         btnSave.addActionListener(e -> saveUser());
         btnCancel.addActionListener(e -> dispose());
     }
 
-    public AddUserForm(User user) {
-        // Constructor for editing an existing user (not implemented yet)
-        setTitle("Edit User");
+    public AddUserForm(Customer user) {
+        setTitle("Sửa thông tin Khách Hàng");
         init();
 
-        tfName.setText(user.getNameUser());
-        if (user.getLoaiUser() != null) {
-            tfLoaiUser.setSelectedItem(user.getLoaiUser());
-        }
+        // diền thông tin người dùng vào form
+        tfName.setText(user.getNameCustomer());
         tfCCCD.setText(user.getCCCD());
-        tfPhone.setText(user.getPhoneUser());
-        tfEmail.setText(user.getEmailUser());
+        tfPhone.setText(user.getPhoneCustomer());
+        tfEmail.setText(user.getEmail());
 
-        btnSave.addActionListener(e -> saveUser());
+        // chọn loại người dùng dựa trên thông tin hiện có
+        for (int i = 0; i < tfLoaiUser.getItemCount(); i++) {
+            LoaiCustomer lnd = tfLoaiUser.getItemAt(i);
+            if (lnd.getTenLoaiCustomer().equals(user.getLoaiCustomer())) {
+                tfLoaiUser.setSelectedIndex(i);
+                break;
+            }
+        }
+
+        btnSave.addActionListener(e -> saveUser(user));
         btnCancel.addActionListener(e -> dispose());
     }
 
     private void saveUser() {
-        User user = new User(
+        // Lấy LoaiCustomer đã chọn
+        LoaiCustomer selectedLoaiCustomer = (LoaiCustomer) tfLoaiUser.getSelectedItem();
+        if (selectedLoaiCustomer == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn loại người dùng hợp lệ.", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Customer user = new Customer(
                 0,
                 tfName.getText(),
-                (String) tfLoaiUser.getSelectedItem(),
+                selectedLoaiCustomer.getTenLoaiCustomer(),
                 tfCCCD.getText(),
                 tfPhone.getText(),
                 tfEmail.getText());
@@ -73,13 +89,45 @@ public class AddUserForm extends JFrame {
         }
     }
 
+    private void saveUser(Customer ID_KhachHang){
+        // Lấy LoaiCustomer đã chọn
+        LoaiCustomer selectedLoaiCustomer = (LoaiCustomer) tfLoaiUser.getSelectedItem();
+        if (selectedLoaiCustomer == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn loại người dùng hợp lệ.", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Customer user = new Customer(
+                ID_KhachHang.getIdCustomer(),
+                tfName.getText(),
+                selectedLoaiCustomer.getTenLoaiCustomer(),
+                tfCCCD.getText(),
+                tfPhone.getText(),
+                tfEmail.getText());
+
+        if (userDao.updateUser(user)) {
+            JOptionPane.showMessageDialog(this, "User updated successfully!");
+            dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Failed to update user.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void loadLoaiNguoiDung() {
+        List<LoaiCustomer> loaiNguoiDung = userDao.getLoaiKhachHang();
+        for (LoaiCustomer lnd : loaiNguoiDung) {
+            tfLoaiUser.addItem(lnd);
+        }
+    }
+
     public void init() {
         setSize(400, 400);
         setLayout(null);
         setLocationRelativeTo(null);
 
-        String[] loaiUsers = { "Ho Gia Dinh", "Doanh Nghiep" };
-        tfLoaiUser = new JComboBox<>(loaiUsers);
+        tfLoaiUser = new JComboBox<>();
+        loadLoaiNguoiDung();
 
         lbAdd.setBounds(150, 10, 200, 30);
         lbName.setBounds(50, 60, 100, 25);
@@ -111,8 +159,8 @@ public class AddUserForm extends JFrame {
 
     }
 
-    public static void main(String[] args) {
-        AddUserForm addUserForm = new AddUserForm();
-        addUserForm.setVisible(true);
-    }
+    // public static void main(String[] args) {
+    //     AddUserForm addUserForm = new AddUserForm();
+    //     addUserForm.setVisible(true);
+    // }
 }

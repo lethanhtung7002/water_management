@@ -1,0 +1,94 @@
+┌───────────────────────────┐
+│        KhachHang          │
+├───────────────────────────┤
+│ PK ID_KhachHang           │
+│ LoaiKhachHang             │
+│ Name                      │
+│ CCCD                      │
+│ Phone_number              │
+│ Email                     │
+└─────────────┬─────────────┘
+              │ 1:N
+              │
+┌─────────────▼─────────────┐
+│        HoSuDung           │
+├───────────────────────────┤
+│ PK ID_HoSuDung            │
+│ FK ID_KhachHang           │
+│ DiaChi                    │
+│ MaQuanHuyen               │
+│ TrangThai                 │
+└─────────────┬─────────────┘
+              │ 1:N
+              │
+┌─────────────▼─────────────┐
+│       DongHoNuoc          │
+├───────────────────────────┤
+│ PK ID_DongHo              │
+│ FK ID_HoSuDung            │
+│ SoHieuDongHo              │
+│ NgayLap                   │
+│ TrangThai                 │
+└─────────────┬─────────────┘
+              │ 1:N
+              │
+┌─────────────▼─────────────┐
+│       ChiSoNuoc           │
+├───────────────────────────┤
+│ PK ID_ChiSo               │
+│ FK ID_DongHo              │
+│ NgayGhi                   │
+│ ChiSo                     │
+└─────────────┬─────────────┘
+              │ 1:1
+              │
+┌─────────────▼─────────────┐
+│          HoaDon           │
+├───────────────────────────┤
+│ PK ID_HoaDon              │
+│ FK ID_ChiSo               │
+│ SanLuongTieuThu           │
+│ TongTien                  │
+│ NgayLap                   │
+│ TrangThai                 │
+│ Thue                      │
+└─────────────┬─────────────┘
+              │ 1:N
+              │
+┌─────────────▼─────────────┐
+│         ThanhToan         │
+├───────────────────────────┤
+│ PK ID_ThanhToan           │
+│ FK ID_HoaDon              │
+│ NgayThanhToan             │
+│ SoTien                    │
+│ HinhThuc                  │
+│ TrangThai                 │
+└───────────────────────────┘
+
+
+
+📌 Bảng giá tách riêng
+(để mỗi loại khách hàng / khu vực có bảng giá khác nhau)
+
+        1        N
+GiaNuoc ────────── BacGia
+
+┌───────────────────────────┐
+│          GiaNuoc          │
+├───────────────────────────┤
+│ PK ID_Gia                 │
+│ LoaiKhachHang             │
+│ KhuVuc                    │
+│ Thue                      │
+└─────────────┬─────────────┘
+              │ 1:N
+              │
+┌─────────────▼─────────────┐
+│          BacGia           │
+├───────────────────────────┤
+│ PK ID_Bac                 │
+│ FK ID_Gia                 │
+│ Bac (1,2,3,...)           │
+│ DonGia                    │
+└───────────────────────────┘
