@@ -83,6 +83,7 @@ public class AddCustomerForm extends JFrame {
         if (userDao.addUser(user)) {
             JOptionPane.showMessageDialog(this, "User added successfully!");
             dispose();
+
         } else {
             JOptionPane.showMessageDialog(this, "Failed to add user.", "Error", JOptionPane.ERROR_MESSAGE);
         }

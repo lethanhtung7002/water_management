@@ -1,0 +1,35 @@
+--Chọn tỉnh--
+An Giang
+Bắc Ninh
+Cà Mau
+Cao Bằng
+Cần Thơ
+Đà Nẵng
+Đắk Lắk
+Điện Biên
+Đồng Nai
+Đồng Tháp
+Gia Lai
+Hà Nội
+Hà Tĩnh
+Hải Phòng
+Hồ Chí Minh
+Huế
+Hưng Yên
+Khánh Hòa
+Lai Châu
+Lạng Sơn
+Lào Cai
+Lâm Đồng
+Ninh Bình
+Nghệ An
+Phú Thọ
+Quảng Ninh
+Quảng Ngãi
+Quảng Trị
+Sơn La
+Tây Ninh
+Tuyên Quang
+Thái Nguyên
+Thanh Hóa
+Vĩnh Long

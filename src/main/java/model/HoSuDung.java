@@ -5,9 +5,12 @@ public class HoSuDung {
     private int ID_Customer;
     private String DiaChi;
     private String MaQuanHuyen;
-    private String TrangThai;
+    private int TrangThai;
 
-    public HoSuDung(int iD_HoSuDung, int iD_Customer, String diaChi, String maQuanHuyen, String trangThai) {
+    public HoSuDung() {
+    }
+
+    public HoSuDung(int iD_HoSuDung, int iD_Customer, String diaChi, String maQuanHuyen, int trangThai) {
         ID_HoSuDung = iD_HoSuDung;
         ID_Customer = iD_Customer;
         DiaChi = diaChi;
@@ -47,11 +50,11 @@ public class HoSuDung {
         MaQuanHuyen = maQuanHuyen;
     }
 
-    public String getTrangThai() {
+    public int getTrangThai() {
         return TrangThai;
     }
 
-    public void setTrangThai(String trangThai) {
+    public void setTrangThai(int trangThai) {
         TrangThai = trangThai;
     }
 

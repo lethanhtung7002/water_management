@@ -9,7 +9,7 @@ import model.Customer;
 import model.LoaiCustomer;
 
 public class UserDao {
-    MySQLConnect mySQLConnect = new MySQLConnect();
+    private MySQLConnect mySQLConnect = new MySQLConnect();
 
     // lấy danh sách người dùng
     public ArrayList<Customer> getUsers() {
@@ -36,14 +36,14 @@ public class UserDao {
     // thêm người dùng
     public boolean addUser(Customer user) {
         int result = 0;
-        String query = "INSERT INTO %s (%s, %s, %s, %s, %s) VALUES ('"
-                .formatted(DB_CustomerCol.TableName, DB_CustomerCol.Loai, DB_CustomerCol.Name, DB_CustomerCol.CCCD,
-                        DB_CustomerCol.PhoneNumber, DB_CustomerCol.Email)
-                + user.getLoaiCustomer() + "', '"
-                + user.getNameCustomer() + "', '"
-                + user.getCCCD() + "', '"
-                + user.getPhoneCustomer() + "', '"
-                + user.getEmail() + "')";
+        String query = """
+                INSERT INTO %s (%s, %s, %s, %s, %s)
+                VALUES ('%d', '%s', '%s', '%s', '%s')
+                """.formatted(
+                DB_CustomerCol.TableName, DB_CustomerCol.Loai, DB_CustomerCol.Name, DB_CustomerCol.CCCD,
+                DB_CustomerCol.PhoneNumber, DB_CustomerCol.Email,
+                user.getLoaiCustomer(), user.getNameCustomer(), user.getCCCD(),
+                user.getPhoneCustomer(), user.getEmail());
 
         try {
             result = mySQLConnect.executeUpdate(query);

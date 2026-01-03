@@ -68,15 +68,7 @@ public class UserManagement extends JPanel {
         btnRefresh.addActionListener(e -> showUserList());
 
         btnAdd.addActionListener(e -> {
-            // Tìm parent JFrame để truyền vào AddUserForm
-            java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
-            if (window instanceof javax.swing.JFrame) {
-                AddCustomerForm addUserForm = new AddCustomerForm();
-                addUserForm.setVisible(true);
-            } else {
-                AddCustomerForm addUserForm = new AddCustomerForm(null);
-                addUserForm.setVisible(true);
-            }
+            new AddCustomerForm().setVisible(true);
         });
 
         btnEdit.addActionListener(e -> {
@@ -93,15 +85,8 @@ public class UserManagement extends JPanel {
             Customer selectedUser = userDao.getUserById((Integer) tableModel.getValueAt(selectedRow, 0));
 
             if (selectedUser != null) {
-                // Tìm parent JFrame
-                java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
-                if (window instanceof javax.swing.JFrame) {
-                    AddCustomerForm editForm = new AddCustomerForm(selectedUser);
-                    editForm.setVisible(true);
-                } else {
-                    AddCustomerForm editForm = new AddCustomerForm(selectedUser);
-                    editForm.setVisible(true);
-                }
+                AddCustomerForm editForm = new AddCustomerForm(selectedUser);
+                editForm.setVisible(true);
             }
         });
 
@@ -159,7 +144,7 @@ public class UserManagement extends JPanel {
         });
     }
 
-    private void showUserList() {
+    public void showUserList() {
         // Lấy dữ liệu từ DAO
         tableModel.setRowCount(0);
         this.UserArr = userDao.getUsers();

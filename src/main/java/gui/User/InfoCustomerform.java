@@ -3,7 +3,8 @@ package gui.User;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
-
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,15 +14,20 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import dao.HoSuDungDao;
 import dao.UserDao;
 import model.Customer;
+import model.HoSuDung;
 
 public class InfoCustomerform extends JFrame {
     UserDao userDao = new UserDao();
+    HoSuDungDao hoSuDungDao = new HoSuDungDao();
 
+    JButton btnRefresh = new JButton("Refresh");
     JButton btnAdd = new JButton("Thêm hộ sử dụng");
     JButton btnEdit = new JButton("Sửa hộ sử dụng");
-    JButton btnChangeStatus = new JButton("Thay đổi trạng thái");
+
+    ArrayList<HoSuDung> hoSuDungArr = new ArrayList<HoSuDung>();
 
     public InfoCustomerform(Customer customer) {
         setTitle("Thông tin khách hàng %s".formatted(customer.getNameCustomer()));
@@ -34,7 +40,7 @@ public class InfoCustomerform extends JFrame {
         add(createInfoPanel(customer), BorderLayout.NORTH);
 
         // Panel button thao tác (giữa)
-        add(createButtonPanel(), BorderLayout.CENTER);
+        add(createButtonPanel(customer.getIdCustomer()), BorderLayout.CENTER);
 
         // Bảng hộ sử dụng (dưới)
         add(createTablePanel(customer.getIdCustomer()), BorderLayout.SOUTH);
@@ -60,12 +66,47 @@ public class InfoCustomerform extends JFrame {
         panel.add(lbl);
     }
 
-    private JPanel createButtonPanel() {
-        JPanel panel = new JPanel(new GridLayout(1, 3));
+    private JPanel createButtonPanel(int customerId) {
+        JPanel panel = new JPanel(new GridLayout(1, 5, 10, 10));
 
+        panel.add(btnRefresh);
         panel.add(btnAdd);
         panel.add(btnEdit);
-        panel.add(btnChangeStatus);
+
+        btnRefresh.addActionListener(e -> {
+            // Cập nhật lại bảng hộ sử dụng
+            JScrollPane tableScrollPane = createTablePanel(customerId);
+            getContentPane().remove(2); // Xóa bảng cũ
+            add(tableScrollPane, BorderLayout.SOUTH);
+            revalidate();
+            repaint();
+        });
+
+        btnAdd.addActionListener(e -> {
+            new AddHoSuDungForm(customerId).setVisible(true);
+        });
+
+        btnEdit.addActionListener(e -> {
+            int selectedRow = ((JTable) ((JScrollPane) getContentPane().getComponent(2)).getViewport().getView())
+                    .getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn hộ sử dụng để sửa.", "Lỗi",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            int idHoSuDung = (int) ((DefaultTableModel) ((JTable) ((JScrollPane) getContentPane().getComponent(2))
+                    .getViewport().getView()).getModel()).getValueAt(selectedRow, 0);
+            
+            HoSuDung hoSuDung = hoSuDungDao.getHoSuDungById(idHoSuDung);
+            if (hoSuDung != null) {
+                AddHoSuDungForm editForm = new AddHoSuDungForm(hoSuDung);
+                editForm.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy hộ sử dụng.", "Lỗi",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
 
         return panel;
     }
@@ -77,26 +118,29 @@ public class InfoCustomerform extends JFrame {
         JTable table = new JTable(model);
         table.setRowHeight(25);
         table.getTableHeader().setBackground(new Color(130, 204, 130));
-        table.getTableHeader().setForeground(Color.WHITE);
+        table.getTableHeader().setForeground(Color.BLACK);
 
         // Load dữ liệu từ database
-        loadHoSuDung(model, customerId);
+        showHoSuDung(model, customerId);
 
         return new JScrollPane(table);
     }
 
-    private void loadHoSuDung(DefaultTableModel model, int customerId) {
-        // TODO: Thay bằng query thực tế từ database
-        // Ví dụ:
-        // List<HoSuDung> list = userDao.getHoSuDungByCustomerId(customerId);
-        // for (HoSuDung h : list) {
-        // model.addRow(new Object[]{h.getMaHo(), h.getDiaChi(), h.getDienTich(),
-        // h.getSoNhanKhau(), h.getTrangThai()});
-        // }
+    private void showHoSuDung(DefaultTableModel model, int customerId) {
+        model.setRowCount(0); // Xóa dữ liệu cũ
 
-        // Data mẫu
-        model.addRow(new Object[] { "H001", "123 Nguyễn Văn Linh", "80m²", 4, "Đang sử dụng" });
-        model.addRow(new Object[] { "H002", "456 Lê Lợi", "100m²", 5, "Đang sử dụng" });
+        this.hoSuDungArr = hoSuDungDao.getHoSuDungByCustomerId(customerId);
+        for (HoSuDung hoSuDung : hoSuDungArr) {
+            String trangThai = hoSuDung.getTrangThai() == 1 ? "Đang sử dụng" : "Ngừng sử dụng";
+            Object[] row = {
+                    hoSuDung.getID_HoSuDung(),
+                    hoSuDung.getDiaChi(),
+                    hoSuDung.getMaQuanHuyen(),
+                    trangThai
+            };
+            model.addRow(row);
+        }
+
     }
 
     public static void main(String[] args) {
