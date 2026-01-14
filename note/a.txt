@@ -26,7 +26,7 @@
 │       ChiSoNuoc           │
 ├───────────────────────────┤
 │ PK ID_ChiSo               │
-│ FK ID_DongHo              │
+│ FK ID_HoSuDung            │
 │ NgayGhi                   │
 │ ChiSo                     │
 └─────────────┬─────────────┘
@@ -79,6 +79,8 @@ GiaNuoc ────────── BacGia
 ├───────────────────────────┤
 │ PK ID_Bac                 │
 │ FK ID_Gia                 │
+│ từ                        │
+│ đến                       │
 │ Bac (1,2,3,...)           │
 │ DonGia                    │
 └───────────────────────────┘

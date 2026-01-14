@@ -4,25 +4,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import model.HoSuDung;
+import model.hoSuDung;
 
 public class HoSuDungDao {
     private MySQLConnect mySQLConnect = new MySQLConnect();
 
     // lấy danh sách hộ sử dụng
-    public ArrayList<HoSuDung> getHoSuDungByCustomerId(int customerId) {
-        ArrayList<HoSuDung> userList = new ArrayList<>();
+    public ArrayList<hoSuDung> getHoSuDungByCustomerId(int customerId) {
+        ArrayList<hoSuDung> userList = new ArrayList<>();
         try {
             String query = "SELECT * FROM %s WHERE %s = %d"
-                    .formatted(DB_HoSuDungCol.TableName,
-                            DB_HoSuDungCol.ID_KhachHang, customerId);
+                    .formatted(qlnTableName.HoSuDung,
+                            qlnIDName.CustomerID, customerId);
             ResultSet rs = mySQLConnect.executeQuery(query);
             while (rs.next()) {
-                HoSuDung user = new HoSuDung();
-                user.setID_HoSuDung(rs.getInt(DB_HoSuDungCol.ID));
-                user.setMaQuanHuyen(rs.getString(DB_HoSuDungCol.KhuVuc));
-                user.setDiaChi(rs.getString(DB_HoSuDungCol.DiaChi));
-                user.setTrangThai(rs.getInt(DB_HoSuDungCol.TrangThai));
+                hoSuDung user = new hoSuDung();
+                user.setID_HoSuDung(rs.getInt(qlnIDName.HoSuDungID));
+                user.setMaQuanHuyen(rs.getString(qlnHoSuDungCol.KhuVuc));
+                user.setDiaChi(rs.getString(qlnHoSuDungCol.DiaChi));
+                user.setTrangThai(rs.getInt(qlnHoSuDungCol.TrangThai));
                 userList.add(user);
             }
         } catch (SQLException e) {
@@ -32,14 +32,14 @@ public class HoSuDungDao {
     }
 
     // thêm hộ sử dụng
-    public boolean add_HoSuDung(HoSuDung user) {
+    public boolean add_HoSuDung(hoSuDung user) {
         int result = 0;
         String query = """
                 INSERT INTO %s (%s, %s, %s, %s)
                 VALUES ('%d', '%s', '%s', '%d')
                 """.formatted(
-                DB_HoSuDungCol.TableName, DB_HoSuDungCol.ID_KhachHang, DB_HoSuDungCol.DiaChi,
-                DB_HoSuDungCol.KhuVuc, DB_HoSuDungCol.TrangThai,
+                qlnTableName.HoSuDung, qlnIDName.CustomerID, qlnHoSuDungCol.DiaChi,
+                qlnHoSuDungCol.KhuVuc, qlnHoSuDungCol.TrangThai,
                 user.getID_Customer(), user.getDiaChi(), user.getMaQuanHuyen(), user.getTrangThai());
 
         try {
@@ -52,19 +52,19 @@ public class HoSuDungDao {
     }
 
     // cập nhật hộ sử dụng
-    public boolean update_HoSuDung(HoSuDung user) {
+    public boolean update_HoSuDung(hoSuDung user) {
         int result = 0;
         String query = """
                 UPDATE %s
                 SET %s = '%d', %s = '%s', %s = '%s', %s = '%d'
                 WHERE %s = '%d'
                 """.formatted(
-                DB_HoSuDungCol.TableName,
-                DB_HoSuDungCol.ID_KhachHang, user.getID_Customer(),
-                DB_HoSuDungCol.DiaChi, user.getDiaChi(),
-                DB_HoSuDungCol.KhuVuc, user.getMaQuanHuyen(),
-                DB_HoSuDungCol.TrangThai, user.getTrangThai(),
-                DB_HoSuDungCol.ID, user.getID_HoSuDung());
+                qlnTableName.HoSuDung,
+                qlnIDName.CustomerID, user.getID_Customer(),
+                qlnHoSuDungCol.DiaChi, user.getDiaChi(),
+                qlnHoSuDungCol.KhuVuc, user.getMaQuanHuyen(),
+                qlnHoSuDungCol.TrangThai, user.getTrangThai(),
+                qlnIDName.HoSuDungID, user.getID_HoSuDung());
 
         try {
             result = mySQLConnect.executeUpdate(query);
@@ -79,8 +79,8 @@ public class HoSuDungDao {
     public boolean delete_HoSuDung(int id_HoSuDung) {
         int result = 0;
         String query = "DELETE FROM %s WHERE %s = %d".formatted(
-                DB_HoSuDungCol.TableName,
-                DB_HoSuDungCol.ID,
+                qlnTableName.HoSuDung,
+                qlnIDName.HoSuDungID,
                 id_HoSuDung);
         try {
             result = mySQLConnect.executeUpdate(query);
@@ -92,19 +92,19 @@ public class HoSuDungDao {
     }
 
     // tìm hộ sử dụng theo ID
-    public HoSuDung getHoSuDungById(int idHoSuDung) {
-        HoSuDung hoSuDung = null;
+    public hoSuDung getHoSuDungById(int idHoSuDung) {
+        hoSuDung hoSuDung = null;
         try {
             String query = "SELECT * FROM %s WHERE %s = %d"
-                    .formatted(DB_HoSuDungCol.TableName, DB_HoSuDungCol.ID, idHoSuDung);
+                    .formatted(qlnTableName.HoSuDung, qlnIDName.HoSuDungID, idHoSuDung);
             ResultSet rs = mySQLConnect.executeQuery(query);
             if (rs.next()) {
-                hoSuDung = new HoSuDung();
-                hoSuDung.setID_HoSuDung(rs.getInt(DB_HoSuDungCol.ID));
-                hoSuDung.setID_Customer(rs.getInt(DB_HoSuDungCol.ID_KhachHang));
-                hoSuDung.setMaQuanHuyen(rs.getString(DB_HoSuDungCol.KhuVuc));
-                hoSuDung.setDiaChi(rs.getString(DB_HoSuDungCol.DiaChi));
-                hoSuDung.setTrangThai(rs.getInt(DB_HoSuDungCol.TrangThai));
+                hoSuDung = new hoSuDung();
+                hoSuDung.setID_HoSuDung(rs.getInt(qlnIDName.HoSuDungID));
+                hoSuDung.setID_Customer(rs.getInt(qlnIDName.CustomerID));
+                hoSuDung.setMaQuanHuyen(rs.getString(qlnHoSuDungCol.KhuVuc));
+                hoSuDung.setDiaChi(rs.getString(qlnHoSuDungCol.DiaChi));
+                hoSuDung.setTrangThai(rs.getInt(qlnHoSuDungCol.TrangThai));
             }
         } catch (SQLException e) {
             System.out.println("Lỗi lấy hộ sử dụng: " + e.getMessage());

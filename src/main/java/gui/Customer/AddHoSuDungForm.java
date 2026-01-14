@@ -1,8 +1,4 @@
-package gui.User;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
+package gui.Customer;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -12,7 +8,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import dao.HoSuDungDao;
-import model.HoSuDung;
+import model.hoSuDung;
+import data.DataLoader;
 
 public class AddHoSuDungForm extends JFrame {
     JLabel lbAdd = new JLabel("Thêm thông tin hộ sử dụng");
@@ -41,8 +38,8 @@ public class AddHoSuDungForm extends JFrame {
         this.customerId = customerId;
     }
 
-    /*Chỉnh sửa sử dụng lại thông số đã chọn */
-    public AddHoSuDungForm(HoSuDung hoSuDung) {
+    /* Chỉnh sửa sử dụng lại thông số đã chọn */
+    public AddHoSuDungForm(hoSuDung hoSuDung) {
         setTitle("Sửa thông tin hộ sử dụng");
         init();
 
@@ -91,13 +88,8 @@ public class AddHoSuDungForm extends JFrame {
     }
 
     void loadKhuVuc() {
-        try (Scanner sc = new Scanner(new File("src/main/java/data/tinh.txt"), "UTF-8")) {
-            while (sc.hasNextLine()) {
-                cbKhuVuc.addItem(sc.nextLine());
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        cbKhuVuc.addItem("-- Chọn tỉnh ---");
+        new DataLoader().khuVuc().forEach(cbKhuVuc::addItem);
     }
 
     void loadtrangThai() {
@@ -106,7 +98,7 @@ public class AddHoSuDungForm extends JFrame {
         cbTrangThai.addItem("Ngừng sử dụng");
     }
 
-    private void saveHoSuDung(HoSuDung hoSuDung) {
+    private void saveHoSuDung(hoSuDung hoSuDung) {
         // Lấy thông tin từ form
         String khuVuc = (String) cbKhuVuc.getSelectedItem();
         String diaChi = tfAddress.getText().trim();
@@ -168,7 +160,7 @@ public class AddHoSuDungForm extends JFrame {
             return;
         }
 
-        HoSuDung hoSuDung = new HoSuDung();
+        hoSuDung hoSuDung = new hoSuDung();
         hoSuDung.setID_Customer(customerId);
         hoSuDung.setDiaChi(diaChi);
         hoSuDung.setMaQuanHuyen(khuVuc);

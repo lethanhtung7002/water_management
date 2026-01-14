@@ -1,16 +1,16 @@
 package model;
 
-public class HoSuDung {
+public class hoSuDung {
     private int ID_HoSuDung;
     private int ID_Customer;
     private String DiaChi;
     private String MaQuanHuyen;
     private int TrangThai;
 
-    public HoSuDung() {
+    public hoSuDung() {
     }
 
-    public HoSuDung(int iD_HoSuDung, int iD_Customer, String diaChi, String maQuanHuyen, int trangThai) {
+    public hoSuDung(int iD_HoSuDung, int iD_Customer, String diaChi, String maQuanHuyen, int trangThai) {
         ID_HoSuDung = iD_HoSuDung;
         ID_Customer = iD_Customer;
         DiaChi = diaChi;
@@ -58,5 +58,4 @@ public class HoSuDung {
         TrangThai = trangThai;
     }
 
-    
 }

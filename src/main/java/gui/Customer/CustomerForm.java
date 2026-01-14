@@ -1,4 +1,4 @@
-package gui.User;
+package gui.Customer;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -6,19 +6,17 @@ import java.awt.FlowLayout;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import dao.UserDao;
+import dao.CustomerDao;
 import model.Customer;
 
-public class UserManagement extends JPanel {
+public class CustomerForm extends JPanel {
 
-    JLabel lbTitle = new JLabel("User Management");
     JTable table;
     DefaultTableModel tableModel;
     JScrollPane scrollPane;
@@ -30,9 +28,9 @@ public class UserManagement extends JPanel {
     JButton btnInfo = new JButton("Info");
 
     ArrayList<Customer> UserArr = new ArrayList<Customer>();
-    UserDao userDao = new UserDao();
+    CustomerDao userDao = new CustomerDao();
 
-    public UserManagement() {
+    public CustomerForm() {
 
         setLayout(new BorderLayout(5, 5));
         setBackground(new Color(26, 26, 26)); // Thêm màu nền cho phù hợp với MenuForm
@@ -41,17 +39,13 @@ public class UserManagement extends JPanel {
         topPanel.setLayout(new FlowLayout());
         topPanel.setBackground(new Color(26, 26, 26)); // Màu nền
 
-        // Style cho label
-        lbTitle.setForeground(Color.WHITE);
-
-        topPanel.add(lbTitle);
         topPanel.add(btnRefresh);
         topPanel.add(btnAdd);
         topPanel.add(btnEdit);
         topPanel.add(btnDelete);
         topPanel.add(btnInfo);
 
-        String[] columnNames = { "ID", "Name", "Loai User", "CCCD", "Phone Number", "Email" };
+        String[] columnNames = { "ID", "Tên Khách hàng", "Loai Khách hàng", "CCCD", "số điện thoại", "Email" };
         tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
         table.setRowHeight(25);
@@ -82,7 +76,7 @@ public class UserManagement extends JPanel {
                 return;
             }
 
-            Customer selectedUser = userDao.getUserById((Integer) tableModel.getValueAt(selectedRow, 0));
+            Customer selectedUser = userDao.getCustomerById((Integer) tableModel.getValueAt(selectedRow, 0));
 
             if (selectedUser != null) {
                 AddCustomerForm editForm = new AddCustomerForm(selectedUser);
@@ -135,7 +129,7 @@ public class UserManagement extends JPanel {
                 return;
             }
 
-            Customer selectedUser = userDao.getUserById((Integer) tableModel.getValueAt(selectedRow, 0));
+            Customer selectedUser = userDao.getCustomerById((Integer) tableModel.getValueAt(selectedRow, 0));
 
             if (selectedUser != null) {
                 InfoCustomerform infoForm = new InfoCustomerform(selectedUser);
@@ -147,7 +141,7 @@ public class UserManagement extends JPanel {
     public void showUserList() {
         // Lấy dữ liệu từ DAO
         tableModel.setRowCount(0);
-        this.UserArr = userDao.getUsers();
+        this.UserArr = userDao.getCustomers();
 
         for (Customer user : UserArr) {
             tableModel.addRow(new Object[] {
@@ -167,12 +161,12 @@ public class UserManagement extends JPanel {
     }
 
     // Main method để test standalone (tùy chọn)
-    public static void main(String[] args) {
-        javax.swing.JFrame frame = new javax.swing.JFrame("Test UserManagement");
-        frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
-        frame.add(new UserManagement());
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-    }
+    // public static void main(String[] args) {
+    // javax.swing.JFrame frame = new javax.swing.JFrame("Test UserManagement");
+    // frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+    // frame.setSize(800, 600);
+    // frame.add(new CustomerForm());
+    // frame.setLocationRelativeTo(null);
+    // frame.setVisible(true);
+    // }
 }

@@ -6,42 +6,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Customer;
-import model.LoaiCustomer;
+import model.loaiCustomer;
 
-public class UserDao {
+public class CustomerDao {
     private MySQLConnect mySQLConnect = new MySQLConnect();
 
     // lấy danh sách người dùng
-    public ArrayList<Customer> getUsers() {
-        ArrayList<Customer> userList = new ArrayList<>();
+    public ArrayList<Customer> getCustomers() {
+        ArrayList<Customer> customers = new ArrayList<>();
         try {
-            String query = "SELECT * FROM %s".formatted(DB_CustomerCol.TableName);
+            String query = "SELECT * FROM " + qlnTableName.Customer;
             ResultSet rs = mySQLConnect.executeQuery(query);
             while (rs.next()) {
-                Customer user = new Customer();
-                user.setIdCustomer(rs.getInt(DB_CustomerCol.ID));
-                user.setLoaiCustomer(rs.getInt(DB_CustomerCol.Loai));
-                user.setNameCustomer(rs.getString(DB_CustomerCol.Name));
-                user.setCCCD(rs.getString(DB_CustomerCol.CCCD));
-                user.setPhoneCustomer(rs.getString(DB_CustomerCol.PhoneNumber));
-                user.setEmail(rs.getString(DB_CustomerCol.Email));
-                userList.add(user);
+                Customer customer = new Customer();
+                customer.setIdCustomer(rs.getInt(qlnIDName.CustomerID));
+                customer.setLoaiCustomer(rs.getInt(qlnIDName.CustomerTypeID));
+                customer.setNameCustomer(rs.getString(qlnCustomerCol.Name));
+                customer.setCCCD(rs.getString(qlnCustomerCol.CCCD));
+                customer.setPhoneCustomer(rs.getString(qlnCustomerCol.PhoneNumber));
+                customer.setEmail(rs.getString(qlnCustomerCol.Email));
+                customers.add(customer);
             }
         } catch (SQLException e) {
-            System.out.println("Lỗi lấy người dùng: " + e.getMessage());
+            System.out.println("Lỗi lấy danh sách người dùng: " + e.getMessage());
         }
-        return userList;
+        return customers;
     }
 
     // thêm người dùng
-    public boolean addUser(Customer user) {
+    public boolean addCustomer(Customer user) {
         int result = 0;
         String query = """
                 INSERT INTO %s (%s, %s, %s, %s, %s)
                 VALUES ('%d', '%s', '%s', '%s', '%s')
                 """.formatted(
-                DB_CustomerCol.TableName, DB_CustomerCol.Loai, DB_CustomerCol.Name, DB_CustomerCol.CCCD,
-                DB_CustomerCol.PhoneNumber, DB_CustomerCol.Email,
+                qlnTableName.Customer, qlnIDName.CustomerTypeID, qlnCustomerCol.Name, qlnCustomerCol.CCCD,
+                qlnCustomerCol.PhoneNumber, qlnCustomerCol.Email,
                 user.getLoaiCustomer(), user.getNameCustomer(), user.getCCCD(),
                 user.getPhoneCustomer(), user.getEmail());
 
@@ -55,7 +55,7 @@ public class UserDao {
     }
 
     // cập nhật người dùng
-    public boolean updateUser(Customer user) {
+    public boolean updateCustomer(Customer user) {
         int result = 0;
         String query = """
                 UPDATE %s SET
@@ -65,13 +65,13 @@ public class UserDao {
                         %s = '%s',
                         %s = '%s'
                 WHERE %s = %d""".formatted(
-                DB_CustomerCol.TableName,
-                DB_CustomerCol.Loai, user.getLoaiCustomer(),
-                DB_CustomerCol.Name, user.getNameCustomer(),
-                DB_CustomerCol.CCCD, user.getCCCD(),
-                DB_CustomerCol.PhoneNumber, user.getPhoneCustomer(),
-                DB_CustomerCol.Email, user.getEmail(),
-                DB_CustomerCol.ID, user.getIdCustomer());
+                qlnTableName.Customer,
+                qlnIDName.CustomerTypeID, user.getLoaiCustomer(),
+                qlnCustomerCol.Name, user.getNameCustomer(),
+                qlnCustomerCol.CCCD, user.getCCCD(),
+                qlnCustomerCol.PhoneNumber, user.getPhoneCustomer(),
+                qlnCustomerCol.Email, user.getEmail(),
+                qlnIDName.CustomerID, user.getIdCustomer());
         System.out.println(query);
         try {
             result = mySQLConnect.executeUpdate(query);
@@ -83,20 +83,20 @@ public class UserDao {
     }
 
     // tìm người dùng theo ID
-    public Customer getUserById(int idUser) {
+    public Customer getCustomerById(int idCustomer) {
         Customer user = null;
         try {
             String query = "SELECT * FROM %s WHERE %s = %d"
-                    .formatted(DB_CustomerCol.TableName, DB_CustomerCol.ID, idUser);
+                    .formatted(qlnTableName.Customer, qlnIDName.CustomerID, idCustomer);
             ResultSet rs = mySQLConnect.executeQuery(query);
             if (rs.next()) {
                 user = new Customer();
-                user.setIdCustomer(rs.getInt(DB_CustomerCol.ID));
-                user.setLoaiCustomer(rs.getInt(DB_CustomerCol.Loai));
-                user.setNameCustomer(rs.getString(DB_CustomerCol.Name));
-                user.setCCCD(rs.getString(DB_CustomerCol.CCCD));
-                user.setPhoneCustomer(rs.getString(DB_CustomerCol.PhoneNumber));
-                user.setEmail(rs.getString(DB_CustomerCol.Email));
+                user.setIdCustomer(rs.getInt(qlnIDName.CustomerID));
+                user.setLoaiCustomer(rs.getInt(qlnIDName.CustomerTypeID));
+                user.setNameCustomer(rs.getString(qlnCustomerCol.Name));
+                user.setCCCD(rs.getString(qlnCustomerCol.CCCD));
+                user.setPhoneCustomer(rs.getString(qlnCustomerCol.PhoneNumber));
+                user.setEmail(rs.getString(qlnCustomerCol.Email));
             }
         } catch (SQLException e) {
             System.out.println("Lỗi lấy người dùng theo ID: " + e.getMessage());
@@ -108,7 +108,7 @@ public class UserDao {
     public boolean deleteUserById(int idUser) {
         int result = 0;
         String query = "DELETE FROM %s WHERE %s = %d"
-                .formatted(DB_CustomerCol.TableName, DB_CustomerCol.ID, idUser);
+                .formatted(qlnTableName.Customer, qlnIDName.CustomerID, idUser);
         try {
             result = mySQLConnect.executeUpdate(query);
         } catch (Exception e) {
@@ -118,16 +118,16 @@ public class UserDao {
         return result > 0;
     }
 
-    public List<LoaiCustomer> getLoaiKhachHang() {
-        List<LoaiCustomer> loaiNguoiDungList = new ArrayList<>();
+    public List<loaiCustomer> getLoaiKhachHang() {
+        List<loaiCustomer> loaiNguoiDungList = new ArrayList<>();
         try {
             String query = "SELECT * FROM %s"
-                    .formatted(DB_CustomerTypeCol.TableName);
+                    .formatted(qlnTableName.CustomerType);
             ResultSet rs = mySQLConnect.executeQuery(query);
             while (rs.next()) {
-                LoaiCustomer loaiNguoiDung = new LoaiCustomer(
-                        rs.getInt(DB_CustomerTypeCol.ID),
-                        rs.getString(DB_CustomerTypeCol.Name));
+                loaiCustomer loaiNguoiDung = new loaiCustomer(
+                        rs.getInt(qlnIDName.CustomerTypeID),
+                        rs.getString(qlnCustomerTypeCol.Name));
                 loaiNguoiDungList.add(loaiNguoiDung);
             }
         } catch (SQLException e) {

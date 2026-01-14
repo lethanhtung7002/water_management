@@ -1,4 +1,4 @@
-package gui.User;
+package gui.Customer;
 
 import java.util.List;
 
@@ -9,9 +9,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import dao.UserDao;
-import model.LoaiCustomer;
+import dao.CustomerDao;
 import model.Customer;
+import model.loaiCustomer;
 
 public class AddCustomerForm extends JFrame {
     JLabel lbAdd = new JLabel("Thêm Khách Hàng");
@@ -22,7 +22,7 @@ public class AddCustomerForm extends JFrame {
     JLabel lbEmail = new JLabel("Email:");
 
     JTextField tfName = new JTextField();
-    JComboBox<LoaiCustomer> cbLoaiUser;
+    JComboBox<loaiCustomer> cbLoaiUser;
     JTextField tfCCCD = new JTextField();
     JTextField tfPhone = new JTextField();
     JTextField tfEmail = new JTextField();
@@ -30,7 +30,7 @@ public class AddCustomerForm extends JFrame {
     JButton btnSave = new JButton("Save");
     JButton btnCancel = new JButton("Cancel");
 
-    UserDao userDao = new UserDao();
+    CustomerDao userDao = new CustomerDao();
 
     public AddCustomerForm() {
         setTitle("Thêm Khách Hàng");
@@ -52,7 +52,7 @@ public class AddCustomerForm extends JFrame {
 
         // Chọn loại người dùng dựa trên ID (không phải tên)
         for (int i = 0; i < cbLoaiUser.getItemCount(); i++) {
-            LoaiCustomer lnd = cbLoaiUser.getItemAt(i);
+            loaiCustomer lnd = cbLoaiUser.getItemAt(i);
             if (lnd.getIdLoaiCustomer() == user.getIdCustomer()) { // So sánh ID
                 cbLoaiUser.setSelectedIndex(i);
                 break;
@@ -65,7 +65,7 @@ public class AddCustomerForm extends JFrame {
 
     private void saveUser() {
         // Lấy LoaiCustomer đã chọn
-        LoaiCustomer selectedLoaiCustomer = (LoaiCustomer) cbLoaiUser.getSelectedItem();
+        loaiCustomer selectedLoaiCustomer = (loaiCustomer) cbLoaiUser.getSelectedItem();
         if (selectedLoaiCustomer == null) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn loại người dùng hợp lệ.", "Error",
                     JOptionPane.ERROR_MESSAGE);
@@ -80,7 +80,7 @@ public class AddCustomerForm extends JFrame {
                 tfPhone.getText(),
                 tfEmail.getText());
 
-        if (userDao.addUser(user)) {
+        if (userDao.addCustomer(user)) {
             JOptionPane.showMessageDialog(this, "User added successfully!");
             dispose();
 
@@ -91,7 +91,7 @@ public class AddCustomerForm extends JFrame {
 
     private void saveUser(Customer ID_KhachHang) {
         // Lấy LoaiCustomer đã chọn
-        LoaiCustomer selectedLoaiCustomer = (LoaiCustomer) cbLoaiUser.getSelectedItem();
+        loaiCustomer selectedLoaiCustomer = (loaiCustomer) cbLoaiUser.getSelectedItem();
         if (selectedLoaiCustomer == null) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn loại người dùng hợp lệ.", "Error",
                     JOptionPane.ERROR_MESSAGE);
@@ -106,7 +106,7 @@ public class AddCustomerForm extends JFrame {
                 tfPhone.getText(),
                 tfEmail.getText());
 
-        if (userDao.updateUser(user)) {
+        if (userDao.updateCustomer(user)) {
             JOptionPane.showMessageDialog(this, "User updated successfully!");
             dispose();
         } else {
@@ -120,8 +120,8 @@ public class AddCustomerForm extends JFrame {
         setLocationRelativeTo(null);
 
         cbLoaiUser = new JComboBox<>();
-        List<LoaiCustomer> loaiNguoiDung = userDao.getLoaiKhachHang();
-        for (LoaiCustomer lnd : loaiNguoiDung) {
+        List<loaiCustomer> loaiNguoiDung = userDao.getLoaiKhachHang();
+        for (loaiCustomer lnd : loaiNguoiDung) {
             cbLoaiUser.addItem(lnd);
         }
 

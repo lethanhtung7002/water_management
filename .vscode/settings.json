@@ -4,5 +4,6 @@
     "editor.formatOnSave": true,
     "[java]": {
         "editor.defaultFormatter": "redhat.java"
-    }
+    },
+    "maven.view": "hierarchical"
 }

@@ -7,67 +7,85 @@ public class NameDB {
     public static final String DB_quanlynuoc = "quanlynuoc";
 }
 
-// Tên cột trong DB_quanlynuoc bảng khachhang 
-class DB_CustomerCol {
-    private DB_CustomerCol() {
+class qlnTableName {
+    public static final String Customer = "khachhang";
+    public static final String CustomerType = "loai_khach_hang";
+    public static final String HoSuDung = "hosudung";
+    public static final String ChiSoNuoc = "chisonuoc";
+    public static final String HoaDon = "hoadon";
+    public static final String GiaNuoc = "gianuoc";
+    public static final String BacGia = "bacgia";
+}
+
+class qlnIDName {
+    public static final String CustomerID = "ID_KhachHang";
+    public static final String CustomerTypeID = "Id_LoaiKH";
+    public static final String HoSuDungID = "ID_HoSuDung";
+    public static final String ChiSoNuocID = "ID_ChiSo";
+    public static final String HoaDonID = "ID_HoaDon";
+    public static final String GiaNuocID = "ID_DonGia";
+    public static final String BacGiaID = "ID_Bac";
+}
+
+// Tên cột trong DB_quanlynuoc bảng khachhang
+class qlnCustomerCol {
+    private qlnCustomerCol() {
     }
 
-    public static final String TableName   = "khachhang";
-    public static final String ID          = "ID_KhachHang";
-    public static final String Loai        = "Id_LoaiKH";
-    public static final String Name        = "Name";
-    public static final String CCCD        = "CCCD";
+    public static final String Name = "Name";
+    public static final String CCCD = "CCCD";
     public static final String PhoneNumber = "Phone_number";
-    public static final String Email       = "Email";
+    public static final String Email = "Email";
 }
 
 // Tên cột trong DB_quanlynuoc bảng loai_khach_hang
-class DB_CustomerTypeCol {
-    private DB_CustomerTypeCol() {
+class qlnCustomerTypeCol {
+    private qlnCustomerTypeCol() {
     }
 
-    public static final String TableName = "loai_khach_hang";
-    public static final String ID        = "Id_LoaiKH";
-    public static final String Name      = "ten_loai";
+    public static final String Name = "ten_loai";
 }
 
 // Tên cột trong DB_quanlynuoc bảng ho su dung
-class DB_HoSuDungCol {
-    private DB_HoSuDungCol() {
+class qlnHoSuDungCol {
+    private qlnHoSuDungCol() {
     }
 
-    public static final String TableName    = "hosudung";
-    public static final String ID           = "ID_HoSuDung";
-    public static final String ID_KhachHang = "ID_KhachHang";
-    public static final String DiaChi       = "DiaChi";
-    public static final String KhuVuc       = "KhuVuc";
-    public static final String TrangThai    = "TrangThai";
+    public static final String DiaChi = "DiaChi";
+    public static final String KhuVuc = "KhuVuc";
+    public static final String TrangThai = "TrangThai";
 }
 
 // Tên cột trong DB_quanlynuoc bảng chi_so_nuoc
-class DB_ChiSoNuocCol {
-    private DB_ChiSoNuocCol() {
+class qlnChiSoNuocCol {
+    private qlnChiSoNuocCol() {
     }
 
-    public static final String TableName   = "chisonuoc";
-    public static final String ID          = "ID_ChiSo";
-    public static final String ID_HoSuDung = "ID_HoSudung";
-    public static final String NgayGhi     = "NgayGhi";
-    public static final String ChiSo       = "ChiSo";
+    public static final String NgayGhi = "NgayGhi";
+    public static final String ChiSo = "ChiSo";
 }
 
 // Tên cột trong DB_quanlynuoc bảng HoaDon
-class DB_HoaDonCol {
-    private DB_HoaDonCol() {
+class qlnHoaDonCol {
+    private qlnHoaDonCol() {
     }
 
-    public static final String TableName     = "hoadon";
-    public static final String ID            = "ID_HoaDon";
-    public static final String ID_KhachHang  = "ID_KhachHang";
-    public static final String ID_ChiSo      = "ID_ChiSo";
     public static final String SoNuocTieuThu = "SanLuongTieuThu";
-    public static final String NgayLap       = "NgayLap";
-    public static final String TrangThai     = "TrangThai";
-    public static final String Thue          = "Thue";
+    public static final String NgayLap = "NgayLap";
+    public static final String TrangThai = "TrangThai";
+    public static final String Thue = "Thue";
 }
 
+class qlnGiaNuocCol {
+    public static final String ID = "ID_DonGia";
+    public static final String ID_KhachHang = "ID_KhachHang";
+    public static final String KhuVuc = "KhuVuc";
+    public static final String Thue = "Thue";
+}
+
+class qlnBacGiaCol {
+    public static final String BacGia = "BacGia";
+    public static final String TuMucNuoc = "TuMucNuoc";
+    public static final String DenMucNuoc = "DenMucNuoc";
+    public static final String Gia = "Gia";
+}

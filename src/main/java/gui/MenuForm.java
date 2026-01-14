@@ -16,7 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import gui.User.UserManagement;
+import gui.Customer.CustomerForm;
 
 public class MenuForm extends JFrame {
 
@@ -52,7 +52,7 @@ public class MenuForm extends JFrame {
         contentPanel.setBackground(new Color(26, 26, 26)); // Màu nền tối
 
         // Thêm các trang nội dung
-        contentPanel.add(new UserManagement(), "Khach hang");
+        contentPanel.add(new CustomerForm(), "Khach hang");
         contentPanel.add(createPage("GiaNuoc Page"), "GiaNuoc");
 
         // --- GHÉP NỐI ---

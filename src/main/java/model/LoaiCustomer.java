@@ -1,10 +1,10 @@
 package model;
 
-public class LoaiCustomer {
-    private int idLoaiCustomer;
+public class loaiCustomer {
+    protected int idLoaiCustomer;
     private String tenLoaiCustomer;
 
-    public LoaiCustomer(int idLoaiCustomer, String tenLoaiCustomer) {
+    public loaiCustomer(int idLoaiCustomer, String tenLoaiCustomer) {
         this.idLoaiCustomer = idLoaiCustomer;
         this.tenLoaiCustomer = tenLoaiCustomer;
     }

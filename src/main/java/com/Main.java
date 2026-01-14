@@ -1,4 +1,6 @@
+package com;
 import javax.swing.UIManager;
+
 import gui.LoginForm;
 
 public class Main {
