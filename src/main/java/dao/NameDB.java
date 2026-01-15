@@ -1,3 +1,19 @@
+/**
+ * Database Constants - Quản lý nước
+ * 
+ * Chứa tên database, bảng và cột để tránh hard-code trong SQL queries.
+ * 
+ * Usage:
+ * <pre>
+ * String sql = "SELECT * FROM " + qlnTableName.Customer 
+ *            + " WHERE " + qlnCustomerCol.CCCD + " = ?";
+ * </pre>
+ * 
+ * @author Lê Thanh Tùng
+ * @version 1.0
+ * @since 2025-01-15
+ */
+
 package dao;
 
 public class NameDB {

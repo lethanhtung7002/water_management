@@ -17,12 +17,10 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import dao.HoSuDungDao;
-import dao.CustomerDao;
 import model.Customer;
 import model.hoSuDung;
 
 public class InfoCustomerform extends JFrame {
-    private CustomerDao userDao = new CustomerDao();
     private HoSuDungDao hoSuDungDao = new HoSuDungDao();
 
     private JButton btnRefresh = new JButton("Refresh");

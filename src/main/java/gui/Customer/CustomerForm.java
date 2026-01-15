@@ -1,3 +1,6 @@
+/* This is page in MenuForm
+ */
+
 package gui.Customer;
 
 import java.awt.BorderLayout;
@@ -21,8 +24,8 @@ public class CustomerForm extends JPanel {
     private DefaultTableModel tableModel;
     private JScrollPane scrollPane;
 
-    private JButton btnAdd = new JButton("Add User");
-    private JButton btnEdit = new JButton("Edit User");
+    private JButton btnAdd = new JButton("Thêm Khách Hàng");
+    private JButton btnEdit = new JButton("Sửa Thông Tin Khách Hàng");
     private JButton btnDelete = new JButton("Delete User");
     private JButton btnRefresh = new JButton("Refresh");
     private JButton btnInfo = new JButton("Info");
