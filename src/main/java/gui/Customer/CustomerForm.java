@@ -17,18 +17,18 @@ import model.Customer;
 
 public class CustomerForm extends JPanel {
 
-    JTable table;
-    DefaultTableModel tableModel;
-    JScrollPane scrollPane;
+    private JTable table;
+    private DefaultTableModel tableModel;
+    private JScrollPane scrollPane;
 
-    JButton btnAdd = new JButton("Add User");
-    JButton btnEdit = new JButton("Edit User");
-    JButton btnDelete = new JButton("Delete User");
-    JButton btnRefresh = new JButton("Refresh");
-    JButton btnInfo = new JButton("Info");
+    private JButton btnAdd = new JButton("Add User");
+    private JButton btnEdit = new JButton("Edit User");
+    private JButton btnDelete = new JButton("Delete User");
+    private JButton btnRefresh = new JButton("Refresh");
+    private JButton btnInfo = new JButton("Info");
 
-    ArrayList<Customer> UserArr = new ArrayList<Customer>();
-    CustomerDao userDao = new CustomerDao();
+    private ArrayList<Customer> UserArr = new ArrayList<Customer>();
+    private CustomerDao userDao = new CustomerDao();
 
     public CustomerForm() {
 

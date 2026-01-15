@@ -22,12 +22,12 @@ import model.Customer;
 import model.hoSuDung;
 
 public class InfoCustomerform extends JFrame {
-    CustomerDao userDao = new CustomerDao();
-    HoSuDungDao hoSuDungDao = new HoSuDungDao();
+    private CustomerDao userDao = new CustomerDao();
+    private HoSuDungDao hoSuDungDao = new HoSuDungDao();
 
-    JButton btnRefresh = new JButton("Refresh");
-    JButton btnAdd = new JButton("Thêm hộ sử dụng");
-    JButton btnEdit = new JButton("Sửa hộ sử dụng");
+    private JButton btnRefresh = new JButton("Refresh");
+    private JButton btnAdd = new JButton("Thêm hộ sử dụng");
+    private JButton btnEdit = new JButton("Sửa hộ sử dụng");
 
     ArrayList<hoSuDung> hoSuDungArr = new ArrayList<hoSuDung>();
 

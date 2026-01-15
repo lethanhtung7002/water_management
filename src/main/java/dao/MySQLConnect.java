@@ -10,7 +10,7 @@ public class MySQLConnect {
     private Connection con = null;
     private Statement stmt = null;
 
-    public final static MySQLConnect Connectqln = new MySQLConnect();
+    public static final MySQLConnect ConnectQLN = new MySQLConnect();
 
     public MySQLConnect() {
         this("localhost", "3306", NameDB.DB_quanlynuoc);

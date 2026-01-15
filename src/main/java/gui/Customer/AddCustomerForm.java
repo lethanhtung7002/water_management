@@ -14,23 +14,23 @@ import model.Customer;
 import model.loaiCustomer;
 
 public class AddCustomerForm extends JFrame {
-    JLabel lbAdd = new JLabel("Thêm Khách Hàng");
-    JLabel lbName = new JLabel("Name:");
-    JLabel lbLoaiUser = new JLabel("Loại Khách Hàng:");
-    JLabel lbCCCD = new JLabel("CCCD:");
-    JLabel lbPhone = new JLabel("Phone Number:");
-    JLabel lbEmail = new JLabel("Email:");
+    private JLabel lbAdd = new JLabel("Thêm Khách Hàng");
+    private JLabel lbName = new JLabel("Name:");
+    private JLabel lbLoaiUser = new JLabel("Loại Khách Hàng:");
+    private JLabel lbCCCD = new JLabel("CCCD:");
+    private JLabel lbPhone = new JLabel("Phone Number:");
+    private JLabel lbEmail = new JLabel("Email:");
 
-    JTextField tfName = new JTextField();
-    JComboBox<loaiCustomer> cbLoaiUser;
-    JTextField tfCCCD = new JTextField();
-    JTextField tfPhone = new JTextField();
-    JTextField tfEmail = new JTextField();
+    private JTextField tfName = new JTextField();
+    private JComboBox<loaiCustomer> cbLoaiUser;
+    private JTextField tfCCCD = new JTextField();
+    private JTextField tfPhone = new JTextField();
+    private JTextField tfEmail = new JTextField();
 
-    JButton btnSave = new JButton("Save");
-    JButton btnCancel = new JButton("Cancel");
+    private JButton btnSave = new JButton("Save");
+    private JButton btnCancel = new JButton("Cancel");
 
-    CustomerDao userDao = new CustomerDao();
+    private CustomerDao userDao = new CustomerDao();
 
     public AddCustomerForm() {
         setTitle("Thêm Khách Hàng");

@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import gui.Customer.CustomerForm;
+import gui.GiaNuoc.GiaNuocForm;
 import data.DataLoader;
 
 public class MenuForm extends JFrame {
@@ -36,7 +37,8 @@ public class MenuForm extends JFrame {
     public MenuForm() {
         setTitle("Water Manager");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1200, 750);
+        setSize(1300, 800);
+        setMinimumSize(new Dimension(900, 700));
         setLayout(new BorderLayout());
 
         initSearch();
@@ -97,7 +99,7 @@ public class MenuForm extends JFrame {
         contentPanel.setBackground(new Color(26, 26, 26));
 
         contentPanel.add(new CustomerForm(), PAGE_CUSTOMER);
-        contentPanel.add(createPage("GiaNuoc Page"), PAGE_WATER_PRICE);
+        contentPanel.add(new GiaNuocForm(), PAGE_WATER_PRICE);
 
         // ==== GHÉP VÀO FRAME ====
         add(sidebar, BorderLayout.WEST);

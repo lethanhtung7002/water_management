@@ -12,21 +12,21 @@ import model.hoSuDung;
 import data.DataLoader;
 
 public class AddHoSuDungForm extends JFrame {
-    JLabel lbAdd = new JLabel("Thêm thông tin hộ sử dụng");
+    private JLabel lbAdd = new JLabel("Thêm thông tin hộ sử dụng");
 
-    JLabel lbKhuVuc = new JLabel("Tỉnh");
-    JLabel lbAddress = new JLabel("Địa chỉ(số nhà, tên đường)");
-    JLabel lbTrangThai = new JLabel("Trạng Thái");
+    private JLabel lbKhuVuc = new JLabel("Tỉnh");
+    private JLabel lbAddress = new JLabel("Địa chỉ(số nhà, tên đường)");
+    private JLabel lbTrangThai = new JLabel("Trạng Thái");
 
-    JComboBox<String> cbKhuVuc = new JComboBox<>();
-    JTextField tfAddress = new JTextField();
-    JComboBox<String> cbTrangThai = new JComboBox<>();
+    private JComboBox<String> cbKhuVuc = new JComboBox<>();
+    private JTextField tfAddress = new JTextField();
+    private JComboBox<String> cbTrangThai = new JComboBox<>();
 
-    JButton btnSave = new JButton("Save");
-    JButton btnCancel = new JButton("Cancel");
+    private JButton btnSave = new JButton("Save");
+    private JButton btnCancel = new JButton("Cancel");
 
-    HoSuDungDao dao = new HoSuDungDao();
-    int customerId;
+    private HoSuDungDao dao = new HoSuDungDao();
+    private int customerId;
 
     /* Truyền thông số id của Khách hàng vào bảng thêm hộ sử dụng tương ứng */
     public AddHoSuDungForm(int customerId) {

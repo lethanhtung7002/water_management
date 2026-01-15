@@ -3,8 +3,8 @@ package dao;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import model.Customer;
 import model.GiaNuoc;
+import static dao.MySQLConnect.ConnectQLN;
 
 public class GiaNuocDao {
 
@@ -15,7 +15,7 @@ public class GiaNuocDao {
         try {
             String query = "SELECT * FORM %s"
                     .formatted(qlnTableName.GiaNuoc);
-            ResultSet rs = MySQLConnect.Connectqln.executeQuery(query);
+            ResultSet rs = ConnectQLN.executeQuery(query);
             while (rs.next()) {
                 GiaNuoc giaNuoc = new GiaNuoc();
                 giaNuoc.setIdDonGia(rs.getInt(qlnIDName.GiaNuocID));
@@ -43,7 +43,7 @@ public class GiaNuocDao {
                 qlnTableName.GiaNuoc, qlnIDName.CustomerTypeID, qlnGiaNuocCol.KhuVuc, qlnGiaNuocCol.Thue,
                 giaNuoc.getIdLoaiCustomer(), giaNuoc.getKhuVuc(), giaNuoc.getThue());
         try {
-            result = MySQLConnect.Connectqln.executeUpdate(query);
+            result = ConnectQLN.executeUpdate(query);
         } catch (Exception e) {
             System.out.println("Lỗi thêm giá nước: " + e.getMessage());
             throw new RuntimeException(e);
@@ -68,7 +68,7 @@ public class GiaNuocDao {
                 qlnIDName.GiaNuocID, giaNuoc.getIdDonGia());
         System.out.println(query);
         try {
-            result = MySQLConnect.Connectqln.executeUpdate(query);
+            result = ConnectQLN.executeUpdate(query);
         } catch (Exception e) {
             System.out.println("Lỗi cập nhật giá nước: " + e.getMessage());
             throw new RuntimeException(e);

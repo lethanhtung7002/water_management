@@ -7,14 +7,15 @@ import java.util.List;
 
 import model.Customer;
 import model.loaiCustomer;
+import static dao.MySQLConnect.ConnectQLN;
 
 public class CustomerDao {
     // lấy danh sách người dùng
     public ArrayList<Customer> getCustomers() {
         ArrayList<Customer> customers = new ArrayList<>();
         try {
-            String query = "SELECT TOP 1000 * FROM " + qlnTableName.Customer;
-            ResultSet rs = MySQLConnect.Connectqln.executeQuery(query);
+            String query = "SELECT * FROM " + qlnTableName.Customer;
+            ResultSet rs = ConnectQLN.executeQuery(query);
             while (rs.next()) {
                 Customer customer = new Customer();
                 customer.setIdCustomer(rs.getInt(qlnIDName.CustomerID));
@@ -44,7 +45,7 @@ public class CustomerDao {
                 user.getPhoneCustomer(), user.getEmail());
 
         try {
-            result = MySQLConnect.Connectqln.executeUpdate(query);
+            result = ConnectQLN.executeUpdate(query);
         } catch (Exception e) {
             System.out.println("Lỗi thêm người dùng: " + e.getMessage());
             throw new RuntimeException(e);
@@ -72,7 +73,7 @@ public class CustomerDao {
                 qlnIDName.CustomerID, user.getIdCustomer());
         System.out.println(query);
         try {
-            result = MySQLConnect.Connectqln.executeUpdate(query);
+            result = ConnectQLN.executeUpdate(query);
         } catch (Exception e) {
             System.out.println("Lỗi cập nhật người dùng: " + e.getMessage());
             throw new RuntimeException(e);
@@ -86,7 +87,7 @@ public class CustomerDao {
         try {
             String query = "SELECT * FROM %s WHERE %s = %d"
                     .formatted(qlnTableName.Customer, qlnIDName.CustomerID, idCustomer);
-            ResultSet rs = MySQLConnect.Connectqln.executeQuery(query);
+            ResultSet rs = ConnectQLN.executeQuery(query);
             if (rs.next()) {
                 user = new Customer();
                 user.setIdCustomer(rs.getInt(qlnIDName.CustomerID));
@@ -108,7 +109,7 @@ public class CustomerDao {
         String query = "DELETE FROM %s WHERE %s = %d"
                 .formatted(qlnTableName.Customer, qlnIDName.CustomerID, idUser);
         try {
-            result = MySQLConnect.Connectqln.executeUpdate(query);
+            result = ConnectQLN.executeUpdate(query);
         } catch (Exception e) {
             System.out.println("Lỗi xóa người dùng: " + e.getMessage());
             throw new RuntimeException(e);
@@ -121,7 +122,7 @@ public class CustomerDao {
         try {
             String query = "SELECT * FROM %s"
                     .formatted(qlnTableName.CustomerType);
-            ResultSet rs = MySQLConnect.Connectqln.executeQuery(query);
+            ResultSet rs = ConnectQLN.executeQuery(query);
             while (rs.next()) {
                 loaiCustomer loaiNguoiDung = new loaiCustomer(
                         rs.getInt(qlnIDName.CustomerTypeID),
