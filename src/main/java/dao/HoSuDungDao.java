@@ -15,7 +15,7 @@ public class HoSuDungDao {
             String query = "SELECT * FROM %s WHERE %s = %d"
                     .formatted(qlnTableName.HoSuDung,
                             qlnIDName.CustomerID, customerId);
-            ResultSet rs = MySQLConnect.Connect.executeQuery(query);
+            ResultSet rs = MySQLConnect.Connectqln.executeQuery(query);
             while (rs.next()) {
                 hoSuDung user = new hoSuDung();
                 user.setID_HoSuDung(rs.getInt(qlnIDName.HoSuDungID));
@@ -42,13 +42,13 @@ public class HoSuDungDao {
                 user.getID_Customer(), user.getDiaChi(), user.getMaQuanHuyen(), user.getTrangThai());
 
         try {
-            result = MySQLConnect.Connect.executeUpdate(query);
+            result = MySQLConnect.Connectqln.executeUpdate(query);
         } catch (Exception e) {
             System.out.println("Lỗi thêm hộ sử dụng: " + e.getMessage());
             throw new RuntimeException(e);
         }
         return result > 0;
-    }   
+    }
 
     // cập nhật hộ sử dụng
     public boolean update_HoSuDung(hoSuDung user) {
@@ -66,7 +66,7 @@ public class HoSuDungDao {
                 qlnIDName.HoSuDungID, user.getID_HoSuDung());
 
         try {
-            result = MySQLConnect.Connect.executeUpdate(query);
+            result = MySQLConnect.Connectqln.executeUpdate(query);
         } catch (Exception e) {
             System.out.println("Lỗi cập nhật hộ sử dụng: " + e.getMessage());
             throw new RuntimeException(e);
@@ -82,7 +82,7 @@ public class HoSuDungDao {
                 qlnIDName.HoSuDungID,
                 id_HoSuDung);
         try {
-            result = MySQLConnect.Connect.executeUpdate(query);
+            result = MySQLConnect.Connectqln.executeUpdate(query);
         } catch (Exception e) {
             System.out.println("Lỗi xóa hộ sử dụng: " + e.getMessage());
             throw new RuntimeException(e);
@@ -96,7 +96,7 @@ public class HoSuDungDao {
         try {
             String query = "SELECT * FROM %s WHERE %s = %d"
                     .formatted(qlnTableName.HoSuDung, qlnIDName.HoSuDungID, idHoSuDung);
-            ResultSet rs = MySQLConnect.Connect.executeQuery(query);
+            ResultSet rs = MySQLConnect.Connectqln.executeQuery(query);
             if (rs.next()) {
                 hoSuDung = new hoSuDung();
                 hoSuDung.setID_HoSuDung(rs.getInt(qlnIDName.HoSuDungID));

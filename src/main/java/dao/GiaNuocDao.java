@@ -7,16 +7,15 @@ import model.Customer;
 import model.GiaNuoc;
 
 public class GiaNuocDao {
-    
 
     // Danh Sach Gia Nuoc
-    public ArrayList<GiaNuoc> getGiaNuoc(){
+    public ArrayList<GiaNuoc> getGiaNuoc() {
         ArrayList<GiaNuoc> listGia = new ArrayList<GiaNuoc>();
 
         try {
             String query = "SELECT * FORM %s"
-                .formatted(qlnTableName.GiaNuoc);
-            ResultSet rs = MySQLConnect.Connect.executeQuery(query);
+                    .formatted(qlnTableName.GiaNuoc);
+            ResultSet rs = MySQLConnect.Connectqln.executeQuery(query);
             while (rs.next()) {
                 GiaNuoc giaNuoc = new GiaNuoc();
                 giaNuoc.setIdDonGia(rs.getInt(qlnIDName.GiaNuocID));
@@ -25,7 +24,7 @@ public class GiaNuocDao {
                 giaNuoc.setThue(rs.getDouble(qlnGiaNuocCol.Thue));
                 listGia.add(giaNuoc);
             }
-            
+
         } catch (Exception e) {
             System.out.println("Lỗi lấy danh sách giá nước: " + e.getMessage());
             throw new RuntimeException(e);
@@ -35,7 +34,7 @@ public class GiaNuocDao {
     }
 
     // Thêm giá nước
-    public boolean addGiaNuoc(GiaNuoc giaNuoc){
+    public boolean addGiaNuoc(GiaNuoc giaNuoc) {
         int result = 0;
         String query = """
                 INSERT INTO %s (%s, %s, %s, %s)
@@ -44,7 +43,7 @@ public class GiaNuocDao {
                 qlnTableName.GiaNuoc, qlnIDName.CustomerTypeID, qlnGiaNuocCol.KhuVuc, qlnGiaNuocCol.Thue,
                 giaNuoc.getIdLoaiCustomer(), giaNuoc.getKhuVuc(), giaNuoc.getThue());
         try {
-            result = MySQLConnect.Connect.executeUpdate(query);
+            result = MySQLConnect.Connectqln.executeUpdate(query);
         } catch (Exception e) {
             System.out.println("Lỗi thêm giá nước: " + e.getMessage());
             throw new RuntimeException(e);
@@ -69,7 +68,7 @@ public class GiaNuocDao {
                 qlnIDName.GiaNuocID, giaNuoc.getIdDonGia());
         System.out.println(query);
         try {
-            result = MySQLConnect.Connect.executeUpdate(query);
+            result = MySQLConnect.Connectqln.executeUpdate(query);
         } catch (Exception e) {
             System.out.println("Lỗi cập nhật giá nước: " + e.getMessage());
             throw new RuntimeException(e);

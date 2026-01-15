@@ -10,7 +10,7 @@ public class MySQLConnect {
     private Connection con = null;
     private Statement stmt = null;
 
-    public final static MySQLConnect Connect = new MySQLConnect();
+    public final static MySQLConnect Connectqln = new MySQLConnect();
 
     public MySQLConnect() {
         this("localhost", "3306", NameDB.DB_quanlynuoc);
@@ -31,7 +31,7 @@ public class MySQLConnect {
             throw new RuntimeException(e);
         }
     }
-    
+
     // INSERT, UPDATE, DELETE
     public int executeUpdate(String sql) {
         int result = 0;
@@ -63,7 +63,7 @@ public class MySQLConnect {
 }
 
 // class test{
-//     public static void main(String[] args) {
-//         new MySQLConnect();
-//     }
+// public static void main(String[] args) {
+// new MySQLConnect();
+// }
 // }
