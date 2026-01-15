@@ -77,8 +77,6 @@ class qlnHoaDonCol {
 }
 
 class qlnGiaNuocCol {
-    public static final String ID = "ID_DonGia";
-    public static final String ID_KhachHang = "ID_KhachHang";
     public static final String KhuVuc = "KhuVuc";
     public static final String Thue = "Thue";
 }

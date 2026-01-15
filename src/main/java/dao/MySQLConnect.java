@@ -7,8 +7,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class MySQLConnect {
-    Connection con = null;
-    Statement stmt = null;
+    private Connection con = null;
+    private Statement stmt = null;
+
+    public final static MySQLConnect Connect = new MySQLConnect();
 
     public MySQLConnect() {
         this("localhost", "3306", NameDB.DB_quanlynuoc);

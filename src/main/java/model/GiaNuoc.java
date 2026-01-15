@@ -6,6 +6,8 @@ public class GiaNuoc {
     private String KhuVuc;
     private Double Thue;
 
+    public GiaNuoc(){}
+
     public GiaNuoc(int iD_DonGia, int idLoaiCustomer, String khuVuc, Double thue) {
         idDonGia = iD_DonGia;
         this.idLoaiCustomer = idLoaiCustomer;

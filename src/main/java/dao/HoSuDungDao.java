@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import model.hoSuDung;
 
 public class HoSuDungDao {
-    private MySQLConnect mySQLConnect = new MySQLConnect();
 
     // lấy danh sách hộ sử dụng
     public ArrayList<hoSuDung> getHoSuDungByCustomerId(int customerId) {
@@ -16,7 +15,7 @@ public class HoSuDungDao {
             String query = "SELECT * FROM %s WHERE %s = %d"
                     .formatted(qlnTableName.HoSuDung,
                             qlnIDName.CustomerID, customerId);
-            ResultSet rs = mySQLConnect.executeQuery(query);
+            ResultSet rs = MySQLConnect.Connect.executeQuery(query);
             while (rs.next()) {
                 hoSuDung user = new hoSuDung();
                 user.setID_HoSuDung(rs.getInt(qlnIDName.HoSuDungID));
@@ -43,13 +42,13 @@ public class HoSuDungDao {
                 user.getID_Customer(), user.getDiaChi(), user.getMaQuanHuyen(), user.getTrangThai());
 
         try {
-            result = mySQLConnect.executeUpdate(query);
+            result = MySQLConnect.Connect.executeUpdate(query);
         } catch (Exception e) {
             System.out.println("Lỗi thêm hộ sử dụng: " + e.getMessage());
             throw new RuntimeException(e);
         }
         return result > 0;
-    }
+    }   
 
     // cập nhật hộ sử dụng
     public boolean update_HoSuDung(hoSuDung user) {
@@ -67,7 +66,7 @@ public class HoSuDungDao {
                 qlnIDName.HoSuDungID, user.getID_HoSuDung());
 
         try {
-            result = mySQLConnect.executeUpdate(query);
+            result = MySQLConnect.Connect.executeUpdate(query);
         } catch (Exception e) {
             System.out.println("Lỗi cập nhật hộ sử dụng: " + e.getMessage());
             throw new RuntimeException(e);
@@ -83,7 +82,7 @@ public class HoSuDungDao {
                 qlnIDName.HoSuDungID,
                 id_HoSuDung);
         try {
-            result = mySQLConnect.executeUpdate(query);
+            result = MySQLConnect.Connect.executeUpdate(query);
         } catch (Exception e) {
             System.out.println("Lỗi xóa hộ sử dụng: " + e.getMessage());
             throw new RuntimeException(e);
@@ -97,7 +96,7 @@ public class HoSuDungDao {
         try {
             String query = "SELECT * FROM %s WHERE %s = %d"
                     .formatted(qlnTableName.HoSuDung, qlnIDName.HoSuDungID, idHoSuDung);
-            ResultSet rs = mySQLConnect.executeQuery(query);
+            ResultSet rs = MySQLConnect.Connect.executeQuery(query);
             if (rs.next()) {
                 hoSuDung = new hoSuDung();
                 hoSuDung.setID_HoSuDung(rs.getInt(qlnIDName.HoSuDungID));
