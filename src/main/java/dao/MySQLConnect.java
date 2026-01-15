@@ -24,7 +24,6 @@ public class MySQLConnect {
 
             con = DriverManager.getConnection(url, user, password);
 
-            System.out.println("Kết nối MySQL thành công!");
         } catch (SQLException e) {
             System.out.println("Kết nối thất bại: " + e.getMessage());
             throw new RuntimeException(e);
@@ -36,6 +35,9 @@ public class MySQLConnect {
         int result = 0;
         try (Statement stmt = con.createStatement()) {
             result = stmt.executeUpdate(sql);
+            System.out.println("""
+                    Cập nhật dữ liệu thành công
+                    Lệnh thực hiện: %s\n """.formatted(sql));
         } catch (SQLException e) {
             System.out.println("Lỗi SQL (Update): " + e.getMessage());
         }
@@ -48,6 +50,9 @@ public class MySQLConnect {
         try {
             stmt = con.createStatement();
             rs = stmt.executeQuery(sql);
+            System.out.println("""
+                    Lấy dữ liệu thành công
+                    Lệnh thực hiện: %s\n """.formatted(sql));
         } catch (SQLException e) {
             System.out.println("Lỗi SQL (Query): " + e.getMessage());
         }

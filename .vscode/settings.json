@@ -5,5 +5,5 @@
     "[java]": {
         "editor.defaultFormatter": "redhat.java"
     },
-    "maven.view": "hierarchical"
+    "maven.view": "flat"
 }

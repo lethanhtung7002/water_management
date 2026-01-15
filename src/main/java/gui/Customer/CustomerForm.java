@@ -49,7 +49,6 @@ public class CustomerForm extends JPanel {
         tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
         table.setRowHeight(25);
-        table.getTableHeader().setBackground(new Color(130, 240, 130));
         table.setFillsViewportHeight(true);
 
         scrollPane = new JScrollPane(table);
@@ -154,19 +153,4 @@ public class CustomerForm extends JPanel {
             });
         }
     }
-
-    // Public method để refresh từ bên ngoài (từ AddUserForm)
-    public void refreshTable() {
-        showUserList();
-    }
-
-    // Main method để test standalone (tùy chọn)
-    // public static void main(String[] args) {
-    // javax.swing.JFrame frame = new javax.swing.JFrame("Test UserManagement");
-    // frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-    // frame.setSize(800, 600);
-    // frame.add(new CustomerForm());
-    // frame.setLocationRelativeTo(null);
-    // frame.setVisible(true);
-    // }
 }

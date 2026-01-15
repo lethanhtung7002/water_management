@@ -17,43 +17,44 @@ public class LoginForm extends JFrame {
     private String username = DEFAULT_USERNAME;
     private String password = DEFAULT_PASSWORD;
 
+    DataLoader loader = new DataLoader();
+
     public LoginForm() {
         setTitle("Login Form");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(20, 20));
 
         // Kiểm tra xem có thông tin login đã lưu không
-        if (checkSavedLogin()) {
+        if (loader.hasLoginSaved()) {
             // Tự động đăng nhập và mở MenuForm
-            SwingUtilities.invokeLater(MenuForm::new);
+
+            
+            String[] credentials = loader.loginRead();
+            if (credentials[0] != null) {
+                this.username = credentials[0];
+                this.password = credentials[1];
+            }
+            
+            System.out.println("Đăng nhập tự động thành công\n"+
+                "Username: " + username + "\n" 
+            );
+            
+            new MenuForm();
             dispose();
         } else {
             // Hiển thị form login
-            initComponents();
+            init();
             pack();
             setLocationRelativeTo(null);
             setVisible(true);
         }
     }
 
-    private boolean checkSavedLogin() {
-        DataLoader loader = new DataLoader();
-        if (loader.hasLoginSaved()) {
-            String[] credentials = loader.loginRead();
-            if (credentials[0] != null && credentials[1] != null) {
-                this.username = credentials[0];
-                this.password = credentials[1];
-                return true;
-            }
-        }
-        return false;
-    }
-
     private boolean checkLogin(String username, String password) {
         return this.username.equals(username) && this.password.equals(password);
     }
 
-    private void initComponents() {
+    private void init() {
         add(createLogoPanel(), BorderLayout.NORTH);
         add(createFormPanel(), BorderLayout.CENTER);
         add(createButtonPanel(), BorderLayout.SOUTH);
@@ -116,7 +117,6 @@ public class LoginForm extends JFrame {
         String inputPassword = new String(passwordChars);
 
         try {
-            // Validation
             if (inputUsername.isEmpty() || inputPassword.isEmpty()) {
                 showError("Username and password cannot be empty.");
                 return;
