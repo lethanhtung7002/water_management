@@ -58,7 +58,7 @@ public class waterPricePage extends JPanel {
 
         btnRefresh.addActionListener(e -> showWaterPriceList());
         btnAdd.addActionListener(e -> {
-            // new AddGiaNuocForm().setVisible(true);
+            new AddWaterPriceForm().setVisible(true);
             
         });
 

@@ -2,15 +2,12 @@ package gui.GiaNuoc;
 
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
+import javax.swing.*;
+import java.awt.*;
 
 import dao.*;
 import data.KhuVucLoader;
+import gui.Customer.GUIConstants;
 import model.Customer;
 import model.GiaNuoc;
 import model.loaiCustomer;
@@ -18,7 +15,6 @@ import model.loaiCustomer;
 public class AddWaterPriceForm extends JFrame {
 
     // === Labels ===
-    private JLabel lbNameForm = new JLabel("Thêm chính sách giá nước");
     private JLabel lbCustomerTpye = new JLabel("Loại Khách Hàng");
     private JLabel lbKhuVuc = new JLabel("Khu Vực");
     private JLabel lbThue = new JLabel("Thue");
@@ -41,6 +37,7 @@ public class AddWaterPriceForm extends JFrame {
 
         // btnSave.addActionListener(e -> save());
         btnCancel.addActionListener(e -> dispose());
+        pack();
     }
 
     public AddWaterPriceForm(GiaNuoc gn){
@@ -48,10 +45,11 @@ public class AddWaterPriceForm extends JFrame {
         // init();
 
         btnCancel.addActionListener(e -> dispose());
+        pack();
     }
 
     public void init(){
-        setSize(800, 600);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
         // Load danh sách loại khách hàng từ database
@@ -61,13 +59,68 @@ public class AddWaterPriceForm extends JFrame {
         }
         new KhuVucLoader().loadKhuVuc(cbKhuVuc);
 
-        int height = 40;
+        add(createFormPanel(), BorderLayout.CENTER);
 
-        // x, y, wight, h
-        lbNameForm.setBounds(159, 10, 200, height);
+        // Thêm button panel vào south
+        // add(createButtonPanel(), BorderLayout.SOUTH);
 
+    }
 
-        add(lbNameForm);
+    private JPanel createFormPanel(){
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 10, 30)); // Tăng vùng đệm
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(8, 8, 8, 8); // Khoảng cách các hàng
+
+        int row = 0;
+
+        // ===== TITLE =====
+        gbc.gridx = 0;
+        gbc.gridy = row++;
+        gbc.gridwidth = 2;
+        JLabel lbTitle = new JLabel(getTitle());
+        lbTitle.setFont(GUIConstants.Fonts.TieuDe);
+        panel.add(lbTitle, gbc);
+
+        // Reset settings
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.WEST; // căn lề cho tiêu đề
+
+        // ===== LOẠI KHÁCH HÀNG =====
+        gbc.gridx = 0;
+        gbc.gridy = row++;
+        lbCustomerTpye.setFont(GUIConstants.Fonts.TieuDePhu);
+        panel.add(lbCustomerTpye, gbc);
+        
+        gbc.gridx = 1;
+        cbCustomerType.setPreferredSize(GUIConstants.Sizes.tf);
+        cbCustomerType.setFont(GUIConstants.Fonts.TieuDePhu);
+        panel.add(cbCustomerType, gbc);
+
+        // ===== KHU VỰC =====
+        gbc.gridx = 0;
+        gbc.gridy = row++;
+        lbKhuVuc.setFont(GUIConstants.Fonts.TieuDePhu);
+        panel.add(lbKhuVuc, gbc);
+
+        gbc.gridx = 1;
+        cbKhuVuc.setPreferredSize(GUIConstants.Sizes.tf);
+        cbKhuVuc.setFont(GUIConstants.Fonts.TieuDePhu);
+        panel.add(cbKhuVuc, gbc);
+
+        // ===== THUẾ =====
+        gbc.gridx = 0;
+        gbc.gridy = row++;
+        lbThue.setFont(GUIConstants.Fonts.TieuDePhu);
+        panel.add(lbThue, gbc);
+
+        gbc.gridx = 1;
+        tfThue.setPreferredSize(GUIConstants.Sizes.tf);
+        tfThue.setFont(GUIConstants.Fonts.TieuDePhu);
+        panel.add(tfThue, gbc);
+
+        return panel;
     }
 
 }
