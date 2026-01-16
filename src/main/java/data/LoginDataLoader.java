@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
-import java.util.Arrays;
 
 /**
  * Class quản lý thông tin đăng nhập (username và password).

@@ -1,3 +1,14 @@
+package gui.Customer;
+
+import java.awt.*;
+import java.util.List;
+
+import javax.swing.*;
+
+import dao.CustomerDao;
+import model.Customer;
+import model.loaiCustomer;
+
 /**
  * Form thêm mới hoặc chỉnh sửa thông tin khách hàng.
  * 
@@ -10,38 +21,14 @@
  * - new AddCustomerForm() - Tạo form thêm mới
  * - new AddCustomerForm(customer) - Tạo form chỉnh sửa với dữ liệu có sẵn
  * 
- * @author Your Name
- * @version 1.0
+ * @author LTT
+ * @version 2.0
  */
-
-package gui.Customer;
-
-import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-
-import dao.CustomerDao;
-import model.Customer;
-import model.loaiCustomer;
-
 public class AddCustomerForm extends JFrame {
-
-    // ===== LABELS =====
-    private JLabel lbAdd = new JLabel("Thêm Khách Hàng");
-    private JLabel lbName = new JLabel("Name:");
-    private JLabel lbLoaiUser = new JLabel("Loại Khách Hàng:");
-    private JLabel lbCCCD = new JLabel("CCCD:");
-    private JLabel lbPhone = new JLabel("Phone Number:");
-    private JLabel lbEmail = new JLabel("Email:");
 
     // ===== INPUT FIELDS =====
     private JTextField tfName = new JTextField();
-    private JComboBox<loaiCustomer> cbLoaiUser;
+    private JComboBox<loaiCustomer> cbLoaiUser = new JComboBox<>();
     private JTextField tfCCCD = new JTextField();
     private JTextField tfPhone = new JTextField();
     private JTextField tfEmail = new JTextField();
@@ -55,7 +42,6 @@ public class AddCustomerForm extends JFrame {
 
     /**
      * Constructor cho form thêm khách hàng mới.
-     * Khởi tạo form trống để người dùng nhập thông tin mới.
      */
     public AddCustomerForm() {
         setTitle("Thêm Khách Hàng");
@@ -64,6 +50,11 @@ public class AddCustomerForm extends JFrame {
         // Lưu khách hàng mới
         btnSave.addActionListener(e -> saveUser());
         btnCancel.addActionListener(e -> dispose());
+
+        pack();
+        setResizable(false);
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     /**
@@ -82,10 +73,10 @@ public class AddCustomerForm extends JFrame {
         tfPhone.setText(user.getPhoneCustomer());
         tfEmail.setText(user.getEmail());
 
-        // Chọn loại người dùng dựa trên ID (không phải tên)
+        // Chọn loại người dùng dựa trên ID
         for (int i = 0; i < cbLoaiUser.getItemCount(); i++) {
             loaiCustomer lnd = cbLoaiUser.getItemAt(i);
-            if (lnd.getIdLoaiCustomer() == user.getIdCustomer()) { // So sánh ID
+            if (lnd.getIdLoaiCustomer() == user.getLoaiCustomer()) {
                 cbLoaiUser.setSelectedIndex(i);
                 break;
             }
@@ -94,11 +85,146 @@ public class AddCustomerForm extends JFrame {
         // Cập nhật khách hàng đã có
         btnSave.addActionListener(e -> saveUser(user));
         btnCancel.addActionListener(e -> dispose());
+
+        pack();
+        setResizable(false);
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    /**
+     * Khởi tạo giao diện form với GridBagLayout.
+     */
+    private void init() {
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLayout(new BorderLayout(10, 10));
+
+        // Load danh sách loại khách hàng từ database
+        List<loaiCustomer> loaiNguoiDung = userDao.getLoaiKhachHang();
+        for (loaiCustomer lnd : loaiNguoiDung) {
+            cbLoaiUser.addItem(lnd);
+        }
+
+        // Thêm form panel vào center
+        add(createFormPanel(), BorderLayout.CENTER);
+
+        // Thêm button panel vào south
+        add(createButtonPanel(), BorderLayout.SOUTH);
+    }
+
+    /**
+     * Tạo form panel với GridBagLayout.
+     * 
+     * @return JPanel chứa form input
+     */
+    private JPanel createFormPanel() {
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 10, 30)); // Tăng vùng đệm
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(8, 8, 8, 8); // Khoảng cách các hàng
+
+        int row = 0;
+
+        // ===== TITLE =====
+        gbc.gridx = 0;
+        gbc.gridy = row++;
+        gbc.gridwidth = 2;
+        JLabel lbTitle = new JLabel(getTitle());
+        lbTitle.setFont(GUIConstants.Fonts.TieuDe);
+        panel.add(lbTitle, gbc);
+
+        // Reset settings
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.WEST; // căn lề cho tiêu đề
+
+        // ===== NAME =====
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        JLabel lbName = new JLabel("Họ Tên:");
+        lbName.setFont(GUIConstants.Fonts.TieuDePhu);
+        panel.add(lbName, gbc);
+
+        gbc.gridx = 1;
+        tfName.setPreferredSize(GUIConstants.Sizes.tf);
+        tfName.setFont(GUIConstants.Fonts.TieuDePhu);
+        panel.add(tfName, gbc);
+        row++;
+
+        // ===== LOẠI KHÁCH HÀNG =====
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        JLabel lbLoai = new JLabel("Loại Khách Hàng:");
+        lbLoai.setFont(GUIConstants.Fonts.TieuDePhu);
+        panel.add(lbLoai, gbc);
+
+        gbc.gridx = 1;
+        cbLoaiUser.setPreferredSize(GUIConstants.Sizes.tf);
+        cbLoaiUser.setFont(GUIConstants.Fonts.TieuDePhu);
+        panel.add(cbLoaiUser, gbc);
+        row++;
+
+        // ===== CCCD =====
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        JLabel lbCCCD = new JLabel("CCCD:");
+        lbCCCD.setFont(GUIConstants.Fonts.TieuDePhu);
+        panel.add(lbCCCD, gbc);
+
+        gbc.gridx = 1;
+        tfCCCD.setPreferredSize(GUIConstants.Sizes.tf);
+        tfCCCD.setFont(GUIConstants.Fonts.TieuDePhu);
+        panel.add(tfCCCD, gbc);
+        row++;
+
+        // ===== PHONE NUMBER =====
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        JLabel lbPhone = new JLabel("Phone Number:");
+        lbPhone.setFont(GUIConstants.Fonts.TieuDePhu);
+        panel.add(lbPhone, gbc);
+
+        gbc.gridx = 1;
+        tfPhone.setPreferredSize(GUIConstants.Sizes.tf);
+        tfPhone.setFont(GUIConstants.Fonts.TieuDePhu);
+        panel.add(tfPhone, gbc);
+        row++;
+
+        // ===== EMAIL =====
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        JLabel lbEmail = new JLabel("Email:");
+        lbEmail.setFont(GUIConstants.Fonts.TieuDePhu);
+        panel.add(lbEmail, gbc);
+
+        gbc.gridx = 1;
+        tfEmail.setPreferredSize(GUIConstants.Sizes.tf);
+        tfEmail.setFont(GUIConstants.Fonts.TieuDePhu);
+        panel.add(tfEmail, gbc);
+
+        return panel;
+    }
+
+    /**
+     * Tạo panel chứa các nút Save và Cancel.
+     */
+    private JPanel createButtonPanel() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 15));
+
+        btnSave.setPreferredSize(GUIConstants.Sizes.btn); // kích thước button
+        btnCancel.setPreferredSize(GUIConstants.Sizes.btn);
+
+        btnSave.setFont(GUIConstants.Fonts.TieuDePhu); // font button
+        btnCancel.setFont(GUIConstants.Fonts.TieuDePhu);
+
+        panel.add(btnSave);
+        panel.add(btnCancel);
+
+        return panel;
     }
 
     /**
      * Lưu khách hàng mới vào database.
-     * Validate dữ liệu trước khi lưu và hiển thị thông báo kết quả.
      */
     private void saveUser() {
         // Lấy loại khách hàng đã chọn từ ComboBox
@@ -114,11 +240,11 @@ public class AddCustomerForm extends JFrame {
             return;
         }
 
-        // Tạo đối tượng Customer mới với ID = 0 (auto increment)
+        // Tạo đối tượng Customer mới
         Customer user = new Customer(
-                0, // ID sẽ được tự động tạo bởi database
+                0, // ID sẽ được tự động tạo
                 tfName.getText(),
-                selectedLoaiCustomer.getIdLoaiCustomer(), // Lưu ID thay vì tên
+                selectedLoaiCustomer.getIdLoaiCustomer(),
                 tfCCCD.getText(),
                 tfPhone.getText(),
                 tfEmail.getText());
@@ -126,7 +252,7 @@ public class AddCustomerForm extends JFrame {
         // Thực hiện thêm vào database
         if (userDao.addCustomer(user)) {
             JOptionPane.showMessageDialog(this, "User added successfully!");
-            dispose(); // Đóng form sau khi thêm thành công
+            dispose();
         } else {
             JOptionPane.showMessageDialog(
                     this,
@@ -142,10 +268,10 @@ public class AddCustomerForm extends JFrame {
      * @param ID_KhachHang Đối tượng Customer cũ (chứa ID cần update)
      */
     private void saveUser(Customer ID_KhachHang) {
-        // Lấy loại khách hàng đã chọn từ ComboBox
+        // Lấy loại khách hàng đã chọn
         loaiCustomer selectedLoaiCustomer = (loaiCustomer) cbLoaiUser.getSelectedItem();
 
-        // Validate: Kiểm tra đã chọn loại khách hàng chưa
+        // Validate
         if (selectedLoaiCustomer == null) {
             JOptionPane.showMessageDialog(
                     this,
@@ -155,19 +281,19 @@ public class AddCustomerForm extends JFrame {
             return;
         }
 
-        // Tạo đối tượng Customer với thông tin mới nhưng giữ nguyên ID
+        // Tạo đối tượng Customer với thông tin mới
         Customer user = new Customer(
-                ID_KhachHang.getIdCustomer(), // Giữ nguyên ID để update
+                ID_KhachHang.getIdCustomer(), // Giữ nguyên ID
                 tfName.getText(),
-                selectedLoaiCustomer.getIdLoaiCustomer(), // Lưu ID thay vì tên
+                selectedLoaiCustomer.getIdLoaiCustomer(),
                 tfCCCD.getText(),
                 tfPhone.getText(),
                 tfEmail.getText());
 
-        // Thực hiện cập nhật trong database
+        // Thực hiện cập nhật
         if (userDao.updateCustomer(user)) {
             JOptionPane.showMessageDialog(this, "User updated successfully!");
-            dispose(); // Đóng form sau khi cập nhật thành công
+            dispose();
         } else {
             JOptionPane.showMessageDialog(
                     this,
@@ -178,74 +304,11 @@ public class AddCustomerForm extends JFrame {
     }
 
     /**
-     * Khởi tạo giao diện form.
-     * Sử dụng Absolute Layout (null layout) để đặt vị trí các component.
-     * 
-     * Layout:
-     * - Load danh sách loại khách hàng từ database vào ComboBox
-     * - Đặt vị trí các label, textfield, button theo tọa độ cố định
-     * - Thiết lập kích thước form 400x400
+     * Method main để test form.
      */
-    public void init() {
-        setSize(400, 400);
-        setLayout(null); // Sử dụng absolute positioning
-        setLocationRelativeTo(null); // Căn giữa màn hình
-
-        // Load danh sách loại khách hàng từ database
-        cbLoaiUser = new JComboBox<>();
-        List<loaiCustomer> loaiNguoiDung = userDao.getLoaiKhachHang();
-        for (loaiCustomer lnd : loaiNguoiDung) {
-            cbLoaiUser.addItem(lnd);
-        }
-
-        // Định nghĩa vị trí và kích thước các component
-        int height = 30; // Chiều cao chung cho các component
-        int x_lb = 50; // Vị trí x của labels
-        int x_tf_cb = 150; // Vị trí x của textfields và combobox
-
-        // Đặt vị trí các component (x, y, width, height)
-        lbAdd.setBounds(x_tf_cb, 10, 200, 30);
-        lbName.setBounds(x_lb, 60, 100, height);
-        tfName.setBounds(x_tf_cb, 60, 200, height);
-        lbLoaiUser.setBounds(x_lb, 100, 100, height);
-        cbLoaiUser.setBounds(x_tf_cb, 100, 200, height);
-        lbCCCD.setBounds(x_lb, 140, 100, height);
-        tfCCCD.setBounds(x_tf_cb, 140, 200, height);
-        lbPhone.setBounds(x_lb, 180, 100, height);
-        tfPhone.setBounds(x_tf_cb, 180, 200, height);
-        lbEmail.setBounds(x_lb, 220, 100, height);
-        tfEmail.setBounds(x_tf_cb, 220, 200, height);
-        btnSave.setBounds(80, 280, 100, 30);
-        btnCancel.setBounds(220, 280, 100, 30);
-
-        // Thêm các component vào form
-        add(lbAdd);
-        add(lbName);
-        add(tfName);
-        add(lbLoaiUser);
-        add(cbLoaiUser);
-        add(lbCCCD);
-        add(tfCCCD);
-        add(lbPhone);
-        add(tfPhone);
-        add(lbEmail);
-        add(tfEmail);
-        add(btnSave);
-        add(btnCancel);
-    }
-}
-
-/**
- * Class test để chạy thử AddCustomerForm độc lập.
- */
-class run_test {
     public static void main(String[] args) {
-        // Mở form thêm khách hàng mới
-        new AddCustomerForm().setVisible(true);
-
-        // Test form chỉnh sửa (cần có Customer object)
-        // Customer testCustomer = new Customer(1, "Test", 1, "123456", "0123456789",
-        // "test@email.com");
-        // new AddCustomerForm(testCustomer).setVisible(true);
+        SwingUtilities.invokeLater(() -> {
+            new AddCustomerForm();
+        });
     }
 }

@@ -15,7 +15,7 @@ import javax.swing.table.DefaultTableModel;
 import dao.GiaNuocDao;
 import model.GiaNuoc;
 
-public class GiaNuocPage extends JPanel {
+public class waterPricePage extends JPanel {
 
     private JTable table;
     private DefaultTableModel tableModel;
@@ -30,7 +30,7 @@ public class GiaNuocPage extends JPanel {
     private ArrayList<GiaNuoc> gnArr = new ArrayList<>();
     private GiaNuocDao giaNuocDao = new GiaNuocDao();
 
-    public GiaNuocPage() {
+    public waterPricePage() {
         setLayout(new BorderLayout(5, 5));
         setBackground(new Color(26, 26, 26)); // Thêm màu nền cho phù hợp với MenuForm
 
@@ -56,7 +56,7 @@ public class GiaNuocPage extends JPanel {
 
         // showGiaNuocList();
 
-        btnRefresh.addActionListener(e -> showGiaNuocList());
+        btnRefresh.addActionListener(e -> showWaterPriceList());
         btnAdd.addActionListener(e -> {
             // new AddGiaNuocForm().setVisible(true);
             
@@ -72,7 +72,7 @@ public class GiaNuocPage extends JPanel {
 
             if (selectedRow == -1) {
                 JOptionPane.showMessageDialog(this,
-                        "Please select a user to delete.",
+                        "Vui lòng chọn hàng để xóa",
                         "No User Selected",
                         JOptionPane.WARNING_MESSAGE);
                 return;
@@ -91,7 +91,7 @@ public class GiaNuocPage extends JPanel {
                             "User Deleted Successfully",
                             "Success",
                             JOptionPane.INFORMATION_MESSAGE);
-                    showGiaNuocList();
+                    showWaterPriceList();
                 } else {
                     JOptionPane.showMessageDialog(this,
                             "User Deleted Failed",
@@ -109,7 +109,7 @@ public class GiaNuocPage extends JPanel {
 
     }
 
-    public void showGiaNuocList() {
+    public void showWaterPriceList() {
         gnArr = giaNuocDao.getGiaNuoc();
         tableModel.setRowCount(0);
         for (GiaNuoc gn : gnArr) {

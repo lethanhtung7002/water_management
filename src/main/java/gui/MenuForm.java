@@ -20,7 +20,7 @@ import javax.swing.SwingConstants;
 import javax.swing.JOptionPane;
 
 import gui.Customer.CustomerPage;
-import gui.GiaNuoc.GiaNuocPage;
+import gui.GiaNuoc.waterPricePage;
 import data.LoginDataLoader;
 
 /**
@@ -57,7 +57,7 @@ public class MenuForm extends JFrame {
 
     // Màu sắc
     private static final Color SELECTED_COLOR = new Color(60, 60, 60);
-    private static final Color HOVER_COLOR = new Color(50, 50, 50); // màu xám
+    private static final Color HOVER_COLOR = new Color(50, 50, 50); 
     private static final Color DEFAULT_COLOR = new Color(32, 32, 32);
 
     public MenuForm() {
@@ -141,7 +141,7 @@ public class MenuForm extends JFrame {
 
         contentPanel.add(createPage("Trang chủ để thực hiện các tính năng nhanh nhưng chưa thêm gì cả :))"), PAGE_HOME);
         contentPanel.add(new CustomerPage(), PAGE_CUSTOMER);
-        contentPanel.add(new GiaNuocPage(), PAGE_WATER_PRICE);
+        contentPanel.add(new waterPricePage(), PAGE_WATER_PRICE);
 
         // ==== GHÉP VÀO FRAME ====
         add(sidebar, BorderLayout.WEST);
