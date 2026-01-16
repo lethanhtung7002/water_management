@@ -20,7 +20,8 @@ import javax.swing.JOptionPane;
 
 import gui.Customer.CustomerForm;
 import gui.GiaNuoc.GiaNuocForm;
-import data.DataLoader;
+import data.KhuVucLoader;
+import data.LoginDataLoader;
 
 /**
  * Form menu chính của hệ thống quản lý nước.
@@ -186,7 +187,7 @@ public class MenuForm extends JFrame {
                 JOptionPane.YES_NO_OPTION);
 
         if (choice == JOptionPane.YES_OPTION) {
-            new DataLoader().loginWrite("", "");
+            new LoginDataLoader().loginWrite("", "");
             dispose();
             new LoginForm();
         }

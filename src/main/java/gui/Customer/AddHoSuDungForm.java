@@ -9,7 +9,7 @@ import javax.swing.JTextField;
 
 import dao.HoSuDungDao;
 import model.hoSuDung;
-import data.DataLoader;
+import data.KhuVucLoader;
 
 public class AddHoSuDungForm extends JFrame {
     private JLabel lbAdd = new JLabel("Thêm thông tin hộ sử dụng");
@@ -44,7 +44,7 @@ public class AddHoSuDungForm extends JFrame {
         init();
 
         // Điền thông tin hộ sử dụng vào form
-        cbKhuVuc.setSelectedItem(hoSuDung.getMaQuanHuyen());
+        cbKhuVuc.setSelectedItem(hoSuDung.getKhuVuc());
         tfAddress.setText(hoSuDung.getDiaChi());
         cbTrangThai.setSelectedItem(hoSuDung.getTrangThai() == 1 ? "Đang sử dụng" : "Ngừng sử dụng");
 
@@ -58,7 +58,7 @@ public class AddHoSuDungForm extends JFrame {
         setLayout(null);
         setLocationRelativeTo(null);
 
-        loadKhuVuc();
+        new KhuVucLoader().loadKhuVuc(cbKhuVuc);
         loadtrangThai();
 
         int height = 30;
@@ -85,11 +85,6 @@ public class AddHoSuDungForm extends JFrame {
 
         add(btnCancel);
         add(btnSave);
-    }
-
-    void loadKhuVuc() {
-        cbKhuVuc.addItem("-- Chọn tỉnh ---");
-        new DataLoader().khuVuc().forEach(cbKhuVuc::addItem);
     }
 
     void loadtrangThai() {
@@ -122,7 +117,7 @@ public class AddHoSuDungForm extends JFrame {
             return;
         }
 
-        hoSuDung.setMaQuanHuyen(khuVuc);
+        hoSuDung.setKhuVuc(khuVuc);
         hoSuDung.setDiaChi(diaChi);
         hoSuDung.setTrangThai(trangThai.equals("Đang sử dụng") ? 1 : 0);
 
@@ -163,7 +158,7 @@ public class AddHoSuDungForm extends JFrame {
         hoSuDung hoSuDung = new hoSuDung();
         hoSuDung.setID_Customer(customerId);
         hoSuDung.setDiaChi(diaChi);
-        hoSuDung.setMaQuanHuyen(khuVuc);
+        hoSuDung.setKhuVuc(khuVuc);
         hoSuDung.setTrangThai(trangThai.equals("Đang sử dụng") ? 1 : 0);
 
         if (dao.add_HoSuDung(hoSuDung)) {

@@ -1,6 +1,7 @@
 package gui;
 
-import data.DataLoader;
+import data.LoginDataLoader;
+
 import java.awt.*;
 import java.util.Arrays;
 import javax.swing.*;
@@ -10,14 +11,14 @@ import javax.swing.*;
  * 
  * Chức năng chính:
  * - Đăng nhập với username và password
- * - Lưu thông tin đăng nhập (Remember me)
+ * - Lưu thông tin đăng nhập 
  * - Tự động đăng nhập nếu đã lưu thông tin
  * - Hỗ trợ phím Enter để submit form
  * 
  * Quy trình hoạt động:
  * 1. Kiểm tra file login.txt có tồn tại không
- * 2. Nếu có → Tự động đăng nhập → Mở MenuForm
- * 3. Nếu không → Hiển thị form đăng nhập
+ * 2. Nếu có -> Tự động đăng nhập -> Mở MenuForm
+ * 3. Nếu không -> Hiển thị form đăng nhập
  * 
  * @author Lê Thanh Tùng
  * @version 1.0
@@ -31,13 +32,13 @@ public class LoginForm extends JFrame {
     // ===== UI COMPONENTS =====
     private final JTextField userTextField = new JTextField(20);
     private final JPasswordField passField = new JPasswordField(20);
-    private final JCheckBox rememberMeCheckbox = new JCheckBox("Remember me");
+    private final JCheckBox rememberMeCheckbox = new JCheckBox("Nhớ Thông tin đăng nhập");
     private final JButton loginButton = new JButton("Login");
 
     // ===== CREDENTIALS =====
     private String username = DEFAULT_USERNAME;
     private String password = DEFAULT_PASSWORD;
-    private final DataLoader loader = new DataLoader();
+    private final LoginDataLoader loader = new LoginDataLoader();
 
     /**
      * Khởi tạo LoginForm.
@@ -117,7 +118,7 @@ public class LoginForm extends JFrame {
     /**
      * Tạo form nhập username, password và checkbox "Remember me".
      * Sử dụng GridBagLayout để căn chỉnh các component.
-     * Hỗ trợ phím Enter: Enter ở Username → Focus vào Password, Enter ở Password →
+     * Hỗ trợ phím Enter: Enter ở Username -> Focus vào Password, Enter ở Password ->
      * Submit form.
      */
     private JPanel createFormPanel() {
@@ -170,7 +171,7 @@ public class LoginForm extends JFrame {
      * Quy trình:
      * 1. Validate input (không để trống)
      * 2. Kiểm tra username/password
-     * 3. Nếu đúng: Lưu thông tin (nếu tick Remember me) → Mở MenuForm → Đóng
+     * 3. Nếu đúng: Lưu thông tin (nếu tick Remember me) -> Mở MenuForm -> Đóng
      * LoginForm
      * 4. Nếu sai: Hiển thị lỗi và clear password field
      * 5. Luôn clear password từ memory sau khi xử lý (bảo mật)

@@ -112,7 +112,7 @@ public class InfoCustomerform extends JFrame {
     }
 
     private JScrollPane createTablePanel(int customerId) {
-        String[] columns = { "Mã số hộ sử dụng", "Địa chỉ(số nhà)", "MaQuanHuyen", "Trạng thái" };
+        String[] columns = { "Mã số hộ sử dụng", "Địa chỉ(số nhà)", "Khu vực", "Trạng thái" };
         DefaultTableModel model = new DefaultTableModel(columns, 0);
 
         JTable table = new JTable(model);
@@ -134,7 +134,7 @@ public class InfoCustomerform extends JFrame {
             Object[] row = {
                     hoSuDung.getID_HoSuDung(),
                     hoSuDung.getDiaChi(),
-                    hoSuDung.getMaQuanHuyen(),
+                    hoSuDung.getKhuVuc(),
                     trangThai
             };
             model.addRow(row);

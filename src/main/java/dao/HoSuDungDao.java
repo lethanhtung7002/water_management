@@ -20,7 +20,7 @@ public class HoSuDungDao {
             while (rs.next()) {
                 hoSuDung user = new hoSuDung();
                 user.setID_HoSuDung(rs.getInt(qlnIDName.HoSuDungID));
-                user.setMaQuanHuyen(rs.getString(qlnHoSuDungCol.KhuVuc));
+                user.setKhuVuc(rs.getString(qlnHoSuDungCol.KhuVuc));
                 user.setDiaChi(rs.getString(qlnHoSuDungCol.DiaChi));
                 user.setTrangThai(rs.getInt(qlnHoSuDungCol.TrangThai));
                 userList.add(user);
@@ -40,7 +40,7 @@ public class HoSuDungDao {
                 """.formatted(
                 qlnTableName.HoSuDung, qlnIDName.CustomerID, qlnHoSuDungCol.DiaChi,
                 qlnHoSuDungCol.KhuVuc, qlnHoSuDungCol.TrangThai,
-                user.getID_Customer(), user.getDiaChi(), user.getMaQuanHuyen(), user.getTrangThai());
+                user.getID_Customer(), user.getDiaChi(), user.getKhuVuc(), user.getTrangThai());
 
         try {
             result = ConnectQLN.executeUpdate(query);
@@ -62,7 +62,7 @@ public class HoSuDungDao {
                 qlnTableName.HoSuDung,
                 qlnIDName.CustomerID, user.getID_Customer(),
                 qlnHoSuDungCol.DiaChi, user.getDiaChi(),
-                qlnHoSuDungCol.KhuVuc, user.getMaQuanHuyen(),
+                qlnHoSuDungCol.KhuVuc, user.getKhuVuc(),
                 qlnHoSuDungCol.TrangThai, user.getTrangThai(),
                 qlnIDName.HoSuDungID, user.getID_HoSuDung());
 
@@ -102,7 +102,7 @@ public class HoSuDungDao {
                 hoSuDung = new hoSuDung();
                 hoSuDung.setID_HoSuDung(rs.getInt(qlnIDName.HoSuDungID));
                 hoSuDung.setID_Customer(rs.getInt(qlnIDName.CustomerID));
-                hoSuDung.setMaQuanHuyen(rs.getString(qlnHoSuDungCol.KhuVuc));
+                hoSuDung.setKhuVuc(rs.getString(qlnHoSuDungCol.KhuVuc));
                 hoSuDung.setDiaChi(rs.getString(qlnHoSuDungCol.DiaChi));
                 hoSuDung.setTrangThai(rs.getInt(qlnHoSuDungCol.TrangThai));
             }

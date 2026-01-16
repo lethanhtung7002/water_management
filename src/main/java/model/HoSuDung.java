@@ -42,11 +42,11 @@ public class hoSuDung {
         DiaChi = diaChi;
     }
 
-    public String getMaQuanHuyen() {
+    public String getKhuVuc() {
         return MaQuanHuyen;
     }
 
-    public void setMaQuanHuyen(String maQuanHuyen) {
+    public void setKhuVuc(String maQuanHuyen) {
         MaQuanHuyen = maQuanHuyen;
     }
 
