@@ -18,7 +18,7 @@ import javax.swing.table.DefaultTableModel;
 import dao.CustomerDao;
 import model.Customer;
 
-public class CustomerForm extends JPanel {
+public class CustomerPage extends JPanel {
 
     private JTable table;
     private DefaultTableModel tableModel;
@@ -33,7 +33,7 @@ public class CustomerForm extends JPanel {
     private ArrayList<Customer> UserArr = new ArrayList<Customer>();
     private CustomerDao userDao = new CustomerDao();
 
-    public CustomerForm() {
+    public CustomerPage() {
 
         setLayout(new BorderLayout(5, 5));
         setBackground(new Color(26, 26, 26)); // Thêm màu nền cho phù hợp với MenuForm
@@ -58,7 +58,7 @@ public class CustomerForm extends JPanel {
         add(topPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
 
-        showUserList();
+        // showUserList();
 
         // === SỰ KIỆN BUTTONS ===
         btnRefresh.addActionListener(e -> showUserList());

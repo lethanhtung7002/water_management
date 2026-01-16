@@ -50,8 +50,9 @@ public class LoginForm extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(20, 20));
 
-        if (loader.hasLoginSaved()) {
-            autoLogin();
+        String[] credentials = loader.loginRead();
+        if (credentials[0] != null) {
+            autoLogin(credentials);
         } else {
             showLoginForm();
         }
@@ -61,12 +62,9 @@ public class LoginForm extends JFrame {
      * Tự động đăng nhập khi đã có thông tin lưu trong file.
      * Đọc credentials từ file, mở MenuForm và đóng LoginForm.
      */
-    private void autoLogin() {
-        String[] credentials = loader.loginRead();
-        if (credentials[0] != null) {
-            this.username = credentials[0];
-            this.password = credentials[1];
-        }
+    private void autoLogin(String[] credentials) {
+        this.username = credentials[0];
+        this.password = credentials[1];
 
         System.out.println("Đăng nhập tự động thành công\n" +
                 "Username: " + username + "\n");

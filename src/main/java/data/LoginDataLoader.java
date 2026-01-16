@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.Arrays;
 
 /**
  * Class quản lý thông tin đăng nhập (username và password).
@@ -45,20 +46,22 @@ public class LoginDataLoader {
         try {
             Scanner sc = new Scanner(file);
 
-            // Đọc dòng 1: username (nếu có)
+            // Đọc username: gán null nếu rỗng
             if (sc.hasNextLine()) {
-                thongTin[0] = sc.nextLine().trim();
+                String line = sc.nextLine().trim();
+                thongTin[0] = line.isEmpty() ? null : line;
             }
 
-            // Đọc dòng 2: password (nếu có)
+            // Đọc password: gán null nếu rỗng
             if (sc.hasNextLine()) {
-                thongTin[1] = sc.nextLine().trim();
+                String line = sc.nextLine().trim();
+                thongTin[1] = line.isEmpty() ? null : line;
             }
 
             // Đóng file
             sc.close();
 
-            System.out.println("Đọc file thành công!");
+            System.out.println("Đọc file thành công login.txt!");
 
         } catch (IOException e) {
             System.out.println("Lỗi khi đọc file: " + e.getMessage());
@@ -103,28 +106,4 @@ public class LoginDataLoader {
             return false;
         }
     }
-
-    /**
-     * Kiểm tra xem có thông tin đăng nhập đã lưu hay chưa.
-     * 
-     * @return true nếu có thông tin hợp lệ, false nếu không
-     */
-    public boolean hasLoginSaved() {
-        // Kiểm tra file có tồn tại không
-        if (!file.exists()) {
-            return false;
-        }
-
-        // Đọc thông tin từ file
-        String[] thongTin = loginRead();
-
-        // Kiểm tra cả username VÀ password có hợp lệ không
-        if (thongTin[0] != null && !thongTin[0].isEmpty()
-                && thongTin[1] != null && !thongTin[1].isEmpty()) {
-            return true;
-        }
-
-        return false;
-    }
-
 }
