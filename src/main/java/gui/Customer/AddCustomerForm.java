@@ -97,7 +97,6 @@ public class AddCustomerForm extends JFrame {
      */
     private void init() {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(new BorderLayout(10, 10));
 
         // Load danh sách loại khách hàng từ database
         List<loaiCustomer> loaiNguoiDung = userDao.getLoaiKhachHang();
