@@ -546,24 +546,12 @@ public class AddWaterPriceForm extends JFrame {
                 return;
             }
 
-            // In ra thông tin debug
-            System.out.println("Loại KH: " + loaiKH.getIdLoaiCustomer() + " - " + loaiKH.getTenLoaiCustomer());
-            System.out.println("Khu vực: " + khuVuc);
-            System.out.println("Thuế: " + thue + "%");
-
             // Tạo object GiaNuoc với ID cũ
             GiaNuoc giaNuoc = new GiaNuoc(
                     waterPriceId, // Giữ nguyên ID
                     loaiKH.getIdLoaiCustomer(),
                     khuVuc,
                     thue);
-
-            // In ra object để kiểm tra
-            System.out.println("Object GiaNuoc:");
-            System.out.println("  - ID: " + giaNuoc.getIdDonGia());
-            System.out.println("  - ID Loại KH: " + giaNuoc.getIdLoaiCustomer());
-            System.out.println("  - Khu vực: " + giaNuoc.getKhuVuc());
-            System.out.println("  - Thuế: " + giaNuoc.getThue() + "%");
 
             // Cập nhật trong database
             boolean success = gnDao.updateGiaNuoc(giaNuoc);
