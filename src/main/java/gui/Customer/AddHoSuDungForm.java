@@ -36,7 +36,7 @@ public class AddHoSuDungForm extends JFrame {
         btnCancel.addActionListener(e -> dispose());
         this.customerId = customerId;
 
-        // setResizable(false);
+        setResizable(false);
         setLocationRelativeTo(null);
         setVisible(true);
     }
@@ -56,7 +56,7 @@ public class AddHoSuDungForm extends JFrame {
         this.customerId = hoSuDung.getID_Customer();
 
         pack();
-        // setResizable(false);
+        setResizable(false);
         setLocationRelativeTo(null);
         setVisible(true);
     }

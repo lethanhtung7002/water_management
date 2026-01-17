@@ -63,6 +63,7 @@ public class LoginForm extends JFrame {
     private void showLoginForm() {
         init();
         pack();
+        setResizable(false);
         setLocationRelativeTo(null);
         setVisible(true);
     }

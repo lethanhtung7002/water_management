@@ -226,8 +226,8 @@ public class AddWaterPriceTierForm extends JFrame {
                 int fromLevel = lastTier.getMaxConsumption() + 1;
                 tfTuMucNuoc.setText(String.valueOf(fromLevel));
 
-                // Gợi ý mức cuối = mức đầu + 10
-                int toLevel = fromLevel + 10;
+                // Gợi ý mức cuối = mức đầu + 9
+                int toLevel = fromLevel + 9;
                 tfDenMucNuoc.setText(String.valueOf(toLevel));
             } else {
                 // Bậc đầu tiên: từ 0
