@@ -58,7 +58,7 @@ public class CustomerPage extends JPanel {
         add(topPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
 
-        // showUserList();
+        showUserList();
 
         // === SỰ KIỆN BUTTONS ===
         btnRefresh.addActionListener(e -> showUserList());

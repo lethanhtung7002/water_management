@@ -63,7 +63,7 @@ public class waterPricePage extends JPanel {
         });
 
         btnEdit.addActionListener(e -> {
-            // new EditGiaNuocForm().setVisible(true);
+            new AddWaterPriceForm(gnArr.get(table.getSelectedRow())).setVisible(true);
             
         });
 

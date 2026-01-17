@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import model.GiaNuoc;
+import model.WaterPriceTier;
+
 import static dao.MySQLConnect.ConnectQLN;
 
 public class GiaNuocDao {
@@ -33,14 +35,37 @@ public class GiaNuocDao {
         return listGia;
     }
 
+    // Lấy bậc giá nước theo id giá nước
+    public ArrayList<WaterPriceTier> getBacGiaNuocByIdGiaNuoc(int idGiaNuoc) {
+        ArrayList<WaterPriceTier> listBac = new ArrayList<WaterPriceTier>();
+        try {
+            String query = "SELECT * FROM %s WHERE %s = %d"
+                    .formatted(qlnTableName.BacGia, qlnIDName.GiaNuocID, idGiaNuoc);
+            ResultSet rs = ConnectQLN.executeQuery(query);
+            while (rs.next()) {
+                WaterPriceTier bacGiaNuoc = new WaterPriceTier();
+                bacGiaNuoc.setTier(rs.getInt(qlnIDName.BacGiaID));
+                bacGiaNuoc.setMinConsumption(rs.getInt(qlnBacGiaCol.TuMucNuoc));
+                bacGiaNuoc.setMaxConsumption(rs.getInt(qlnBacGiaCol.DenMucNuoc));
+                bacGiaNuoc.setPrice(rs.getDouble(qlnBacGiaCol.Gia));
+                listBac.add(bacGiaNuoc);
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi lấy danh sách bậc giá nước: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
+        return listBac;
+    }
+
     // Thêm giá nước
     public boolean addGiaNuoc(GiaNuoc giaNuoc) {
         int result = 0;
         String query = """
-                INSERT INTO %s (%s, %s, %s, %s)
-                VALUES ('%d', '%s', '%s', '%s')
+                INSERT INTO %s (%s, %s, %s)
+                VALUES ('%d', '%s', '%f')
                 """.formatted(
-                qlnTableName.GiaNuoc, qlnIDName.CustomerTypeID, qlnGiaNuocCol.KhuVuc, qlnGiaNuocCol.Thue,
+                qlnTableName.GiaNuoc, 
+                qlnIDName.CustomerTypeID, qlnGiaNuocCol.KhuVuc, qlnGiaNuocCol.Thue,
                 giaNuoc.getIdLoaiCustomer(), giaNuoc.getKhuVuc(), giaNuoc.getThue());
         try {
             result = ConnectQLN.executeUpdate(query);
@@ -56,10 +81,9 @@ public class GiaNuocDao {
         int result = 0;
         String query = """
                 UPDATE %s SET
+                        %s = '%d',
                         %s = '%s',
-                        %s = '%s',
-                        %s = '%s',
-                        %s = '%s'
+                        %s = '%f'
                 WHERE %s = %d""".formatted(
                 qlnTableName.GiaNuoc,
                 qlnIDName.CustomerTypeID, giaNuoc.getIdLoaiCustomer(),

@@ -1,4 +1,4 @@
-package gui.Customer;
+package gui;
 
 import java.awt.*;
 

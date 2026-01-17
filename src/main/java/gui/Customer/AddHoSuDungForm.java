@@ -5,6 +5,7 @@ import java.awt.*;
 
 import dao.HoSuDungDao;
 import data.KhuVucLoader;
+import gui.GUIConstants;
 import model.hoSuDung;
 
 public class AddHoSuDungForm extends JFrame {

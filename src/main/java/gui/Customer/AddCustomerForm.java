@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.*;
 
 import dao.CustomerDao;
+import gui.GUIConstants;
 import model.Customer;
 import model.loaiCustomer;
 
