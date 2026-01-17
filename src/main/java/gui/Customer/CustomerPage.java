@@ -1,7 +1,6 @@
 package gui.Customer;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
 

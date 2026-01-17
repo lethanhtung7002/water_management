@@ -476,13 +476,6 @@ public class AddCustomerForm extends JFrame {
                 return;
             }
 
-            // Debug
-            System.out.println("Tên: " + name);
-            System.out.println("Loại KH: " + selectedLoaiCustomer.getTenLoaiCustomer());
-            System.out.println("CCCD: " + cccd);
-            System.out.println("SĐT: " + phone);
-            System.out.println("Email: " + email);
-
             // Tạo object Customer
             Customer customer = new Customer(
                     0, // ID tự động tăng
@@ -517,9 +510,6 @@ public class AddCustomerForm extends JFrame {
      */
     private void updateCustomer(int customerId) {
         try {
-            System.out.println("=== UPDATE CUSTOMER ===");
-            System.out.println("ID: " + customerId);
-
             // Validate loại khách hàng
             loaiCustomer selectedLoaiCustomer = (loaiCustomer) cbLoaiUser.getSelectedItem();
             if (selectedLoaiCustomer == null) {
@@ -551,13 +541,6 @@ public class AddCustomerForm extends JFrame {
                 showError("Vui lòng nhập email!");
                 return;
             }
-
-            // Debug
-            System.out.println("Tên: " + name);
-            System.out.println("Loại KH: " + selectedLoaiCustomer.getTenLoaiCustomer());
-            System.out.println("CCCD: " + cccd);
-            System.out.println("SĐT: " + phone);
-            System.out.println("Email: " + email);
 
             // Tạo object Customer
             Customer customer = new Customer(

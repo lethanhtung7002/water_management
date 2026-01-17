@@ -99,7 +99,7 @@ public class CustomerDao {
         // Tạo câu lệnh UPDATE
         String query = """
                 UPDATE %s SET
-                        %s = '%s',
+                        %s = %d,
                         %s = '%s',
                         %s = '%s',
                         %s = '%s',
