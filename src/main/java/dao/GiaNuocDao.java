@@ -60,45 +60,48 @@ public class GiaNuocDao {
     // Thêm giá nước
     public boolean addGiaNuoc(GiaNuoc giaNuoc) {
         int result = 0;
-        String query = """
-                INSERT INTO %s (%s, %s, %s)
-                VALUES (%d, '%s', %f)     // ✅ BỎ dấu nháy ở %d và %f
-                """.formatted(
+        String query = String.format(java.util.Locale.US,
+                "INSERT INTO %s (%s, %s, %s) VALUES (%d, '%s', %.2f)",
                 qlnTableName.GiaNuoc,
                 qlnIDName.CustomerTypeID, qlnGiaNuocCol.KhuVuc, qlnGiaNuocCol.Thue,
                 giaNuoc.getIdLoaiCustomer(), giaNuoc.getKhuVuc(), giaNuoc.getThue());
+
+        System.out.println("=== SQL INSERT ===");
+        System.out.println(query);
+        System.out.println("==================");
+
         try {
             result = ConnectQLN.executeUpdate(query);
+            System.out.println("Số dòng thêm: " + result);
         } catch (Exception e) {
             System.out.println("Lỗi thêm giá nước: " + e.getMessage());
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
         return result > 0;
     }
 
-    // cập nhật người dùng
+    // cập nhật giá nước
     public boolean updateGiaNuoc(GiaNuoc giaNuoc) {
         int result = 0;
-        String query = """
-                UPDATE %s SET
-                        %s = %d,
-                        %s = '%s',
-                        %s = %f
-                WHERE %s = %d""".formatted(
+        String query = String.format(java.util.Locale.US,
+                "UPDATE %s SET %s = %d, %s = '%s', %s = %.2f WHERE %s = %d",
                 qlnTableName.GiaNuoc,
                 qlnIDName.CustomerTypeID, giaNuoc.getIdLoaiCustomer(),
                 qlnGiaNuocCol.KhuVuc, giaNuoc.getKhuVuc(),
                 qlnGiaNuocCol.Thue, giaNuoc.getThue(),
                 qlnIDName.GiaNuocID, giaNuoc.getIdDonGia());
 
-        System.out.println("SQL Query: " + query); // Debug
+        System.out.println("=== SQL UPDATE ===");
+        System.out.println(query);
+        System.out.println("==================");
 
         try {
             result = ConnectQLN.executeUpdate(query);
-            System.out.println("Rows affected: " + result); // Debug
+            System.out.println("Số dòng cập nhật: " + result);
         } catch (Exception e) {
             System.out.println("Lỗi cập nhật giá nước: " + e.getMessage());
-            e.printStackTrace(); // In chi tiết lỗi
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
         return result > 0;

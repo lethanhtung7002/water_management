@@ -25,7 +25,6 @@ public class waterPricePage extends JPanel {
     private JButton btnEdit = new JButton("Sửa giá nước");
     private JButton btnDelete = new JButton("Xóa giá nước");
     private JButton btnRefresh = new JButton("Làm mới");
-    private JButton btnInfo = new JButton("Thông tin");
 
     private ArrayList<GiaNuoc> gnArr = new ArrayList<>();
     private GiaNuocDao giaNuocDao = new GiaNuocDao();
@@ -42,9 +41,8 @@ public class waterPricePage extends JPanel {
         topPanel.add(btnAdd);
         topPanel.add(btnEdit);
         topPanel.add(btnDelete);
-        topPanel.add(btnInfo);
 
-        String[] columnNames = { "Id Đơn giá", "Loại khách hàng", "Khu vực", "Thue"};
+        String[] columnNames = { "Id Đơn giá", "Loại khách hàng", "Khu vực", "Thue" };
         tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
         table.setRowHeight(25);
@@ -59,12 +57,12 @@ public class waterPricePage extends JPanel {
         btnRefresh.addActionListener(e -> showWaterPriceList());
         btnAdd.addActionListener(e -> {
             new AddWaterPriceForm().setVisible(true);
-            
+
         });
 
         btnEdit.addActionListener(e -> {
             new AddWaterPriceForm(gnArr.get(table.getSelectedRow())).setVisible(true);
-            
+
         });
 
         btnDelete.addActionListener(e -> {
@@ -99,12 +97,7 @@ public class waterPricePage extends JPanel {
                             JOptionPane.ERROR_MESSAGE);
                 }
             }
-            
-        });
 
-        btnInfo.addActionListener(e -> {
-            // new InfoGiaNuocForm().setVisible(true);
-            
         });
 
     }
@@ -113,11 +106,11 @@ public class waterPricePage extends JPanel {
         gnArr = giaNuocDao.getGiaNuoc();
         tableModel.setRowCount(0);
         for (GiaNuoc gn : gnArr) {
-            tableModel.addRow(new Object[] { 
-                gn.getIdDonGia(), 
-                gn.getIdLoaiCustomer(),  
-                gn.getKhuVuc(), 
-                gn.getThue()
+            tableModel.addRow(new Object[] {
+                    gn.getIdDonGia(),
+                    gn.getIdLoaiCustomer(),
+                    gn.getKhuVuc(),
+                    gn.getThue()
             });
         }
     }

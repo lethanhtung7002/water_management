@@ -11,138 +11,217 @@ import java.awt.*;
 import dao.*;
 import data.KhuVucLoader;
 import gui.GUIConstants;
-import model.Customer;
 import model.*;
-import model.loaiCustomer;
 
+/**
+ * Form quản lý chính sách giá nước.
+ * 
+ * Chức năng:
+ * - Thêm mới chính sách giá nước
+ * - Sửa chính sách giá nước hiện có
+ * - Quản lý bậc giá nước (tier pricing)
+ * 
+ * Cách sử dụng:
+ * - new AddWaterPriceForm() → Thêm mới
+ * - new AddWaterPriceForm(GiaNuoc) → Sửa
+ * 
+ * @author Lê Thanh Tùng
+ * @version 2.0
+ */
 public class AddWaterPriceForm extends JFrame {
 
-    // === Labels ===
-    private JLabel lbCustomerTpye = new JLabel("Loại Khách Hàng");
+    // ===== LABELS =====
+    private JLabel lbCustomerType = new JLabel("Loại Khách Hàng");
     private JLabel lbKhuVuc = new JLabel("Khu Vực");
-    private JLabel lbThue = new JLabel("Thue");
+    private JLabel lbThue = new JLabel("Thuế (%)");
 
-    // === Input ===
+    // ===== INPUT FIELDS =====
     private JComboBox<loaiCustomer> cbCustomerType = new JComboBox<>();
     private JComboBox<String> cbKhuVuc = new JComboBox<>();
     private JTextField tfThue = new JTextField();
 
-    // === Buttons ===
-    private JButton btnSave = new JButton("Save");
-    private JButton btnUpdate = new JButton("Update");
-    private JButton btnCancel = new JButton("Cancel");
-    private JButton btnRefresh = new JButton("Làm mới");
-    private JButton btnAdd = new JButton("Thêm bậc giá nước");
-    private JButton btnEdit = new JButton("Sửa bậc giá nước");
-    private JButton btnDelete = new JButton("Xóa bậc giá nước");
+    // ===== BUTTONS - Main Form =====
+    private JButton btnSave = new JButton("Lưu");
+    private JButton btnUpdate = new JButton("Cập nhật");
+    private JButton btnCancel = new JButton("Hủy");
 
+    // ===== BUTTONS - Water Price Tier Management =====
+    private JButton btnRefresh = new JButton("Làm mới");
+    private JButton btnAddTier = new JButton("Thêm bậc giá");
+    private JButton btnEditTier = new JButton("Sửa bậc giá");
+    private JButton btnDeleteTier = new JButton("Xóa bậc giá");
+
+    // ===== DAO =====
     private GiaNuocDao gnDao = new GiaNuocDao();
     private CustomerDao cDao = new CustomerDao();
 
-    private JScrollPane wptTable;
+    // ===== TABLE =====
+    private JScrollPane wptScrollPane;
+    private JTable wptTable;
+    private DefaultTableModel wptTableModel;
+    private ArrayList<WaterPriceTier> waterPriceTiers = new ArrayList<>();
 
-    ArrayList<WaterPriceTier> WaterPriceTiersArr = new ArrayList<>();
-
+    /**
+     * Constructor cho chế độ THÊM MỚI.
+     * Hiển thị form trống để nhập thông tin chính sách giá nước mới.
+     */
     public AddWaterPriceForm() {
         setTitle("Thêm chính sách giá nước");
-        init();
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        btnSave.addActionListener(e -> save());
+        // Load dữ liệu cho ComboBox
+        loadCustomerTypes();
+        loadKhuVuc();
+
+        // Tạo giao diện
+        add(createFormPanel(), BorderLayout.CENTER);
+        add(createButtonPanel(true), BorderLayout.SOUTH);
+
+        // Gắn sự kiện
+        btnSave.addActionListener(e -> saveWaterPrice());
         btnCancel.addActionListener(e -> dispose());
-        setLocationRelativeTo(null);
+
+        // Hiển thị form
         pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
+    /**
+     * Constructor cho chế độ SỬA.
+     * Hiển thị thông tin giá nước hiện có và cho phép chỉnh sửa.
+     * Bao gồm cả quản lý bậc giá nước.
+     * 
+     * @param gn Đối tượng GiaNuoc cần chỉnh sửa
+     */
     public AddWaterPriceForm(GiaNuoc gn) {
         setTitle("Sửa chính sách giá nước");
-        init(gn.getIdDonGia());
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        cbCustomerType.setSelectedItem(gn.getIdLoaiCustomer());
-        cbKhuVuc.setSelectedItem(gn.getKhuVuc());
-        tfThue.setText(String.valueOf(gn.getThue()));
+        // Load dữ liệu cho ComboBox
+        loadCustomerTypes();
+        loadKhuVuc();
 
-        btnUpdate.addActionListener(e -> updateData(gn.getIdDonGia()));
+        // Tạo panel bên trái (form chính)
+        JPanel leftPanel = new JPanel(new BorderLayout());
+        leftPanel.add(createFormPanel(), BorderLayout.CENTER);
+        leftPanel.add(createButtonPanel(false), BorderLayout.SOUTH);
+
+        // Tạo panel bên phải (bảng bậc giá nước)
+        JPanel rightPanel = new JPanel(new BorderLayout());
+        rightPanel.add(createTierButtonPanel(gn.getIdDonGia()), BorderLayout.NORTH);
+        rightPanel.add(createTierTable(gn.getIdDonGia()), BorderLayout.CENTER);
+
+        // Ghép 2 panel vào frame
+        add(leftPanel, BorderLayout.WEST);
+        add(rightPanel, BorderLayout.CENTER);
+
+        // Điền dữ liệu vào form
+        fillFormData(gn);
+
+        // Gắn sự kiện
+        btnUpdate.addActionListener(e -> updateWaterPrice(gn.getIdDonGia()));
         btnCancel.addActionListener(e -> dispose());
-        setLocationRelativeTo(null);
+
+        // Hiển thị form
         pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
-    public void init() {
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    // ========================================
+    // PHẦN 1: LOAD DỮ LIỆU
+    // ========================================
 
-        // Load danh sách loại khách hàng từ database
+    /**
+     * Load danh sách loại khách hàng từ database vào ComboBox.
+     * Ví dụ: Sinh hoạt, Sản xuất, Kinh doanh, Hành chính
+     */
+    private void loadCustomerTypes() {
+        cbCustomerType.removeAllItems(); // Xóa dữ liệu cũ
         List<loaiCustomer> loaiNguoiDung = cDao.getLoaiKhachHang();
         for (loaiCustomer lnd : loaiNguoiDung) {
             cbCustomerType.addItem(lnd);
         }
-        new KhuVucLoader().loadKhuVuc(cbKhuVuc);
-
-        add(createFormPanel(), BorderLayout.WEST);
-        add(createBtnWP(), BorderLayout.CENTER);
-
-        // Thêm button panel vào south
-        add(createBtnWP(), BorderLayout.SOUTH);
-
     }
 
-    public void init(int idWPT) {
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    /**
+     * Load danh sách khu vực (tỉnh/thành phố) từ file vào ComboBox.
+     * File: src/main/java/data/khu_vuc.txt
+     */
+    private void loadKhuVuc() {
+        cbKhuVuc.removeAllItems(); // Xóa dữ liệu cũ
+        new KhuVucLoader().loadKhuVuc(cbKhuVuc);
+    }
 
-        // Load danh sách loại khách hàng từ database
-        List<loaiCustomer> loaiNguoiDung = cDao.getLoaiKhachHang();
-        for (loaiCustomer lnd : loaiNguoiDung) {
-            cbCustomerType.addItem(lnd);
+    /**
+     * Điền dữ liệu từ object GiaNuoc vào form (dùng cho chế độ sửa).
+     * 
+     * @param gn Đối tượng GiaNuoc chứa dữ liệu cần điền
+     */
+    private void fillFormData(GiaNuoc gn) {
+        // Tìm và chọn loại khách hàng tương ứng
+        for (int i = 0; i < cbCustomerType.getItemCount(); i++) {
+            loaiCustomer lc = cbCustomerType.getItemAt(i);
+            if (lc.getIdLoaiCustomer() == gn.getIdLoaiCustomer()) {
+                cbCustomerType.setSelectedIndex(i);
+                break;
+            }
         }
-        new KhuVucLoader().loadKhuVuc(cbKhuVuc);
 
-        JPanel leftFrame = new JPanel(new BorderLayout());
-        leftFrame.add(createFormPanel(), BorderLayout.WEST);
-        leftFrame.add(createBtnWP(), BorderLayout.SOUTH);
+        // Chọn khu vực
+        cbKhuVuc.setSelectedItem(gn.getKhuVuc());
 
-        JPanel rightFrame = new JPanel(new BorderLayout());
-        rightFrame.add(createBtnWPT(idWPT), BorderLayout.NORTH);
-        rightFrame.add(createTableWPT(idWPT));
-
-        add(leftFrame, BorderLayout.WEST);
-        add(rightFrame, BorderLayout.CENTER);
-
+        // Hiển thị thuế
+        tfThue.setText(String.valueOf(gn.getThue()));
     }
 
+    // ========================================
+    // PHẦN 2: TẠO GIAO DIỆN
+    // ========================================
+
+    /**
+     * Tạo panel chứa form nhập liệu (loại KH, khu vực, thuế).
+     * Sử dụng GridBagLayout để căn chỉnh đẹp mắt.
+     * 
+     * @return JPanel chứa form
+     */
     private JPanel createFormPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 10, 30)); // Tăng vùng đệm
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 10, 30));
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(8, 8, 8, 8); // Khoảng cách các hàng
+        gbc.insets = new Insets(8, 8, 8, 8); // Khoảng cách giữa các component
+        gbc.anchor = GridBagConstraints.WEST; // Căn trái
 
         int row = 0;
 
-        // ===== TITLE =====
+        // ===== TIÊU ĐỀ =====
         gbc.gridx = 0;
         gbc.gridy = row++;
-        gbc.gridwidth = 2;
+        gbc.gridwidth = 2; // Chiếm 2 cột
         JLabel lbTitle = new JLabel(getTitle());
         lbTitle.setFont(GUIConstants.Fonts.TieuDe);
         panel.add(lbTitle, gbc);
 
-        // Reset settings
+        // Reset gridwidth về 1 cho các component tiếp theo
         gbc.gridwidth = 1;
-        gbc.anchor = GridBagConstraints.WEST; // căn lề cho tiêu đề
 
         // ===== LOẠI KHÁCH HÀNG =====
         gbc.gridx = 0;
-        gbc.gridy = row++;
-        lbCustomerTpye.setFont(GUIConstants.Fonts.TieuDePhu);
-        panel.add(lbCustomerTpye, gbc);
+        gbc.gridy = row;
+        lbCustomerType.setFont(GUIConstants.Fonts.TieuDePhu);
+        panel.add(lbCustomerType, gbc);
 
         gbc.gridx = 1;
         cbCustomerType.setPreferredSize(GUIConstants.Sizes.tf);
         cbCustomerType.setFont(GUIConstants.Fonts.TieuDePhu);
         panel.add(cbCustomerType, gbc);
+        row++;
 
         // ===== KHU VỰC =====
         gbc.gridx = 0;
-        gbc.gridy = row++;
+        gbc.gridy = row;
         lbKhuVuc.setFont(GUIConstants.Fonts.TieuDePhu);
         panel.add(lbKhuVuc, gbc);
 
@@ -150,10 +229,11 @@ public class AddWaterPriceForm extends JFrame {
         cbKhuVuc.setPreferredSize(GUIConstants.Sizes.tf);
         cbKhuVuc.setFont(GUIConstants.Fonts.TieuDePhu);
         panel.add(cbKhuVuc, gbc);
+        row++;
 
         // ===== THUẾ =====
         gbc.gridx = 0;
-        gbc.gridy = row++;
+        gbc.gridy = row;
         lbThue.setFont(GUIConstants.Fonts.TieuDePhu);
         panel.add(lbThue, gbc);
 
@@ -165,138 +245,369 @@ public class AddWaterPriceForm extends JFrame {
         return panel;
     }
 
-    private JPanel createBtnWP() {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    /**
+     * Tạo panel chứa các nút Save/Update và Cancel.
+     * 
+     * @param isAddMode true = hiển thị nút "Lưu", false = hiển thị nút "Cập nhật"
+     * @return JPanel chứa các nút
+     */
+    private JPanel createButtonPanel(boolean isAddMode) {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
 
-        btnSave.setPreferredSize(GUIConstants.Sizes.btn); // kích thước button
+        // Cấu hình kích thước và font cho các nút
+        btnSave.setPreferredSize(GUIConstants.Sizes.btn);
+        btnUpdate.setPreferredSize(GUIConstants.Sizes.btn);
         btnCancel.setPreferredSize(GUIConstants.Sizes.btn);
 
-        btnSave.setFont(GUIConstants.Fonts.TieuDePhu); // font button
+        btnSave.setFont(GUIConstants.Fonts.TieuDePhu);
+        btnUpdate.setFont(GUIConstants.Fonts.TieuDePhu);
         btnCancel.setFont(GUIConstants.Fonts.TieuDePhu);
 
-        panel.add(btnSave);
+        // Chỉ hiển thị nút phù hợp với chế độ
+        if (isAddMode) {
+            panel.add(btnSave);
+        } else {
+            panel.add(btnUpdate);
+        }
         panel.add(btnCancel);
+
         return panel;
     }
 
-    private JPanel createBtnWPT(int wptId) {
-        JPanel panel = new JPanel(new FlowLayout());
+    /**
+     * Tạo panel chứa các nút quản lý bậc giá nước.
+     * Chỉ hiển thị trong chế độ sửa.
+     * 
+     * @param waterPriceId ID của chính sách giá nước
+     * @return JPanel chứa các nút quản lý
+     */
+    private JPanel createTierButtonPanel(int waterPriceId) {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 10));
+        panel.setBorder(BorderFactory.createTitledBorder("Quản lý bậc giá nước"));
 
-        panel.add(new JLabel("Bậc giá nước"));
         panel.add(btnRefresh);
-        panel.add(btnAdd);
-        panel.add(btnEdit);
-        panel.add(btnDelete);
+        panel.add(btnAddTier);
+        panel.add(btnEditTier);
+        panel.add(btnDeleteTier);
 
-        btnRefresh.addActionListener(e -> {
-            this.wptTable = createTableWPT(wptId);
+        // Gắn sự kiện
+        btnRefresh.addActionListener(e -> refreshTierTable(waterPriceId));
+
+        btnAddTier.addActionListener(e -> {
+            // TODO: Mở form thêm bậc giá nước
+            JOptionPane.showMessageDialog(this,
+                    "Chức năng đang phát triển: Thêm bậc giá nước",
+                    "Thông báo",
+                    JOptionPane.INFORMATION_MESSAGE);
         });
 
-        btnAdd.addActionListener(e -> {
-            
+        btnEditTier.addActionListener(e -> {
+            int selectedRow = wptTable.getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(this,
+                        "Vui lòng chọn bậc giá cần sửa!",
+                        "Cảnh báo",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            // TODO: Mở form sửa bậc giá nước
+            JOptionPane.showMessageDialog(this,
+                    "Chức năng đang phát triển: Sửa bậc giá nước",
+                    "Thông báo",
+                    JOptionPane.INFORMATION_MESSAGE);
         });
 
-        btnEdit.addActionListener(e -> {
-            
-        });
+        btnDeleteTier.addActionListener(e -> {
+            int selectedRow = wptTable.getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(this,
+                        "Vui lòng chọn bậc giá cần xóa!",
+                        "Cảnh báo",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            // TODO: Xóa bậc giá nước
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "Bạn có chắc muốn xóa bậc giá này?",
+                    "Xác nhận",
+                    JOptionPane.YES_NO_OPTION);
 
-        btnDelete.addActionListener(e -> {
-            
+            if (confirm == JOptionPane.YES_OPTION) {
+                JOptionPane.showMessageDialog(this,
+                        "Chức năng đang phát triển: Xóa bậc giá nước",
+                        "Thông báo",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
         });
 
         return panel;
     }
 
-    private JScrollPane createTableWPT(int wptId) {
-        String[] col = { "Bậc Giá", "Từ mức nước", " Đến Mức Nước", "Giá" };
-        DefaultTableModel model = new DefaultTableModel(col, 0);
+    /**
+     * Tạo bảng hiển thị các bậc giá nước.
+     * Bảng gồm 4 cột: Bậc giá, Từ mức nước, Đến mức nước, Giá
+     * 
+     * @param waterPriceId ID của chính sách giá nước
+     * @return JScrollPane chứa bảng
+     */
+    private JScrollPane createTierTable(int waterPriceId) {
+        // Định nghĩa tên cột
+        String[] columns = { "Bậc Giá", "Từ mức nước (m³)", "Đến mức nước (m³)", "Giá (VNĐ/m³)" };
 
-        JTable table = new JTable(model);
-        table.setRowHeight(25);
+        // Tạo model cho bảng
+        wptTableModel = new DefaultTableModel(columns, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Không cho phép edit trực tiếp trên bảng
+            }
+        };
 
-        showWaterPriceTiers(model, wptId);
+        // Tạo bảng
+        wptTable = new JTable(wptTableModel);
+        wptTable.setRowHeight(25);
+        wptTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Chỉ chọn 1 dòng
+        wptTable.getTableHeader().setReorderingAllowed(false); // Không cho di chuyển cột
 
-        return new JScrollPane(table);
+        // Load dữ liệu
+        loadTierData(waterPriceId);
+
+        // Tạo scroll pane
+        wptScrollPane = new JScrollPane(wptTable);
+        wptScrollPane.setPreferredSize(new Dimension(500, 300));
+
+        return wptScrollPane;
     }
 
-    private void showWaterPriceTiers(DefaultTableModel model, int wptId) {
-        model.setRowCount(0);
+    /**
+     * Load dữ liệu bậc giá nước từ database vào bảng.
+     * 
+     * @param waterPriceId ID của chính sách giá nước
+     */
+    private void loadTierData(int waterPriceId) {
+        // Xóa dữ liệu cũ
+        wptTableModel.setRowCount(0);
 
-        this.WaterPriceTiersArr = gnDao.getBacGiaNuocByIdGiaNuoc(wptId);
-        for (WaterPriceTier wpt : WaterPriceTiersArr) {
-            model.addRow(new Object[] { wpt.getTier(),
-                    wpt.getMinConsumption(),
-                    wpt.getMaxConsumption(),
-                    wpt.getPrice() });
-        }
+        try {
+            // Lấy dữ liệu từ database
+            this.waterPriceTiers = gnDao.getBacGiaNuocByIdGiaNuoc(waterPriceId);
 
-    }
+            // Thêm từng dòng vào bảng
+            for (WaterPriceTier tier : waterPriceTiers) {
+                Object[] row = {
+                        tier.getTier(),
+                        tier.getMinConsumption(),
+                        tier.getMaxConsumption(),
+                        String.format("%,.0f", tier.getPrice()) // Format giá có dấu phẩy
+                };
+                wptTableModel.addRow(row);
+            }
 
-    private void save() {
-        // Lấy loại khách hàng đã chọn từ ComboBox
-        loaiCustomer loaiKhachHang = (loaiCustomer) cbCustomerType.getSelectedItem();
+            System.out.println("Đã load " + waterPriceTiers.size() + " bậc giá nước");
 
-        // Lấy khu vực đã chọn từ ComboBox
-        String khuVuc = (String) cbKhuVuc.getSelectedItem();
-
-        // Lấy thuế đã nhập từ TextField
-        double thue = Double.parseDouble(tfThue.getText());
-
-        // Tạo đối tượng GiaNuoc
-        GiaNuoc giaNuoc = new GiaNuoc(
-                0,
-                loaiKhachHang.getIdLoaiCustomer(),
-                khuVuc,
-                thue);
-
-        // Lưu vào database
-        if (gnDao.addGiaNuoc(giaNuoc)) {
-            // Hiển thị thông báo thành công
-            JOptionPane.showMessageDialog(this, "Thêm chính sách giá nước thành công!", "Thành công",
-                    JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this, "Thêm chính sách giá nước thất bại!", "Thất bại",
+        } catch (Exception e) {
+            System.out.println("Lỗi khi load bậc giá nước: " + e.getMessage());
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    "Lỗi khi tải dữ liệu bậc giá nước: " + e.getMessage(),
+                    "Lỗi",
                     JOptionPane.ERROR_MESSAGE);
         }
-
-        // Đóng form hiện tại
-        dispose();
     }
 
-    private void updateData(int ID_giaNuoc) {
-        // Lấy loại khách hàng đã chọn từ ComboBox
-        loaiCustomer loaiKhachHang = (loaiCustomer) cbCustomerType.getSelectedItem();
+    /**
+     * Làm mới bảng bậc giá nước.
+     * 
+     * @param waterPriceId ID của chính sách giá nước
+     */
+    private void refreshTierTable(int waterPriceId) {
+        loadTierData(waterPriceId);
+        JOptionPane.showMessageDialog(this,
+                "Đã làm mới dữ liệu bậc giá nước!",
+                "Thông báo",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
 
-        // Lấy khu vực đã chọn từ ComboBox
-        String khuVuc = (String) cbKhuVuc.getSelectedItem();
+    // ========================================
+    // PHẦN 3: XỬ LÝ LOGIC
+    // ========================================
 
-        // Lấy thuế đã nhập từ TextField
-        double thue = Double.parseDouble(tfThue.getText());
+    /**
+     * Lưu chính sách giá nước mới vào database.
+     * Thực hiện validation trước khi lưu.
+     */
+    private void saveWaterPrice() {
+        try {
+            System.out.println("=== SAVE WATER PRICE ===");
 
-        GiaNuoc giaNuoc = new GiaNuoc(
-                ID_giaNuoc,
-                loaiKhachHang.getIdLoaiCustomer(),
-                khuVuc,
-                thue);
+            // Validate loại khách hàng
+            loaiCustomer loaiKH = (loaiCustomer) cbCustomerType.getSelectedItem();
+            if (loaiKH == null) {
+                showError("Vui lòng chọn loại khách hàng!");
+                return;
+            }
 
-        // Lưu vào database
-        if (gnDao.updateGiaNuoc(giaNuoc)) {
-            // Hiển thị thông báo thành công
-            JOptionPane.showMessageDialog(this, "Cập nhật chính sách giá nước thành công!", "Thành công",
-                    JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this, "Cập nhật chính sách giá nước thất bại!", "Thất bại",
-                    JOptionPane.ERROR_MESSAGE);
+            // Validate khu vực
+            String khuVuc = (String) cbKhuVuc.getSelectedItem();
+            if (khuVuc == null || khuVuc.equals("-- Chọn tỉnh ---")) {
+                showError("Vui lòng chọn khu vực!");
+                return;
+            }
+
+            // Validate thuế
+            String thueText = tfThue.getText().trim();
+            if (thueText.isEmpty()) {
+                showError("Vui lòng nhập thuế!");
+                return;
+            }
+
+            double thue;
+            try {
+                thue = Double.parseDouble(thueText);
+                if (thue < 0 || thue > 100) {
+                    showError("Thuế phải từ 0 đến 100!");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                showError("Thuế phải là số hợp lệ!");
+                return;
+            }
+
+            // In ra thông tin debug
+            System.out.println("Loại KH: " + loaiKH.getIdLoaiCustomer() + " - " + loaiKH.getTenLoaiCustomer());
+            System.out.println("Khu vực: " + khuVuc);
+            System.out.println("Thuế: " + thue + "%");
+
+            // Tạo object GiaNuoc
+            GiaNuoc giaNuoc = new GiaNuoc(
+                    0, // ID tự động tăng
+                    loaiKH.getIdLoaiCustomer(),
+                    khuVuc,
+                    thue);
+
+            // Lưu vào database
+            boolean success = gnDao.addGiaNuoc(giaNuoc);
+            System.out.println("Kết quả lưu: " + success);
+
+            if (success) {
+                showSuccess("Thêm chính sách giá nước thành công!");
+                dispose(); // Đóng form
+            } else {
+                showError("Thêm chính sách giá nước thất bại!");
+            }
+
+        } catch (Exception e) {
+            System.out.println("Lỗi không mong muốn: " + e.getMessage());
+            e.printStackTrace();
+            showError("Lỗi: " + e.getMessage());
         }
-
-        // Đóng form hiện tại
-        dispose();
     }
 
-}
+    /**
+     * Cập nhật chính sách giá nước đã có trong database.
+     * Thực hiện validation trước khi cập nhật.
+     * 
+     * @param waterPriceId ID của chính sách cần cập nhật
+     */
+    private void updateWaterPrice(int waterPriceId) {
+        try {
+            System.out.println("=== UPDATE WATER PRICE ===");
+            System.out.println("ID: " + waterPriceId);
 
-class run_test {
-    public static void main(String[] args) {
-        new AddWaterPriceForm().setVisible(true);
+            // Validate loại khách hàng
+            loaiCustomer loaiKH = (loaiCustomer) cbCustomerType.getSelectedItem();
+            if (loaiKH == null) {
+                showError("Vui lòng chọn loại khách hàng!");
+                return;
+            }
+
+            // Validate khu vực
+            String khuVuc = (String) cbKhuVuc.getSelectedItem();
+            if (khuVuc == null || khuVuc.equals("-- Chọn tỉnh ---")) {
+                showError("Vui lòng chọn khu vực!");
+                return;
+            }
+
+            // Validate thuế
+            String thueText = tfThue.getText().trim();
+            if (thueText.isEmpty()) {
+                showError("Vui lòng nhập thuế!");
+                return;
+            }
+
+            double thue;
+            try {
+                thue = Double.parseDouble(thueText);
+                if (thue < 0 || thue > 100) {
+                    showError("Thuế phải từ 0 đến 100!");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                showError("Thuế phải là số hợp lệ!");
+                return;
+            }
+
+            // In ra thông tin debug
+            System.out.println("Loại KH: " + loaiKH.getIdLoaiCustomer() + " - " + loaiKH.getTenLoaiCustomer());
+            System.out.println("Khu vực: " + khuVuc);
+            System.out.println("Thuế: " + thue + "%");
+
+            // Tạo object GiaNuoc với ID cũ
+            GiaNuoc giaNuoc = new GiaNuoc(
+                    waterPriceId, // Giữ nguyên ID
+                    loaiKH.getIdLoaiCustomer(),
+                    khuVuc,
+                    thue);
+
+            // In ra object để kiểm tra
+            System.out.println("Object GiaNuoc:");
+            System.out.println("  - ID: " + giaNuoc.getIdDonGia());
+            System.out.println("  - ID Loại KH: " + giaNuoc.getIdLoaiCustomer());
+            System.out.println("  - Khu vực: " + giaNuoc.getKhuVuc());
+            System.out.println("  - Thuế: " + giaNuoc.getThue() + "%");
+
+            // Cập nhật trong database
+            boolean success = gnDao.updateGiaNuoc(giaNuoc);
+            System.out.println("Kết quả cập nhật: " + success);
+
+            if (success) {
+                showSuccess("Cập nhật chính sách giá nước thành công!");
+                dispose(); // Đóng form
+            } else {
+                showError("Cập nhật chính sách giá nước thất bại!");
+            }
+
+        } catch (Exception e) {
+            System.out.println("Lỗi không mong muốn: " + e.getMessage());
+            e.printStackTrace();
+            showError("Lỗi: " + e.getMessage());
+        }
+    }
+
+    // ========================================
+    // PHẦN 4: HELPER METHODS
+    // ========================================
+
+    /**
+     * Hiển thị dialog thông báo lỗi.
+     * 
+     * @param message Nội dung thông báo
+     */
+    private void showError(String message) {
+        JOptionPane.showMessageDialog(this,
+                message,
+                "Lỗi",
+                JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * Hiển thị dialog thông báo thành công.
+     * 
+     * @param message Nội dung thông báo
+     */
+    private void showSuccess(String message) {
+        JOptionPane.showMessageDialog(this,
+                message,
+                "Thành công",
+                JOptionPane.INFORMATION_MESSAGE);
     }
 }
