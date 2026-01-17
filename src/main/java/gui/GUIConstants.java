@@ -21,4 +21,10 @@ public class GUIConstants {
         public static final Dimension tf = new Dimension(250, 30);
         public static final Dimension btn = new Dimension(120, 35);
     }
+
+    public static class Colors {
+
+        public static final Color BACKGROUND_COLOR = new Color(26, 26, 26);
+
+    }
 }

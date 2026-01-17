@@ -1,6 +1,3 @@
-/* This is page in MenuForm
- */
-
 package gui.Customer;
 
 import java.awt.BorderLayout;
@@ -14,10 +11,22 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import gui.GUIConstants;
 
 import dao.CustomerDao;
 import model.Customer;
 
+/**
+ * Trang quản lý khách hàng.
+ * 
+ * Chức năng:
+ * - Hiển thị danh sách khách hàng
+ * - Thêm, sửa, xóa khách hàng
+ * - Xem thông tin chi tiết và quản lý hộ sử dụng
+ * 
+ * @author Lê Thanh Tùng
+ * @version 2.0
+ */
 public class CustomerPage extends JPanel {
 
     private JTable table;
@@ -25,135 +34,139 @@ public class CustomerPage extends JPanel {
     private JScrollPane scrollPane;
 
     private JButton btnAdd = new JButton("Thêm Khách Hàng");
-    private JButton btnEdit = new JButton("Sửa Thông Tin Khách Hàng");
-    private JButton btnDelete = new JButton("Delete User");
-    private JButton btnRefresh = new JButton("Refresh");
-    private JButton btnInfo = new JButton("Info");
+    private JButton btnEdit = new JButton("Sửa Thông Tin");
+    private JButton btnDelete = new JButton("Xóa Khách Hàng");
+    private JButton btnRefresh = new JButton("Làm mới");
 
-    private ArrayList<Customer> UserArr = new ArrayList<Customer>();
-    private CustomerDao userDao = new CustomerDao();
+    private ArrayList<Customer> customerList = new ArrayList<>();
+    private CustomerDao customerDao = new CustomerDao();
 
     public CustomerPage() {
-
         setLayout(new BorderLayout(5, 5));
-        setBackground(new Color(26, 26, 26)); // Thêm màu nền cho phù hợp với MenuForm
+        setBackground(GUIConstants.Colors.BACKGROUND_COLOR);
 
+        // Panel chứa các nút
         JPanel topPanel = new JPanel();
-        topPanel.setLayout(new FlowLayout());
-        topPanel.setBackground(new Color(26, 26, 26)); // Màu nền
+        topPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        topPanel.setBackground(GUIConstants.Colors.BACKGROUND_COLOR);
 
         topPanel.add(btnRefresh);
         topPanel.add(btnAdd);
         topPanel.add(btnEdit);
         topPanel.add(btnDelete);
-        topPanel.add(btnInfo);
 
-        String[] columnNames = { "ID", "Tên Khách hàng", "Loai Khách hàng", "CCCD", "số điện thoại", "Email" };
+        // Tạo bảng
+        String[] columnNames = { "ID", "Tên Khách hàng", "Loại KH", "CCCD", "Số điện thoại", "Email" };
         tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
         table.setRowHeight(25);
         table.setFillsViewportHeight(true);
+        table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
         scrollPane = new JScrollPane(table);
         add(topPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
 
-        showUserList();
+        // Load dữ liệu
+        showCustomerList();
 
-        // === SỰ KIỆN BUTTONS ===
-        btnRefresh.addActionListener(e -> showUserList());
+        // ===== SỰ KIỆN BUTTONS =====
 
+        // Refresh - Làm mới danh sách
+        btnRefresh.addActionListener(e -> showCustomerList());
+
+        // Add - Thêm khách hàng mới
         btnAdd.addActionListener(e -> {
-            new AddCustomerForm().setVisible(true);
+            new AddCustomerForm(); // Form thêm mới
         });
 
+        // Edit - Sửa thông tin khách hàng
         btnEdit.addActionListener(e -> {
             int selectedRow = table.getSelectedRow();
 
             if (selectedRow == -1) {
                 JOptionPane.showMessageDialog(this,
-                        "Please select a user to edit.",
-                        "No User Selected",
+                        "Vui lòng chọn khách hàng cần sửa!",
+                        "Cảnh báo",
                         JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            Customer selectedUser = userDao.getCustomerById((Integer) tableModel.getValueAt(selectedRow, 0));
+            // Lấy ID từ bảng
+            int customerId = (Integer) tableModel.getValueAt(selectedRow, 0);
 
-            if (selectedUser != null) {
-                AddCustomerForm editForm = new AddCustomerForm(selectedUser);
-                editForm.setVisible(true);
+            // Lấy thông tin chi tiết từ database
+            Customer selectedCustomer = customerDao.getCustomerById(customerId);
+
+            if (selectedCustomer != null) {
+                new AddCustomerForm(selectedCustomer); // Form sửa + quản lý hộ sử dụng
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Không tìm thấy thông tin khách hàng!",
+                        "Lỗi",
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
 
+        // Delete - Xóa khách hàng
         btnDelete.addActionListener(e -> {
             int selectedRow = table.getSelectedRow();
 
             if (selectedRow == -1) {
                 JOptionPane.showMessageDialog(this,
-                        "Please select a user to delete.",
-                        "No User Selected",
+                        "Vui lòng chọn khách hàng cần xóa!",
+                        "Cảnh báo",
                         JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
+            // Xác nhận xóa
             int confirm = JOptionPane.showConfirmDialog(this,
-                    "Are you sure you want to delete this user?",
-                    "Confirm Delete",
+                    "Bạn có chắc muốn xóa khách hàng này?\nLưu ý: Sẽ xóa cả các hộ sử dụng liên quan!",
+                    "Xác nhận xóa",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.WARNING_MESSAGE);
 
             if (confirm == JOptionPane.YES_OPTION) {
-                String idDelete = tableModel.getValueAt(selectedRow, 0).toString();
-                if (userDao.deleteUserById(Integer.parseInt(idDelete))) {
+                int customerId = (Integer) tableModel.getValueAt(selectedRow, 0);
+
+                if (customerDao.deleteUserById(customerId)) {
                     JOptionPane.showMessageDialog(this,
-                            "User Deleted Successfully",
-                            "Success",
+                            "Xóa khách hàng thành công!",
+                            "Thành công",
                             JOptionPane.INFORMATION_MESSAGE);
-                    showUserList();
+                    showCustomerList(); // Refresh lại bảng
                 } else {
                     JOptionPane.showMessageDialog(this,
-                            "User Deleted Failed",
-                            "Error",
+                            "Xóa khách hàng thất bại!",
+                            "Lỗi",
                             JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
 
-        btnInfo.addActionListener(e -> {
-            int selectedRow = table.getSelectedRow();
-
-            if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(this,
-                        "Please select a user to view info.",
-                        "No User Selected",
-                        JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            Customer selectedUser = userDao.getCustomerById((Integer) tableModel.getValueAt(selectedRow, 0));
-
-            if (selectedUser != null) {
-                InfoCustomerform infoForm = new InfoCustomerform(selectedUser);
-                infoForm.setVisible(true);
-            }
-        });
     }
 
-    public void showUserList() {
-        // Lấy dữ liệu từ DAO
+    /**
+     * Hiển thị danh sách khách hàng lên bảng.
+     */
+    public void showCustomerList() {
+        // Xóa dữ liệu cũ
         tableModel.setRowCount(0);
-        this.UserArr = userDao.getCustomers();
 
-        for (Customer user : UserArr) {
-            tableModel.addRow(new Object[] {
-                    user.getIdCustomer(),
-                    user.getNameCustomer(),
-                    user.getLoaiCustomer(),
-                    user.getCCCD(),
-                    user.getPhoneCustomer(),
-                    user.getEmail()
-            });
-        }
+        // Lấy dữ liệu từ DAO
+        this.customerList = customerDao.getCustomers();
+
+        // Thêm từng dòng vào bảng
+        for (Customer customer : customerList) {
+                tableModel.addRow(new Object[] {
+                        customer.getIdCustomer(),
+                        customer.getNameCustomer(),
+                        customer.getLoaiCustomer(),
+                        customer.getCCCD(),
+                        customer.getPhoneCustomer(),
+                        customer.getEmail()
+                });
+            }
     }
 }

@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import gui.GUIConstants;
 
 import dao.GiaNuocDao;
 import model.GiaNuoc;
@@ -31,11 +32,11 @@ public class waterPricePage extends JPanel {
 
     public waterPricePage() {
         setLayout(new BorderLayout(5, 5));
-        setBackground(new Color(26, 26, 26)); // Thêm màu nền cho phù hợp với MenuForm
+        setBackground(GUIConstants.Colors.BACKGROUND_COLOR); // Thêm màu nền cho phù hợp với MenuForm
 
         JPanel topPanel = new JPanel();
-        topPanel.setLayout(new FlowLayout());
-        topPanel.setBackground(new Color(26, 26, 26)); // Màu nền
+        topPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        topPanel.setBackground(GUIConstants.Colors.BACKGROUND_COLOR); // Màu nền
 
         topPanel.add(btnRefresh);
         topPanel.add(btnAdd);
@@ -77,8 +78,8 @@ public class waterPricePage extends JPanel {
             }
 
             int confirm = JOptionPane.showConfirmDialog(this,
-                    "Are you sure you want to delete this user?",
-                    "Confirm Delete",
+                    "Bạn có chắc chắn muốn xóa giá nước này?",
+                    "Xác nhận xóa",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.WARNING_MESSAGE);
 
@@ -86,14 +87,14 @@ public class waterPricePage extends JPanel {
                 String idDelete = tableModel.getValueAt(selectedRow, 0).toString();
                 if (giaNuocDao.deleteGiaNuocById(Integer.parseInt(idDelete))) {
                     JOptionPane.showMessageDialog(this,
-                            "User Deleted Successfully",
-                            "Success",
+                            "Xóa giá nước thành công!",
+                            "Thành công",
                             JOptionPane.INFORMATION_MESSAGE);
                     showWaterPriceList();
                 } else {
                     JOptionPane.showMessageDialog(this,
-                            "User Deleted Failed",
-                            "Error",
+                            "Xóa giá nước thất bại!",
+                            "Lỗi",
                             JOptionPane.ERROR_MESSAGE);
                 }
             }
@@ -103,6 +104,8 @@ public class waterPricePage extends JPanel {
     }
 
     public void showWaterPriceList() {
+        tableModel.setRowCount(0);
+        
         gnArr = giaNuocDao.getGiaNuoc();
         tableModel.setRowCount(0);
         for (GiaNuoc gn : gnArr) {
