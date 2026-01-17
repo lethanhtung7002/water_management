@@ -291,14 +291,11 @@ public class AddWaterPriceForm extends JFrame {
         panel.add(btnDeleteTier);
 
         // Gắn sự kiện
-        btnRefresh.addActionListener(e -> refreshTierTable(waterPriceId));
+        btnRefresh.addActionListener(e -> loadTierData(waterPriceId));
 
         btnAddTier.addActionListener(e -> {
-            // TODO: Mở form thêm bậc giá nước
-            JOptionPane.showMessageDialog(this,
-                    "Chức năng đang phát triển: Thêm bậc giá nước",
-                    "Thông báo",
-                    JOptionPane.INFORMATION_MESSAGE);
+            // Mở form thêm bậc giá nước
+            new AddWaterPriceTierForm(waterPriceId);
         });
 
         btnEditTier.addActionListener(e -> {
@@ -310,11 +307,12 @@ public class AddWaterPriceForm extends JFrame {
                         JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            // TODO: Mở form sửa bậc giá nước
-            JOptionPane.showMessageDialog(this,
-                    "Chức năng đang phát triển: Sửa bậc giá nước",
-                    "Thông báo",
-                    JOptionPane.INFORMATION_MESSAGE);
+
+            // Lấy WaterPriceTier từ danh sách
+            WaterPriceTier selectedTier = waterPriceTiers.get(selectedRow);
+
+            // Mở form sửa
+            new AddWaterPriceTierForm(selectedTier);
         });
 
         btnDeleteTier.addActionListener(e -> {
@@ -326,17 +324,24 @@ public class AddWaterPriceForm extends JFrame {
                         JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            // TODO: Xóa bậc giá nước
+
             int confirm = JOptionPane.showConfirmDialog(this,
                     "Bạn có chắc muốn xóa bậc giá này?",
                     "Xác nhận",
                     JOptionPane.YES_NO_OPTION);
 
             if (confirm == JOptionPane.YES_OPTION) {
-                JOptionPane.showMessageDialog(this,
-                        "Chức năng đang phát triển: Xóa bậc giá nước",
-                        "Thông báo",
-                        JOptionPane.INFORMATION_MESSAGE);
+                // Lấy ID bậc giá
+                WaterPriceTier selectedTier = waterPriceTiers.get(selectedRow);
+                BacGiaDao bacGiaDao = new BacGiaDao();
+
+                // Xóa khỏi database
+                if (bacGiaDao.deleteBacGiaById(selectedTier.getIdWaterPriceTier())) {
+                    showSuccess("Xóa bậc giá nước thành công!");
+                    loadTierData(waterPriceId); // Refresh bảng
+                } else {
+                    showError("Xóa bậc giá nước thất bại!");
+                }
             }
         });
 
@@ -412,19 +417,6 @@ public class AddWaterPriceForm extends JFrame {
                     "Lỗi",
                     JOptionPane.ERROR_MESSAGE);
         }
-    }
-
-    /**
-     * Làm mới bảng bậc giá nước.
-     * 
-     * @param waterPriceId ID của chính sách giá nước
-     */
-    private void refreshTierTable(int waterPriceId) {
-        loadTierData(waterPriceId);
-        JOptionPane.showMessageDialog(this,
-                "Đã làm mới dữ liệu bậc giá nước!",
-                "Thông báo",
-                JOptionPane.INFORMATION_MESSAGE);
     }
 
     // ========================================
@@ -546,12 +538,24 @@ public class AddWaterPriceForm extends JFrame {
                 return;
             }
 
+            // In ra thông tin debug
+            System.out.println("Loại KH: " + loaiKH.getIdLoaiCustomer() + " - " + loaiKH.getTenLoaiCustomer());
+            System.out.println("Khu vực: " + khuVuc);
+            System.out.println("Thuế: " + thue + "%");
+
             // Tạo object GiaNuoc với ID cũ
             GiaNuoc giaNuoc = new GiaNuoc(
                     waterPriceId, // Giữ nguyên ID
                     loaiKH.getIdLoaiCustomer(),
                     khuVuc,
                     thue);
+
+            // In ra object để kiểm tra
+            System.out.println("Object GiaNuoc:");
+            System.out.println("  - ID: " + giaNuoc.getIdDonGia());
+            System.out.println("  - ID Loại KH: " + giaNuoc.getIdLoaiCustomer());
+            System.out.println("  - Khu vực: " + giaNuoc.getKhuVuc());
+            System.out.println("  - Thuế: " + giaNuoc.getThue() + "%");
 
             // Cập nhật trong database
             boolean success = gnDao.updateGiaNuoc(giaNuoc);
