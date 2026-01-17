@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import java.awt.*;
@@ -283,7 +284,9 @@ public class AddWaterPriceForm extends JFrame {
      */
     private JPanel createTierButtonPanel(int waterPriceId) {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 10));
-        panel.setBorder(BorderFactory.createTitledBorder("Quản lý bậc giá nước"));
+        TitledBorder titledBorder = BorderFactory.createTitledBorder("Quản lý bậc giá nước");
+        titledBorder.setTitleFont(GUIConstants.Fonts.TieuDe);
+        panel.setBorder(titledBorder);
 
         panel.add(btnRefresh);
         panel.add(btnAddTier);

@@ -3,7 +3,6 @@ package gui;
 import data.LoginDataLoader;
 
 import java.awt.*;
-import java.util.Arrays;
 import javax.swing.*;
 
 /**
@@ -28,7 +27,7 @@ public class LoginForm extends JFrame {
     // ===== UI COMPONENTS =====
     private final JTextField userTextField = new JTextField(20);
     private final JPasswordField passField = new JPasswordField(20);
-    private final JCheckBox rememberMeCheckbox = new JCheckBox("Nhớ Thông tin đăng nhập");
+    private final JCheckBox reMemberMeCheckbox = new JCheckBox("Nhớ Thông tin đăng nhập");
     private final JButton loginButton = new JButton("Login");
 
     // ===== CREDENTIALS =====
@@ -115,22 +114,19 @@ public class LoginForm extends JFrame {
         gbc.gridy = 0;
         formPanel.add(new JLabel("Username:"), gbc);
         gbc.gridx = 1;
-        gbc.weightx = 1.0;
         formPanel.add(userTextField, gbc);
 
         // Password
         gbc.gridx = 0;
         gbc.gridy = 1;
-        gbc.weightx = 0;
         formPanel.add(new JLabel("Password:"), gbc);
         gbc.gridx = 1;
-        gbc.weightx = 1.0;
         formPanel.add(passField, gbc);
 
         // Remember me checkbox
         gbc.gridx = 1;
         gbc.gridy = 2;
-        formPanel.add(rememberMeCheckbox, gbc);
+        formPanel.add(reMemberMeCheckbox, gbc);
 
         // Enter key support
         userTextField.addActionListener(e -> passField.requestFocus());
@@ -173,7 +169,7 @@ public class LoginForm extends JFrame {
         // Kiểm tra credentials
         if (checkLogin(inputUsername, inputPassword)) {
             // Lưu thông tin login nếu checkbox được tick
-            if (rememberMeCheckbox.isSelected()) {
+            if (reMemberMeCheckbox.isSelected()) {
                 if (!loader.loginWrite(inputUsername, inputPassword)) {
                     showWarning("Failed to save login credentials.");
                 }

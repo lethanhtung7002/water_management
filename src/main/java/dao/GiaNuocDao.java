@@ -39,19 +39,31 @@ public class GiaNuocDao {
     public ArrayList<WaterPriceTier> getBacGiaNuocByIdGiaNuoc(int idGiaNuoc) {
         ArrayList<WaterPriceTier> listBac = new ArrayList<WaterPriceTier>();
         try {
-            String query = "SELECT * FROM %s WHERE %s = %d"
-                    .formatted(qlnTableName.BacGia, qlnIDName.GiaNuocID, idGiaNuoc);
+            String query = "SELECT * FROM %s WHERE %s = %d ORDER BY %s"
+                    .formatted(
+                            qlnTableName.BacGia,
+                            qlnIDName.GiaNuocID,
+                            idGiaNuoc,
+                            qlnBacGiaCol.BacGia);
+
             ResultSet rs = ConnectQLN.executeQuery(query);
+
             while (rs.next()) {
                 WaterPriceTier bacGiaNuoc = new WaterPriceTier();
-                bacGiaNuoc.setTier(rs.getInt(qlnIDName.BacGiaID));
+
+                // Set đầy đủ tất cả các field
+                bacGiaNuoc.setIdWaterPriceTier(rs.getInt(qlnIDName.BacGiaID));
+                bacGiaNuoc.setIdWaterPrice(rs.getInt(qlnIDName.GiaNuocID));
+                bacGiaNuoc.setTier(rs.getInt(qlnBacGiaCol.BacGia));
                 bacGiaNuoc.setMinConsumption(rs.getInt(qlnBacGiaCol.TuMucNuoc));
                 bacGiaNuoc.setMaxConsumption(rs.getInt(qlnBacGiaCol.DenMucNuoc));
                 bacGiaNuoc.setPrice(rs.getDouble(qlnBacGiaCol.Gia));
+
                 listBac.add(bacGiaNuoc);
             }
         } catch (Exception e) {
             System.out.println("Lỗi lấy danh sách bậc giá nước: " + e.getMessage());
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
         return listBac;
@@ -110,10 +122,8 @@ public class GiaNuocDao {
     // xóa giá nước
     public boolean deleteGiaNuocById(int id) {
         int result = 0;
-        String query = """
-                DELETE FROM %s WHERE %s = %d""".formatted(
-                qlnTableName.GiaNuoc,
-                qlnIDName.GiaNuocID, id);
+        String query = "DELETE FROM %s WHERE %s = %d"
+                .formatted(qlnTableName.GiaNuoc, qlnIDName.GiaNuocID, id);
         try {
             result = ConnectQLN.executeUpdate(query);
         } catch (Exception e) {
