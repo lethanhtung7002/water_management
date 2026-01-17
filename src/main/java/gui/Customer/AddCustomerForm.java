@@ -24,8 +24,8 @@ import model.loaiCustomer;
  * - Quản lý hộ sử dụng của khách hàng (khi sửa)
  * 
  * Cách sử dụng:
- * - new CustomerForm() → Thêm mới khách hàng
- * - new CustomerForm(Customer) → Sửa khách hàng + quản lý hộ sử dụng
+ * - new AddCustomerForm() → Thêm mới khách hàng
+ * - new AddCustomerForm(Customer) → Sửa khách hàng + quản lý hộ sử dụng
  * 
  * @author Lê Thanh Tùng
  * @version 2.0
@@ -67,6 +67,8 @@ public class AddCustomerForm extends JFrame {
     private DefaultTableModel hoSuDungTableModel;
     private ArrayList<hoSuDung> hoSuDungList = new ArrayList<>();
 
+    private Customer customer;
+
     /**
      * Constructor cho chế độ THÊM MỚI khách hàng.
      * Hiển thị form trống để nhập thông tin khách hàng mới.
@@ -79,7 +81,7 @@ public class AddCustomerForm extends JFrame {
         loadCustomerTypes();
 
         // Tạo giao diện
-        add(createFormPanel(), BorderLayout.CENTER);
+        add(createFormPanel(false), BorderLayout.CENTER);
         add(createButtonPanel(true), BorderLayout.SOUTH);
 
         // Gắn sự kiện
@@ -100,6 +102,7 @@ public class AddCustomerForm extends JFrame {
      * @param customer Đối tượng Customer cần chỉnh sửa
      */
     public AddCustomerForm(Customer customer) {
+        this.customer = customer;
         setTitle("Sửa thông tin Khách Hàng - " + customer.getNameCustomer());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -108,7 +111,7 @@ public class AddCustomerForm extends JFrame {
 
         // Tạo panel bên trái (form khách hàng)
         JPanel leftPanel = new JPanel(new BorderLayout());
-        leftPanel.add(createFormPanel(), BorderLayout.CENTER);
+        leftPanel.add(createFormPanel(true), BorderLayout.CENTER);
         leftPanel.add(createButtonPanel(false), BorderLayout.SOUTH);
 
         // Tạo panel bên phải (bảng hộ sử dụng)
@@ -178,7 +181,7 @@ public class AddCustomerForm extends JFrame {
      * 
      * @return JPanel chứa form
      */
-    private JPanel createFormPanel() {
+    private JPanel createFormPanel(boolean b) {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 10, 30));
 
@@ -197,6 +200,24 @@ public class AddCustomerForm extends JFrame {
         panel.add(lbTitle, gbc);
 
         gbc.gridwidth = 1;
+
+        // hiện  thông tin cho phần edit
+        if (b) {
+            JLabel lbIDCustomer = new JLabel("ID Khách Hàng:");
+            JTextField tfIDCustomer = new JTextField(String.valueOf(this.customer.getIdCustomer()));
+            tfIDCustomer.setEditable(false);
+
+            gbc.gridx = 0;
+            gbc.gridy = row;
+            lbIDCustomer.setFont(GUIConstants.Fonts.TieuDePhu);
+            panel.add(lbIDCustomer, gbc);
+
+            gbc.gridx = 1;
+            tfIDCustomer.setPreferredSize(GUIConstants.Sizes.tf);
+            tfIDCustomer.setFont(GUIConstants.Fonts.TieuDePhu);
+            panel.add(tfIDCustomer, gbc);
+            row++;
+        }
 
         // ===== HỌ TÊN =====
         gbc.gridx = 0;
