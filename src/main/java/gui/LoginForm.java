@@ -11,7 +11,7 @@ import javax.swing.*;
  * 
  * Chức năng chính:
  * - Đăng nhập với username và password
- * - Lưu thông tin đăng nhập 
+ * - Lưu thông tin đăng nhập
  * - Tự động đăng nhập nếu đã lưu thông tin
  * - Hỗ trợ phím Enter để submit form
  * 
@@ -101,14 +101,14 @@ public class LoginForm extends JFrame {
     /**
      * Tạo form nhập username, password và checkbox "Remember me".
      * Sử dụng GridBagLayout để căn chỉnh các component.
-     * Hỗ trợ phím Enter: Enter ở Username -> Focus vào Password, Enter ở Password ->
+     * Hỗ trợ phím Enter: Enter ở Username -> Focus vào Password, Enter ở Password
+     * ->
      * Submit form.
      */
     private JPanel createFormPanel() {
         JPanel formPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Username
         gbc.gridx = 0;
@@ -164,34 +164,29 @@ public class LoginForm extends JFrame {
         char[] passwordChars = passField.getPassword();
         String inputPassword = new String(passwordChars);
 
-        try {
-            // Validation: Kiểm tra không để trống
-            if (inputUsername.isEmpty() || inputPassword.isEmpty()) {
-                showError("Username and password cannot be empty.");
-                return;
-            }
+        // Validation: Kiểm tra không để trống
+        if (inputUsername.isEmpty() || inputPassword.isEmpty()) {
+            showError("Username and password cannot be empty.");
+            return;
+        }
 
-            // Kiểm tra credentials
-            if (checkLogin(inputUsername, inputPassword)) {
-                // Lưu thông tin login nếu checkbox được tick
-                if (rememberMeCheckbox.isSelected()) {
-                    if (!loader.loginWrite(inputUsername, inputPassword)) {
-                        showWarning("Failed to save login credentials.");
-                    }
+        // Kiểm tra credentials
+        if (checkLogin(inputUsername, inputPassword)) {
+            // Lưu thông tin login nếu checkbox được tick
+            if (rememberMeCheckbox.isSelected()) {
+                if (!loader.loginWrite(inputUsername, inputPassword)) {
+                    showWarning("Failed to save login credentials.");
                 }
-
-                // Mở MenuForm và đóng LoginForm
-                SwingUtilities.invokeLater(MenuForm::new);
-                dispose();
-            } else {
-                // Sai thông tin đăng nhập
-                showError("Invalid username or password.");
-                passField.setText("");
-                passField.requestFocus();
             }
-        } finally {
-            // Clear password từ memory (bảo mật)
-            Arrays.fill(passwordChars, '0');
+
+            // Mở MenuForm và đóng LoginForm
+            SwingUtilities.invokeLater(MenuForm::new);
+            dispose();
+        } else {
+            // Sai thông tin đăng nhập
+            showError("Invalid username or password.");
+            passField.setText("");
+            passField.requestFocus();
         }
     }
 

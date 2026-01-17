@@ -360,12 +360,7 @@ public class AddWaterPriceForm extends JFrame {
         String[] columns = { "Bậc Giá", "Từ mức nước (m³)", "Đến mức nước (m³)", "Giá (VNĐ/m³)" };
 
         // Tạo model cho bảng
-        wptTableModel = new DefaultTableModel(columns, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false; // Không cho phép edit trực tiếp trên bảng
-            }
-        };
+        wptTableModel = new DefaultTableModel(columns, 0);
 
         // Tạo bảng
         wptTable = new JTable(wptTableModel);
@@ -429,8 +424,6 @@ public class AddWaterPriceForm extends JFrame {
      */
     private void saveWaterPrice() {
         try {
-            System.out.println("=== SAVE WATER PRICE ===");
-
             // Validate loại khách hàng
             loaiCustomer loaiKH = (loaiCustomer) cbCustomerType.getSelectedItem();
             if (loaiKH == null) {
@@ -451,7 +444,6 @@ public class AddWaterPriceForm extends JFrame {
                 showError("Vui lòng nhập thuế!");
                 return;
             }
-
             double thue;
             try {
                 thue = Double.parseDouble(thueText);
@@ -464,11 +456,6 @@ public class AddWaterPriceForm extends JFrame {
                 return;
             }
 
-            // In ra thông tin debug
-            System.out.println("Loại KH: " + loaiKH.getIdLoaiCustomer() + " - " + loaiKH.getTenLoaiCustomer());
-            System.out.println("Khu vực: " + khuVuc);
-            System.out.println("Thuế: " + thue + "%");
-
             // Tạo object GiaNuoc
             GiaNuoc giaNuoc = new GiaNuoc(
                     0, // ID tự động tăng
@@ -478,7 +465,6 @@ public class AddWaterPriceForm extends JFrame {
 
             // Lưu vào database
             boolean success = gnDao.addGiaNuoc(giaNuoc);
-            System.out.println("Kết quả lưu: " + success);
 
             if (success) {
                 showSuccess("Thêm chính sách giá nước thành công!");
@@ -538,11 +524,6 @@ public class AddWaterPriceForm extends JFrame {
                 return;
             }
 
-            // In ra thông tin debug
-            System.out.println("Loại KH: " + loaiKH.getIdLoaiCustomer() + " - " + loaiKH.getTenLoaiCustomer());
-            System.out.println("Khu vực: " + khuVuc);
-            System.out.println("Thuế: " + thue + "%");
-
             // Tạo object GiaNuoc với ID cũ
             GiaNuoc giaNuoc = new GiaNuoc(
                     waterPriceId, // Giữ nguyên ID
@@ -550,18 +531,8 @@ public class AddWaterPriceForm extends JFrame {
                     khuVuc,
                     thue);
 
-            // In ra object để kiểm tra
-            System.out.println("Object GiaNuoc:");
-            System.out.println("  - ID: " + giaNuoc.getIdDonGia());
-            System.out.println("  - ID Loại KH: " + giaNuoc.getIdLoaiCustomer());
-            System.out.println("  - Khu vực: " + giaNuoc.getKhuVuc());
-            System.out.println("  - Thuế: " + giaNuoc.getThue() + "%");
-
             // Cập nhật trong database
-            boolean success = gnDao.updateGiaNuoc(giaNuoc);
-            System.out.println("Kết quả cập nhật: " + success);
-
-            if (success) {
+            if (gnDao.updateGiaNuoc(giaNuoc)) {
                 showSuccess("Cập nhật chính sách giá nước thành công!");
                 dispose(); // Đóng form
             } else {
