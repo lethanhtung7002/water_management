@@ -62,9 +62,9 @@ public class GiaNuocDao {
         int result = 0;
         String query = """
                 INSERT INTO %s (%s, %s, %s)
-                VALUES ('%d', '%s', '%f')
+                VALUES (%d, '%s', %f)     // ✅ BỎ dấu nháy ở %d và %f
                 """.formatted(
-                qlnTableName.GiaNuoc, 
+                qlnTableName.GiaNuoc,
                 qlnIDName.CustomerTypeID, qlnGiaNuocCol.KhuVuc, qlnGiaNuocCol.Thue,
                 giaNuoc.getIdLoaiCustomer(), giaNuoc.getKhuVuc(), giaNuoc.getThue());
         try {
@@ -81,20 +81,24 @@ public class GiaNuocDao {
         int result = 0;
         String query = """
                 UPDATE %s SET
-                        %s = '%d',
+                        %s = %d,
                         %s = '%s',
-                        %s = '%f'
+                        %s = %f
                 WHERE %s = %d""".formatted(
                 qlnTableName.GiaNuoc,
                 qlnIDName.CustomerTypeID, giaNuoc.getIdLoaiCustomer(),
                 qlnGiaNuocCol.KhuVuc, giaNuoc.getKhuVuc(),
                 qlnGiaNuocCol.Thue, giaNuoc.getThue(),
                 qlnIDName.GiaNuocID, giaNuoc.getIdDonGia());
-        System.out.println(query);
+
+        System.out.println("SQL Query: " + query); // Debug
+
         try {
             result = ConnectQLN.executeUpdate(query);
+            System.out.println("Rows affected: " + result); // Debug
         } catch (Exception e) {
             System.out.println("Lỗi cập nhật giá nước: " + e.getMessage());
+            e.printStackTrace(); // In chi tiết lỗi
             throw new RuntimeException(e);
         }
         return result > 0;
