@@ -25,10 +25,6 @@ import javax.swing.*;
  */
 public class LoginForm extends JFrame {
 
-    // ===== DEFAULT CREDENTIALS =====
-    private static final String DEFAULT_USERNAME = "admin";
-    private static final String DEFAULT_PASSWORD = "password";
-
     // ===== UI COMPONENTS =====
     private final JTextField userTextField = new JTextField(20);
     private final JPasswordField passField = new JPasswordField(20);
@@ -36,8 +32,8 @@ public class LoginForm extends JFrame {
     private final JButton loginButton = new JButton("Login");
 
     // ===== CREDENTIALS =====
-    private String username = DEFAULT_USERNAME;
-    private String password = DEFAULT_PASSWORD;
+    private String username = "admin";
+    private String password = "password";
     private final LoginDataLoader loader = new LoginDataLoader();
 
     /**
@@ -51,26 +47,15 @@ public class LoginForm extends JFrame {
         setLayout(new BorderLayout(20, 20));
 
         String[] credentials = loader.loginRead();
-        if (credentials[0] != null) {
-            autoLogin(credentials);
+        if (checkLogin(credentials[0], credentials[1])) {
+            System.out.println("Đăng nhập tự động thành công\n" +
+                    "Username: " + credentials[0] + "\n");
+
+            new MenuForm();
+            dispose();
         } else {
             showLoginForm();
         }
-    }
-
-    /**
-     * Tự động đăng nhập khi đã có thông tin lưu trong file.
-     * Đọc credentials từ file, mở MenuForm và đóng LoginForm.
-     */
-    private void autoLogin(String[] credentials) {
-        this.username = credentials[0];
-        this.password = credentials[1];
-
-        System.out.println("Đăng nhập tự động thành công\n" +
-                "Username: " + username + "\n");
-
-        new MenuForm();
-        dispose();
     }
 
     /**

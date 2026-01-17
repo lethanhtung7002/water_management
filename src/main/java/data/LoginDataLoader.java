@@ -32,8 +32,6 @@ public class LoginDataLoader {
     public String[] loginRead() {
         // Tạo mảng để lưu kết quả
         String[] thongTin = new String[2];
-        thongTin[0] = null; // username
-        thongTin[1] = null; // password
 
         // Kiểm tra file có tồn tại không
         if (!file.exists()) {
@@ -78,12 +76,6 @@ public class LoginDataLoader {
      */
     public boolean loginWrite(String username, String password) {
         try {
-            // Tạo thư mục nếu chưa tồn tại
-            File thuMuc = file.getParentFile();
-            if (thuMuc != null && !thuMuc.exists()) {
-                thuMuc.mkdirs();
-            }
-
             // Ghi file
             FileWriter fw = new FileWriter(file);
 
