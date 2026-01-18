@@ -20,6 +20,7 @@ import javax.swing.SwingConstants;
 import javax.swing.JOptionPane;
 
 import gui.Customer.CustomerPage;
+import gui.Customer.HoSuDungPage;
 import gui.GiaNuoc.waterPricePage;
 import data.LoginDataLoader;
 
@@ -108,7 +109,7 @@ public class MenuForm extends JFrame {
         // Tạo các nút menu và lưu 
         btnHome = createMenuButton("Trang chủ", "🏠", Page.HOME);
         btnCustomer = createMenuButton("Khách hàng", "👤", Page.CUSTOMER);
-        btnHoSuDung = createMenuButton("Hộ Sủ dụng", "", Page.HO_SU_DUNG);
+        btnHoSuDung = createMenuButton("Hộ Sủ dụng", "🏘", Page.HO_SU_DUNG);
         btnWaterPrice = createMenuButton("Giá nước", "💧", Page.WATER_PRICR);
 
         centerBar.add(btnHome);
@@ -141,6 +142,7 @@ public class MenuForm extends JFrame {
         contentPanel.setBackground(GUIConstants.Colors.BACKGROUND);
 
         contentPanel.add(createPage("Trang chủ để thực hiện các tính năng nhanh nhưng chưa thêm gì cả :))"), Page.HOME);
+        contentPanel.add(new HoSuDungPage(), Page.HO_SU_DUNG);
         contentPanel.add(new CustomerPage(), Page.CUSTOMER);
         contentPanel.add(new waterPricePage(), Page.WATER_PRICR);
 

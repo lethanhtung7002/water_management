@@ -103,7 +103,7 @@ public class AddCustomerForm extends JFrame {
      */
     public AddCustomerForm(Customer customer) {
         this.customer = customer;
-        setTitle("Sửa thông tin Khách Hàng - " + customer.getNameCustomer());
+        setTitle("Sửa thông tin Khách Hàng");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         // Load dữ liệu cho ComboBox
@@ -198,6 +198,12 @@ public class AddCustomerForm extends JFrame {
         JLabel lbTitle = new JLabel(getTitle());
         lbTitle.setFont(GUIConstants.Fonts.TieuDe);
         panel.add(lbTitle, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = row++;
+        JLabel lbTenKH = new JLabel(customer.getNameCustomer());
+        lbTenKH.setFont(GUIConstants.Fonts.TieuDe);
+        panel.add(lbTenKH, gbc);
 
         gbc.gridwidth = 1;
 
