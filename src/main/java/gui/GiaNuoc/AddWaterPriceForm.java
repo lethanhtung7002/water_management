@@ -37,7 +37,7 @@ public class AddWaterPriceForm extends JFrame {
     private JLabel lbThue = new JLabel("Thuế (%)");
 
     // ===== INPUT FIELDS =====
-    private JComboBox<loaiCustomer> cbCustomerType = new JComboBox<>();
+    private JComboBox<LoaiCustomer> cbCustomerType = new JComboBox<>();
     private JComboBox<String> cbKhuVuc = new JComboBox<>();
     private JTextField tfThue = new JTextField();
 
@@ -140,8 +140,8 @@ public class AddWaterPriceForm extends JFrame {
      */
     private void loadCustomerTypes() {
         cbCustomerType.removeAllItems(); // Xóa dữ liệu cũ
-        List<loaiCustomer> loaiNguoiDung = cDao.getLoaiKhachHang();
-        for (loaiCustomer lnd : loaiNguoiDung) {
+        List<LoaiCustomer> loaiNguoiDung = cDao.getLoaiKhachHang();
+        for (LoaiCustomer lnd : loaiNguoiDung) {
             cbCustomerType.addItem(lnd);
         }
     }
@@ -163,7 +163,7 @@ public class AddWaterPriceForm extends JFrame {
     private void fillFormData(GiaNuoc gn) {
         // Tìm và chọn loại khách hàng tương ứng
         for (int i = 0; i < cbCustomerType.getItemCount(); i++) {
-            loaiCustomer lc = cbCustomerType.getItemAt(i);
+            LoaiCustomer lc = cbCustomerType.getItemAt(i);
             if (lc.getIdLoaiCustomer() == gn.getIdLoaiCustomer()) {
                 cbCustomerType.setSelectedIndex(i);
                 break;
@@ -428,7 +428,7 @@ public class AddWaterPriceForm extends JFrame {
     private void saveWaterPrice() {
         try {
             // Validate loại khách hàng
-            loaiCustomer loaiKH = (loaiCustomer) cbCustomerType.getSelectedItem();
+            LoaiCustomer loaiKH = (LoaiCustomer) cbCustomerType.getSelectedItem();
             if (loaiKH == null) {
                 showError("Vui lòng chọn loại khách hàng!");
                 return;
@@ -495,7 +495,7 @@ public class AddWaterPriceForm extends JFrame {
             System.out.println("ID: " + waterPriceId);
 
             // Validate loại khách hàng
-            loaiCustomer loaiKH = (loaiCustomer) cbCustomerType.getSelectedItem();
+            LoaiCustomer loaiKH = (LoaiCustomer) cbCustomerType.getSelectedItem();
             if (loaiKH == null) {
                 showError("Vui lòng chọn loại khách hàng!");
                 return;

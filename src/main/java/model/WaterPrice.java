@@ -2,14 +2,14 @@ package model;
 
 public class WaterPrice {
     private int idWaterPrice;
-    private loaiCustomer loaiCustomer;
+    private LoaiCustomer loaiCustomer;
     private String khuVuc;
     private double thue;
 
     public WaterPrice() {
     }
-    
-    public WaterPrice(int idWaterPrice, loaiCustomer loaiCustomer, String khuVuc, double thue) {
+
+    public WaterPrice(int idWaterPrice, LoaiCustomer loaiCustomer, String khuVuc, double thue) {
         this.idWaterPrice = idWaterPrice;
         this.loaiCustomer = loaiCustomer;
         this.khuVuc = khuVuc;
@@ -24,11 +24,11 @@ public class WaterPrice {
         this.idWaterPrice = idWaterPrice;
     }
 
-    public loaiCustomer getLoaiCustomer() {
+    public LoaiCustomer getLoaiCustomer() {
         return loaiCustomer;
     }
 
-    public void setLoaiCustomer(loaiCustomer loaiCustomer) {
+    public void setLoaiCustomer(LoaiCustomer loaiCustomer) {
         this.loaiCustomer = loaiCustomer;
     }
 
@@ -48,6 +48,4 @@ public class WaterPrice {
         this.thue = thue;
     }
 
-    
-    
 }

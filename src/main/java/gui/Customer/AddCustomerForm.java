@@ -12,8 +12,8 @@ import dao.CustomerDao;
 import dao.HoSuDungDao;
 import gui.GUIConstants;
 import model.Customer;
-import model.hoSuDung;
-import model.loaiCustomer;
+import model.HoSuDung;
+import model.LoaiCustomer;
 
 /**
  * Form quản lý khách hàng và hộ sử dụng.
@@ -41,7 +41,7 @@ public class AddCustomerForm extends JFrame {
 
     // ===== INPUT FIELDS =====
     private JTextField tfName = new JTextField();
-    private JComboBox<loaiCustomer> cbLoaiUser = new JComboBox<>();
+    private JComboBox<LoaiCustomer> cbLoaiUser = new JComboBox<>();
     private JTextField tfCCCD = new JTextField();
     private JTextField tfPhone = new JTextField();
     private JTextField tfEmail = new JTextField();
@@ -65,7 +65,7 @@ public class AddCustomerForm extends JFrame {
     private JScrollPane hoSuDungScrollPane;
     private JTable hoSuDungTable;
     private DefaultTableModel hoSuDungTableModel;
-    private ArrayList<hoSuDung> hoSuDungList = new ArrayList<>();
+    private ArrayList<HoSuDung> hoSuDungList = new ArrayList<>();
 
     private Customer customer;
 
@@ -145,8 +145,8 @@ public class AddCustomerForm extends JFrame {
      */
     private void loadCustomerTypes() {
         cbLoaiUser.removeAllItems();
-        List<loaiCustomer> loaiNguoiDung = customerDao.getLoaiKhachHang();
-        for (loaiCustomer lnd : loaiNguoiDung) {
+        List<LoaiCustomer> loaiNguoiDung = customerDao.getLoaiKhachHang();
+        for (LoaiCustomer lnd : loaiNguoiDung) {
             cbLoaiUser.addItem(lnd);
         }
     }
@@ -164,7 +164,7 @@ public class AddCustomerForm extends JFrame {
 
         // Chọn loại khách hàng tương ứng
         for (int i = 0; i < cbLoaiUser.getItemCount(); i++) {
-            loaiCustomer lnd = cbLoaiUser.getItemAt(i);
+            LoaiCustomer lnd = cbLoaiUser.getItemAt(i);
             if (lnd.getIdLoaiCustomer() == customer.getLoaiCustomer()) {
                 cbLoaiUser.setSelectedIndex(i);
                 break;
@@ -207,7 +207,7 @@ public class AddCustomerForm extends JFrame {
 
         gbc.gridwidth = 1;
 
-        // hiện  thông tin cho phần edit
+        // hiện thông tin cho phần edit
         if (b) {
             JLabel lbIDCustomer = new JLabel("ID Khách Hàng:");
             JTextField tfIDCustomer = new JTextField(String.valueOf(this.customer.getIdCustomer()));
@@ -349,7 +349,7 @@ public class AddCustomerForm extends JFrame {
                 return;
             }
 
-            hoSuDung selected = hoSuDungList.get(selectedRow);
+            HoSuDung selected = hoSuDungList.get(selectedRow);
             new AddHoSuDungForm(selected);
         });
 
@@ -369,7 +369,7 @@ public class AddCustomerForm extends JFrame {
                     JOptionPane.YES_NO_OPTION);
 
             if (confirm == JOptionPane.YES_OPTION) {
-                hoSuDung selected = hoSuDungList.get(selectedRow);
+                HoSuDung selected = hoSuDungList.get(selectedRow);
                 if (hoSuDungDao.delete_HoSuDung(selected.getID_HoSuDung())) {
                     showSuccess("Xóa hộ sử dụng thành công!");
                     refreshHoSuDungTable(customerId);
@@ -424,7 +424,7 @@ public class AddCustomerForm extends JFrame {
         try {
             this.hoSuDungList = hoSuDungDao.getHoSuDungByCustomerId(customerId);
 
-            for (hoSuDung hsd : hoSuDungList) {
+            for (HoSuDung hsd : hoSuDungList) {
                 String trangThai = hsd.getTrangThai() == 1 ? "Đang sử dụng" : "Ngừng sử dụng";
                 Object[] row = {
                         hsd.getID_HoSuDung(),
@@ -472,7 +472,7 @@ public class AddCustomerForm extends JFrame {
             System.out.println("=== SAVE CUSTOMER ===");
 
             // Validate loại khách hàng
-            loaiCustomer selectedLoaiCustomer = (loaiCustomer) cbLoaiUser.getSelectedItem();
+            LoaiCustomer selectedLoaiCustomer = (LoaiCustomer) cbLoaiUser.getSelectedItem();
             if (selectedLoaiCustomer == null) {
                 showError("Vui lòng chọn loại khách hàng!");
                 return;
@@ -538,7 +538,7 @@ public class AddCustomerForm extends JFrame {
     private void updateCustomer(int customerId) {
         try {
             // Validate loại khách hàng
-            loaiCustomer selectedLoaiCustomer = (loaiCustomer) cbLoaiUser.getSelectedItem();
+            LoaiCustomer selectedLoaiCustomer = (LoaiCustomer) cbLoaiUser.getSelectedItem();
             if (selectedLoaiCustomer == null) {
                 showError("Vui lòng chọn loại khách hàng!");
                 return;

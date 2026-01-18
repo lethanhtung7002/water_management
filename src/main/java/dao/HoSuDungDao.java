@@ -4,21 +4,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import model.hoSuDung;
+import model.HoSuDung;
 import static dao.MySQLConnect.ConnectQLN;
 
 public class HoSuDungDao {
 
     // lấy danh sách hộ sử dụng
-    public ArrayList<hoSuDung> getHoSuDungByCustomerId(int customerId) {
-        ArrayList<hoSuDung> userList = new ArrayList<>();
+    public ArrayList<HoSuDung> getHoSuDungByCustomerId(int customerId) {
+        ArrayList<HoSuDung> userList = new ArrayList<>();
         try {
             String query = "SELECT * FROM %s WHERE %s = %d"
                     .formatted(qlnTableName.HoSuDung,
                             qlnIDName.CustomerID, customerId);
             ResultSet rs = ConnectQLN.executeQuery(query);
             while (rs.next()) {
-                hoSuDung user = new hoSuDung();
+                HoSuDung user = new HoSuDung();
                 user.setID_HoSuDung(rs.getInt(qlnIDName.HoSuDungID));
                 user.setKhuVuc(rs.getString(qlnHoSuDungCol.KhuVuc));
                 user.setDiaChi(rs.getString(qlnHoSuDungCol.DiaChi));
@@ -32,7 +32,7 @@ public class HoSuDungDao {
     }
 
     // thêm hộ sử dụng
-    public boolean add_HoSuDung(hoSuDung user) {
+    public boolean add_HoSuDung(HoSuDung user) {
         int result = 0;
         String query = """
                 INSERT INTO %s (%s, %s, %s, %s)
@@ -52,7 +52,7 @@ public class HoSuDungDao {
     }
 
     // cập nhật hộ sử dụng
-    public boolean update_HoSuDung(hoSuDung user) {
+    public boolean update_HoSuDung(HoSuDung user) {
         int result = 0;
         String query = """
                 UPDATE %s
@@ -92,14 +92,14 @@ public class HoSuDungDao {
     }
 
     // tìm hộ sử dụng theo ID
-    public hoSuDung getHoSuDungById(int idHoSuDung) {
-        hoSuDung hoSuDung = null;
+    public HoSuDung getHoSuDungById(int idHoSuDung) {
+        HoSuDung hoSuDung = null;
         try {
             String query = "SELECT * FROM %s WHERE %s = %d"
                     .formatted(qlnTableName.HoSuDung, qlnIDName.HoSuDungID, idHoSuDung);
             ResultSet rs = ConnectQLN.executeQuery(query);
             if (rs.next()) {
-                hoSuDung = new hoSuDung();
+                hoSuDung = new HoSuDung();
                 hoSuDung.setID_HoSuDung(rs.getInt(qlnIDName.HoSuDungID));
                 hoSuDung.setID_Customer(rs.getInt(qlnIDName.CustomerID));
                 hoSuDung.setKhuVuc(rs.getString(qlnHoSuDungCol.KhuVuc));

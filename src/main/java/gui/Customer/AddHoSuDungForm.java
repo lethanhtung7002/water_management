@@ -6,7 +6,7 @@ import java.awt.*;
 import dao.HoSuDungDao;
 import data.KhuVucLoader;
 import gui.GUIConstants;
-import model.hoSuDung;
+import model.HoSuDung;
 
 public class AddHoSuDungForm extends JFrame {
 
@@ -42,7 +42,7 @@ public class AddHoSuDungForm extends JFrame {
     }
 
     /* Chỉnh sửa sử dụng lại thông số đã chọn */
-    public AddHoSuDungForm(hoSuDung hoSuDung) {
+    public AddHoSuDungForm(HoSuDung hoSuDung) {
         setTitle("Sửa thông tin hộ sử dụng");
         init();
 
@@ -81,7 +81,7 @@ public class AddHoSuDungForm extends JFrame {
         gbc.insets = new Insets(8, 8, 8, 8); // Khoảng cách các hàng
 
         int row = 0;
-        
+
         // ===== TITLE =====
         gbc.gridx = 0;
         gbc.gridy = row++;
@@ -94,7 +94,7 @@ public class AddHoSuDungForm extends JFrame {
         gbc.gridwidth = 1;
         gbc.anchor = GridBagConstraints.WEST; // căn lề cho tiêu đề
 
-        //=== Khu Vuc ===
+        // === Khu Vuc ===
         gbc.gridx = 0;
         gbc.gridy = row;
         lbKhuVuc.setFont(GUIConstants.Fonts.TieuDePhu);
@@ -154,7 +154,7 @@ public class AddHoSuDungForm extends JFrame {
         cbTrangThai.addItem("Ngừng sử dụng");
     }
 
-    private void saveHoSuDung(hoSuDung hoSuDung) {
+    private void saveHoSuDung(HoSuDung hoSuDung) {
         // Lấy thông tin từ form
         String khuVuc = (String) cbKhuVuc.getSelectedItem();
         String diaChi = tfAddress.getText().trim();
@@ -216,7 +216,7 @@ public class AddHoSuDungForm extends JFrame {
             return;
         }
 
-        hoSuDung hoSuDung = new hoSuDung();
+        HoSuDung hoSuDung = new HoSuDung();
         hoSuDung.setID_Customer(customerId);
         hoSuDung.setDiaChi(diaChi);
         hoSuDung.setKhuVuc(khuVuc);

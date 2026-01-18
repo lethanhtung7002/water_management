@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Customer;
-import model.loaiCustomer;
+import model.LoaiCustomer;
 import static dao.MySQLConnect.ConnectQLN;
 
 /**
@@ -181,8 +181,8 @@ public class CustomerDao {
      * @return List chứa các loại khách hàng
      * @throws RuntimeException nếu có lỗi khi thực thi câu lệnh SQL
      */
-    public List<loaiCustomer> getLoaiKhachHang() {
-        List<loaiCustomer> loaiNguoiDungList = new ArrayList<>();
+    public List<LoaiCustomer> getLoaiKhachHang() {
+        List<LoaiCustomer> loaiNguoiDungList = new ArrayList<>();
         try {
             String query = "SELECT * FROM %s"
                     .formatted(qlnTableName.CustomerType);
@@ -190,7 +190,7 @@ public class CustomerDao {
 
             // Duyệt qua từng loại khách hàng
             while (rs.next()) {
-                loaiCustomer loaiNguoiDung = new loaiCustomer(
+                LoaiCustomer loaiNguoiDung = new LoaiCustomer(
                         rs.getInt(qlnIDName.CustomerTypeID),
                         rs.getString(qlnCustomerTypeCol.Name));
                 loaiNguoiDungList.add(loaiNguoiDung);

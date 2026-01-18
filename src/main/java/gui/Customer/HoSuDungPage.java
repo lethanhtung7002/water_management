@@ -43,11 +43,11 @@ public class HoSuDungPage extends JPanel {
 
     // ===== FILTERS =====
     private JComboBox<String> cbKhuVuc = new JComboBox<>();
-    private JComboBox<loaiCustomer> cbCustomerType = new JComboBox<>();
+    private JComboBox<LoaiCustomer> cbCustomerType = new JComboBox<>();
     private JTextField tfSearchCustomerId = new JTextField(10);
 
     // ===== DATA =====
-    private ArrayList<hoSuDung> hsdArr = new ArrayList<>();
+    private ArrayList<HoSuDung> hsdArr = new ArrayList<>();
 
     // ===== DAO =====
     private HoSuDungDao hsdDao = new HoSuDungDao();
@@ -159,15 +159,16 @@ public class HoSuDungPage extends JPanel {
         // Load loại khách hàng
         cbCustomerType.removeAllItems();
         cbCustomerType.addItem(new AllCustomerTypes()); // Thêm option "Tất cả"
-        List<loaiCustomer> loaiKHList = customerDao.getLoaiKhachHang();
-        for (loaiCustomer lkh : loaiKHList) {
+        List<LoaiCustomer> loaiKHList = customerDao.getLoaiKhachHang();
+        for (LoaiCustomer lkh : loaiKHList) {
             cbCustomerType.addItem(lkh);
         }
 
         // Load khu vực
         new KhuVucLoader().loadKhuVuc(cbKhuVuc);
     }
-    private static class AllCustomerTypes extends loaiCustomer {
+
+    private static class AllCustomerTypes extends LoaiCustomer {
         public AllCustomerTypes() {
             super(0, "Tất cả loại KH");
         }
@@ -215,7 +216,7 @@ public class HoSuDungPage extends JPanel {
                 return;
             }
 
-            hoSuDung selected = hsdArr.get(selectedRow);
+            HoSuDung selected = hsdArr.get(selectedRow);
             new AddHoSuDungForm(selected);
         });
 
@@ -236,7 +237,7 @@ public class HoSuDungPage extends JPanel {
                     JOptionPane.WARNING_MESSAGE);
 
             if (confirm == JOptionPane.YES_OPTION) {
-                hoSuDung selected = hsdArr.get(selectedRow);
+                HoSuDung selected = hsdArr.get(selectedRow);
 
                 if (hsdDao.delete_HoSuDung(selected.getID_HoSuDung())) {
                     showSuccess("Xóa hộ sử dụng thành công!");
@@ -262,7 +263,7 @@ public class HoSuDungPage extends JPanel {
 
         try {
             // Lấy giá trị filter (chỉ dùng khi applyFilter = true)
-            loaiCustomer selectedType = applyFilter ? (loaiCustomer) cbCustomerType.getSelectedItem() : null;
+            LoaiCustomer selectedType = applyFilter ? (LoaiCustomer) cbCustomerType.getSelectedItem() : null;
             String selectedKhuVuc = applyFilter ? (String) cbKhuVuc.getSelectedItem() : null;
             String searchId = applyFilter ? tfSearchCustomerId.getText().trim() : "";
 
@@ -289,9 +290,9 @@ public class HoSuDungPage extends JPanel {
                 }
 
                 // Lấy danh sách hộ sử dụng của khách hàng
-                ArrayList<hoSuDung> hsdList = hsdDao.getHoSuDungByCustomerId(customer.getIdCustomer());
+                ArrayList<HoSuDung> hsdList = hsdDao.getHoSuDungByCustomerId(customer.getIdCustomer());
 
-                for (hoSuDung hsd : hsdList) {
+                for (HoSuDung hsd : hsdList) {
                     // Lọc theo khu vực (chỉ khi applyFilter = true)
                     if (applyFilter && selectedKhuVuc != null &&
                             !selectedKhuVuc.equals("-- Chọn tỉnh ---")) {
