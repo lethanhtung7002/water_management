@@ -21,7 +21,7 @@ import model.Customer;
  * Chức năng:
  * - Hiển thị danh sách khách hàng
  * - Thêm, sửa, xóa khách hàng
- * - Xem thông tin chi tiết và quản lý hộ sử dụng
+ * - Xem thông tin chi tiết và quản lý hộ sử dụng với khách hàng tương ứng
  * 
  * @author Lê Thanh Tùng
  * @version 2.0
