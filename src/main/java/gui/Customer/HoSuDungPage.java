@@ -22,7 +22,6 @@ import model.*;
  * - Sửa, xóa hộ sử dụng
  * - Xem thông tin chi tiết hộ sử dụng
  * 
- * @author Lê Thanh Tùng
  * @version 1.0
  */
 public class HoSuDungPage extends JPanel {

@@ -43,7 +43,7 @@ public class MenuForm extends JFrame {
         static final String HOME = "0";
         static final String CUSTOMER = "1";
         static final String HO_SU_DUNG = "2";
-        static final String WATER_PRICR = "3";
+        static final String WATER_PRICRE = "3";
     }
 
     private JPanel contentPanel;
@@ -106,11 +106,11 @@ public class MenuForm extends JFrame {
         JPanel centerBar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         centerBar.setBackground(GUIConstants.Colors.DEFAULT);
 
-        // Tạo các nút menu và lưu 
+        // Tạo các nút menu và lưu
         btnHome = createMenuButton("Trang chủ", "🏠", Page.HOME);
         btnCustomer = createMenuButton("Khách hàng", "👤", Page.CUSTOMER);
         btnHoSuDung = createMenuButton("Hộ Sủ dụng", "🏘", Page.HO_SU_DUNG);
-        btnWaterPrice = createMenuButton("Giá nước", "💧", Page.WATER_PRICR);
+        btnWaterPrice = createMenuButton("Giá nước", "💧", Page.WATER_PRICRE);
 
         centerBar.add(btnHome);
         centerBar.add(btnCustomer);
@@ -144,7 +144,7 @@ public class MenuForm extends JFrame {
         contentPanel.add(createPage("Trang chủ để thực hiện các tính năng nhanh nhưng chưa thêm gì cả :))"), Page.HOME);
         contentPanel.add(new HoSuDungPage(), Page.HO_SU_DUNG);
         contentPanel.add(new CustomerPage(), Page.CUSTOMER);
-        contentPanel.add(new waterPricePage(), Page.WATER_PRICR);
+        contentPanel.add(new waterPricePage(), Page.WATER_PRICRE);
 
         // ==== GHÉP VÀO FRAME ====
         add(sidebar, BorderLayout.WEST);
@@ -204,7 +204,7 @@ public class MenuForm extends JFrame {
         // Action khi click
         btn.addActionListener(e -> {
             cardLayout.show(contentPanel, pageKey);
-            setSelectedButton(btn); //Highlight nút được chọn
+            setSelectedButton(btn); // Highlight nút được chọn
         });
 
         return btn;
