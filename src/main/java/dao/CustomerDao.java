@@ -113,8 +113,6 @@ public class CustomerDao {
                 qlnCustomerCol.Email, user.getEmail(),
                 qlnIDName.CustomerID, user.getIdCustomer());
 
-        System.out.println(query); // Debug: In ra câu lệnh SQL
-
         try {
             result = ConnectQLN.executeUpdate(query);
         } catch (Exception e) {

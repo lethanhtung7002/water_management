@@ -63,7 +63,7 @@ public class MenuForm extends JFrame {
     public MenuForm() {
         setTitle("Water Manager");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1300, 800);
+        setSize(1200, 800);
         setMinimumSize(new Dimension(900, 700));
         setLayout(new BorderLayout());
 

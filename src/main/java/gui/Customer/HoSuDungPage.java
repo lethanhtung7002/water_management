@@ -1,8 +1,6 @@
 package gui.Customer;
 
-import java.awt.BorderLayout;
 import java.awt.*;
-import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +39,7 @@ public class HoSuDungPage extends JPanel {
     private JButton btnAdd = new JButton("Thêm");
     private JButton btnEdit = new JButton("Sửa Thông Tin");
     private JButton btnDelete = new JButton("Xóa");
+    private JButton btnChiSo_HoaDon = new JButton("Chỉ số nước và Hóa đơn");
     private JButton btnRefresh = new JButton("Làm mới và lọc");
 
     // ===== FILTERS =====
@@ -68,7 +67,7 @@ public class HoSuDungPage extends JPanel {
 
         // Load dữ liệu
         loadFilterData();
-        showAllHoSuDung();
+        // showHoSuDung(true);
 
         // Gắn sự kiện
         attachEventHandlers();
@@ -87,6 +86,7 @@ public class HoSuDungPage extends JPanel {
         panelBtn.add(btnAdd);
         panelBtn.add(btnEdit);
         panelBtn.add(btnDelete);
+        panelBtn.add(btnChiSo_HoaDon);
 
         // ===== HÀNG 2: Panel chứa bộ lọc =====
         JPanel panelFilter = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
@@ -159,28 +159,19 @@ public class HoSuDungPage extends JPanel {
     private void loadFilterData() {
         // Load loại khách hàng
         cbCustomerType.removeAllItems();
-        cbCustomerType.addItem(null); // Thêm option "Tất cả"
+        cbCustomerType.addItem(new AllCustomerTypes()); // Thêm option "Tất cả"
         List<loaiCustomer> loaiKHList = customerDao.getLoaiKhachHang();
         for (loaiCustomer lkh : loaiKHList) {
             cbCustomerType.addItem(lkh);
         }
 
-        // Tùy chỉnh hiển thị cho ComboBox
-        cbCustomerType.setRenderer(new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(
-                    JList<?> list, Object value, int index,
-                    boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value == null) {
-                    setText("-- Tất cả loại KH --");
-                }
-                return this;
-            }
-        });
-
         // Load khu vực
         new KhuVucLoader().loadKhuVuc(cbKhuVuc);
+    }
+    private static class AllCustomerTypes extends loaiCustomer {
+        public AllCustomerTypes() {
+            super(0, "Tất cả loại KH");
+        }
     }
 
     /**
@@ -188,7 +179,7 @@ public class HoSuDungPage extends JPanel {
      */
     private void attachEventHandlers() {
         // Nút Refresh/Lọc
-        btnRefresh.addActionListener(e -> filterHoSuDung());
+        btnRefresh.addActionListener(e -> showHoSuDung(true));
 
         // Nút Thêm
         btnAdd.addActionListener(e -> {
@@ -250,7 +241,7 @@ public class HoSuDungPage extends JPanel {
 
                 if (hsdDao.delete_HoSuDung(selected.getID_HoSuDung())) {
                     showSuccess("Xóa hộ sử dụng thành công!");
-                    showAllHoSuDung(); // Refresh lại bảng
+                    showHoSuDung(false); // Refresh lại bảng
                 } else {
                     showError("Xóa hộ sử dụng thất bại!");
                 }
@@ -258,73 +249,36 @@ public class HoSuDungPage extends JPanel {
         });
 
         // Enter ở textfield tìm kiếm
-        tfSearchCustomerId.addActionListener(e -> filterHoSuDung());
+        tfSearchCustomerId.addActionListener(e -> showHoSuDung(true));
     }
 
     /**
-     * Hiển thị toàn bộ hộ sử dụng (không lọc)
+     * Hiển thị danh sách hộ sử dụng với các bộ lọc tùy chọn.
+     * 
+     * @param applyFilter true = áp dụng bộ lọc, false = hiển thị tất cả
      */
-    public void showAllHoSuDung() {
+    public void showHoSuDung(boolean applyFilter) {
         tableModel.setRowCount(0);
         hsdArr.clear();
 
         try {
-            // Lấy tất cả khách hàng
-            ArrayList<Customer> allCustomers = customerDao.getCustomers();
-
-            // Với mỗi khách hàng, lấy danh sách hộ sử dụng
-            for (Customer customer : allCustomers) {
-                ArrayList<hoSuDung> hsdList = hsdDao.getHoSuDungByCustomerId(customer.getIdCustomer());
-
-                for (hoSuDung hsd : hsdList) {
-                    hsd.setID_Customer(customer.getIdCustomer()); // Đảm bảo có ID khách hàng
-
-                    String trangThai = hsd.getTrangThai() == 1 ? "Đang sử dụng" : "Ngừng sử dụng";
-
-                    Object[] row = {
-                            hsd.getID_HoSuDung(),
-                            customer.getIdCustomer(),
-                            customer.getNameCustomer(),
-                            hsd.getKhuVuc(),
-                            hsd.getDiaChi(),
-                            trangThai
-                    };
-
-                    tableModel.addRow(row);
-                    hsdArr.add(hsd);
-                }
-            }
-            System.out.println("Đã load " + hsdArr.size() + " hộ sử dụng");
-
-        } catch (Exception e) {
-            showError("Lỗi khi tải dữ liệu: " + e.getMessage());
-        }
-    }
-
-    /**
-     * Lọc hộ sử dụng theo các tiêu chí đã chọn
-     */
-    private void filterHoSuDung() {
-        tableModel.setRowCount(0);
-        hsdArr.clear();
-
-        try {
-            // Lấy giá trị filter
-            loaiCustomer selectedType = (loaiCustomer) cbCustomerType.getSelectedItem();
-            String selectedKhuVuc = (String) cbKhuVuc.getSelectedItem();
-            String searchId = tfSearchCustomerId.getText().trim();
+            // Lấy giá trị filter (chỉ dùng khi applyFilter = true)
+            loaiCustomer selectedType = applyFilter ? (loaiCustomer) cbCustomerType.getSelectedItem() : null;
+            String selectedKhuVuc = applyFilter ? (String) cbKhuVuc.getSelectedItem() : null;
+            String searchId = applyFilter ? tfSearchCustomerId.getText().trim() : "";
 
             // Lấy tất cả khách hàng
             ArrayList<Customer> allCustomers = customerDao.getCustomers();
 
             for (Customer customer : allCustomers) {
-                // Lọc theo loại khách hàng
-                if (selectedType != null && customer.getLoaiCustomer() != selectedType.getIdLoaiCustomer()) {
+                // Lọc theo loại khách hàng (chỉ khi applyFilter = true)
+                if (applyFilter && selectedType.equals("Tất cả loại KH") &&
+                        customer.getLoaiCustomer() != selectedType.getIdLoaiCustomer()) {
                     continue;
                 }
 
-                // Lọc theo ID khách hàng (nếu có nhập)
-                if (!searchId.isEmpty()) {
+                // Lọc theo ID khách hàng (chỉ khi applyFilter = true)
+                if (applyFilter && !searchId.isEmpty()) {
                     try {
                         int searchIdInt = Integer.parseInt(searchId);
                         if (customer.getIdCustomer() != searchIdInt) {
@@ -339,8 +293,9 @@ public class HoSuDungPage extends JPanel {
                 ArrayList<hoSuDung> hsdList = hsdDao.getHoSuDungByCustomerId(customer.getIdCustomer());
 
                 for (hoSuDung hsd : hsdList) {
-                    // Lọc theo khu vực
-                    if (selectedKhuVuc != null && !selectedKhuVuc.equals("-- Chọn tỉnh ---")) {
+                    // Lọc theo khu vực (chỉ khi applyFilter = true)
+                    if (applyFilter && selectedKhuVuc != null &&
+                            !selectedKhuVuc.equals("-- Chọn tỉnh ---")) {
                         if (!hsd.getKhuVuc().equals(selectedKhuVuc)) {
                             continue;
                         }
@@ -364,12 +319,13 @@ public class HoSuDungPage extends JPanel {
                 }
             }
 
-            System.out.println("Đã lọc được " + hsdArr.size() + " hộ sử dụng");
+            String message = applyFilter ? "Đã lọc được " : "Đã load ";
+            System.out.println(message + hsdArr.size() + " hộ sử dụng");
 
         } catch (Exception e) {
-            System.out.println("Lỗi khi lọc hộ sử dụng: " + e.getMessage());
+            System.out.println("Lỗi khi tải/lọc hộ sử dụng: " + e.getMessage());
             e.printStackTrace();
-            showError("Lỗi khi lọc dữ liệu: " + e.getMessage());
+            showError("Lỗi khi tải dữ liệu: " + e.getMessage());
         }
     }
 
