@@ -37,28 +37,27 @@ import data.LoginDataLoader;
  */
 public class MenuForm extends JFrame {
 
+    // Key cho CardLayout (để tránh phụ thuộc text hiển thị)
+    private class Page{
+        static final String HOME = "0";
+        static final String CUSTOMER = "1";
+        static final String HO_SU_DUNG = "2";
+        static final String WATER_PRICR = "3";
+    }
+
     private JPanel contentPanel;
-    private CardLayout cardLayout;
+    private CardLayout cardLayout; // CardLayout là cơ chế đổi màn hình trong cùng một container.
 
     private JPanel sidebar;
     private JPanel searchPanel;
     private JButton logoutButton = new JButton("🚪 Đăng xuất");
 
-    // Key cho CardLayout (để tránh phụ thuộc text hiển thị)
-    private static final String PAGE_HOME = "PAGE_HOME";
-    private static final String PAGE_CUSTOMER = "PAGE_CUSTOMER";
-    private static final String PAGE_WATER_PRICE = "PAGE_WATER_PRICE";
-
     // ===== THÊM: Lưu các nút menu để highlight =====
     private JButton btnHome;
     private JButton btnCustomer;
+    private JButton btnHoSuDung;
     private JButton btnWaterPrice;
     private JButton currentSelectedButton = null; // Nút đang được chọn
-
-    // Màu sắc
-    private static final Color SELECTED_COLOR = new Color(60, 60, 60);
-    private static final Color HOVER_COLOR = new Color(50, 50, 50); 
-    private static final Color DEFAULT_COLOR = new Color(32, 32, 32);
 
     public MenuForm() {
         setTitle("Water Manager");
@@ -79,7 +78,7 @@ public class MenuForm extends JFrame {
      */
     private void initSearch() {
         searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        searchPanel.setBackground(new Color(26, 26, 26));
+        searchPanel.setBackground(GUIConstants.Colors.BACKGROUND);
         JTextField searchField = new JTextField(30);
         searchField.setPreferredSize(new Dimension(200, 30));
         searchPanel.add(searchField);
@@ -96,7 +95,7 @@ public class MenuForm extends JFrame {
          * tạo ra thanh bên trái để chọn các thao tác cần thực hiện
          */
         sidebar = new JPanel(new BorderLayout());
-        sidebar.setBackground(DEFAULT_COLOR);
+        sidebar.setBackground(GUIConstants.Colors.DEFAULT);
         sidebar.setPreferredSize(new Dimension(250, 0));
 
         /*
@@ -104,15 +103,17 @@ public class MenuForm extends JFrame {
          * tạo ra thanh menu chứa các nút cần nội dung để thực hiện hành động
          */
         JPanel centerBar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        centerBar.setBackground(DEFAULT_COLOR);
+        centerBar.setBackground(GUIConstants.Colors.DEFAULT);
 
         // Tạo các nút menu và lưu 
-        btnHome = createMenuButton("Trang chủ", "🏠", PAGE_HOME);
-        btnCustomer = createMenuButton("Khách hàng", "👤", PAGE_CUSTOMER);
-        btnWaterPrice = createMenuButton("Giá nước", "💧", PAGE_WATER_PRICE);
+        btnHome = createMenuButton("Trang chủ", "🏠", Page.HOME);
+        btnCustomer = createMenuButton("Khách hàng", "👤", Page.CUSTOMER);
+        btnHoSuDung = createMenuButton("Hộ Sủ dụng", "", Page.HO_SU_DUNG);
+        btnWaterPrice = createMenuButton("Giá nước", "💧", Page.WATER_PRICR);
 
         centerBar.add(btnHome);
         centerBar.add(btnCustomer);
+        centerBar.add(btnHoSuDung);
         centerBar.add(btnWaterPrice);
 
         sidebar.add(centerBar, BorderLayout.CENTER);
@@ -123,7 +124,7 @@ public class MenuForm extends JFrame {
          * tạo ra thanh tài khoản ở trên để đăng xuất
          */
         JPanel accountBar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        accountBar.setBackground(DEFAULT_COLOR);
+        accountBar.setBackground(GUIConstants.Colors.DEFAULT);
         logoutButton.setPreferredSize(new Dimension(230, 40));
         accountBar.add(logoutButton);
         sidebar.add(accountBar, BorderLayout.NORTH);
@@ -137,15 +138,15 @@ public class MenuForm extends JFrame {
          */
         cardLayout = new CardLayout();
         contentPanel = new JPanel(cardLayout);
-        contentPanel.setBackground(new Color(26, 26, 26));
+        contentPanel.setBackground(GUIConstants.Colors.BACKGROUND);
 
-        contentPanel.add(createPage("Trang chủ để thực hiện các tính năng nhanh nhưng chưa thêm gì cả :))"), PAGE_HOME);
-        contentPanel.add(new CustomerPage(), PAGE_CUSTOMER);
-        contentPanel.add(new waterPricePage(), PAGE_WATER_PRICE);
+        contentPanel.add(createPage("Trang chủ để thực hiện các tính năng nhanh nhưng chưa thêm gì cả :))"), Page.HOME);
+        contentPanel.add(new CustomerPage(), Page.CUSTOMER);
+        contentPanel.add(new waterPricePage(), Page.WATER_PRICR);
 
         // ==== GHÉP VÀO FRAME ====
         add(sidebar, BorderLayout.WEST);
-        add(contentPanel, BorderLayout.CENTER);
+        add(contentPanel);
 
         // ===== THÊM: Mặc định chọn trang chủ =====
         setSelectedButton(btnHome);
@@ -169,7 +170,7 @@ public class MenuForm extends JFrame {
         btn.setPreferredSize(new Dimension(230, 40));
         btn.setContentAreaFilled(false);// tắt nền nút
         btn.setForeground(Color.WHITE);
-        btn.setHorizontalAlignment(SwingConstants.LEFT);
+        btn.setHorizontalAlignment(SwingConstants.LEFT); // căn trái
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         /*
@@ -184,7 +185,7 @@ public class MenuForm extends JFrame {
             public void mouseEntered(MouseEvent e) {
                 // Chỉ đổi màu nếu KHÔNG phải nút đang được chọn
                 if (btn != currentSelectedButton) {
-                    btn.setBackground(HOVER_COLOR);
+                    btn.setBackground(GUIConstants.Colors.HOVER);
                     btn.setContentAreaFilled(true);// bật nền nút khi di chuột đến
                 }
             }
@@ -216,13 +217,13 @@ public class MenuForm extends JFrame {
         // Bỏ highlight nút cũ
         if (currentSelectedButton != null) {
             currentSelectedButton.setContentAreaFilled(false);
-            currentSelectedButton.setBackground(DEFAULT_COLOR);
+            currentSelectedButton.setBackground(GUIConstants.Colors.DEFAULT);
         }
 
         // Highlight nút mới
         currentSelectedButton = selectedButton;
         currentSelectedButton.setContentAreaFilled(true);
-        currentSelectedButton.setBackground(SELECTED_COLOR);
+        currentSelectedButton.setBackground(GUIConstants.Colors.SELECTED);
     }
 
     /**
@@ -250,7 +251,7 @@ public class MenuForm extends JFrame {
      */
     private JPanel createPage(String title) {
         JPanel p = new JPanel(new GridBagLayout());
-        p.setBackground(new Color(26, 26, 26));
+        p.setBackground(GUIConstants.Colors.BACKGROUND);
         JLabel label = new JLabel(title);
         label.setFont(new Font("Arial", Font.BOLD, 30));
         label.setForeground(Color.WHITE);

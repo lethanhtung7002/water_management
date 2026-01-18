@@ -31,11 +31,11 @@ public class waterPricePage extends JPanel {
 
     public waterPricePage() {
         setLayout(new BorderLayout(5, 5));
-        setBackground(GUIConstants.Colors.BACKGROUND_COLOR); // Thêm màu nền cho phù hợp với MenuForm
+        setBackground(GUIConstants.Colors.BACKGROUND); // Thêm màu nền cho phù hợp với MenuForm
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
-        topPanel.setBackground(GUIConstants.Colors.BACKGROUND_COLOR); // Màu nền
+        topPanel.setBackground(GUIConstants.Colors.BACKGROUND); // Màu nền
 
         topPanel.add(btnRefresh);
         topPanel.add(btnAdd);
@@ -104,7 +104,7 @@ public class waterPricePage extends JPanel {
 
     public void showWaterPriceList() {
         tableModel.setRowCount(0);
-        
+
         gnArr = giaNuocDao.getGiaNuoc();
         tableModel.setRowCount(0);
         for (GiaNuoc gn : gnArr) {

@@ -42,12 +42,12 @@ public class CustomerPage extends JPanel {
 
     public CustomerPage() {
         setLayout(new BorderLayout(5, 5));
-        setBackground(GUIConstants.Colors.BACKGROUND_COLOR);
+        setBackground(GUIConstants.Colors.BACKGROUND);
 
         // Panel chứa các nút
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
-        topPanel.setBackground(GUIConstants.Colors.BACKGROUND_COLOR);
+        topPanel.setBackground(GUIConstants.Colors.BACKGROUND);
 
         topPanel.add(btnRefresh);
         topPanel.add(btnAdd);
@@ -60,7 +60,6 @@ public class CustomerPage extends JPanel {
         table = new JTable(tableModel);
         table.setRowHeight(25);
         table.setFillsViewportHeight(true);
-        table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
         scrollPane = new JScrollPane(table);
         add(topPanel, BorderLayout.NORTH);
@@ -158,14 +157,14 @@ public class CustomerPage extends JPanel {
 
         // Thêm từng dòng vào bảng
         for (Customer customer : customerList) {
-                tableModel.addRow(new Object[] {
-                        customer.getIdCustomer(),
-                        customer.getNameCustomer(),
-                        customer.getLoaiCustomer(),
-                        customer.getCCCD(),
-                        customer.getPhoneCustomer(),
-                        customer.getEmail()
-                });
-            }
+            tableModel.addRow(new Object[] {
+                    customer.getIdCustomer(),
+                    customer.getNameCustomer(),
+                    customer.getLoaiCustomer(),
+                    customer.getCCCD(),
+                    customer.getPhoneCustomer(),
+                    customer.getEmail()
+            });
+        }
     }
 }
