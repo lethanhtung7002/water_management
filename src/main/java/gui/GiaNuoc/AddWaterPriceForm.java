@@ -26,8 +26,6 @@ import model.*;
  * - new AddWaterPriceForm() → Thêm mới
  * - new AddWaterPriceForm(GiaNuoc) → Sửa
  * 
- * @author Lê Thanh Tùng
- * @version 2.0
  */
 public class AddWaterPriceForm extends JFrame {
 

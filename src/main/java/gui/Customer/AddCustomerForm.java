@@ -27,8 +27,6 @@ import model.LoaiCustomer;
  * - new AddCustomerForm() → Thêm mới khách hàng
  * - new AddCustomerForm(Customer) → Sửa khách hàng + quản lý hộ sử dụng
  * 
- * @author Lê Thanh Tùng
- * @version 2.0
  */
 public class AddCustomerForm extends JFrame {
 

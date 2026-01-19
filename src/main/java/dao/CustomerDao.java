@@ -23,8 +23,6 @@ import static dao.MySQLConnect.ConnectQLN;
  * - Xóa khách hàng theo ID
  * - Lấy danh sách loại khách hàng
  * 
- * @author Lê Thanh Tùng
- * @version 1.0
  */
 public class CustomerDao {
 

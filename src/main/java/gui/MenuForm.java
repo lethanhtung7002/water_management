@@ -33,8 +33,6 @@ import data.LoginDataLoader;
  * - Content area chính sử dụng CardLayout để chuyển đổi giữa các trang
  * - Hiển thị trang đang được chọn
  * 
- * @author Lê Thanh Tùng :)
- * @version 1.0
  */
 public class MenuForm extends JFrame {
 

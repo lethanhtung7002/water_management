@@ -455,13 +455,4 @@ public class AddWaterPriceTierForm extends JFrame {
                 "Thành công",
                 JOptionPane.INFORMATION_MESSAGE);
     }
-
-    /**
-     * Main method để test form.
-     */
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new AddWaterPriceTierForm(1); // Test với ID_DonGia = 1
-        });
-    }
 }

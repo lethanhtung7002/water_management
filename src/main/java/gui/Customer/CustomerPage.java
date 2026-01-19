@@ -23,8 +23,6 @@ import model.Customer;
  * - Thêm, sửa, xóa khách hàng
  * - Xem thông tin chi tiết và quản lý hộ sử dụng với khách hàng tương ứng
  * 
- * @author Lê Thanh Tùng
- * @version 2.0
  */
 public class CustomerPage extends JPanel {
 

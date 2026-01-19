@@ -19,8 +19,6 @@ import javax.swing.*;
  * 2. Nếu có -> Tự động đăng nhập -> Mở MenuForm
  * 3. Nếu không -> Hiển thị form đăng nhập
  * 
- * @author Lê Thanh Tùng
- * @version 1.0
  */
 public class LoginForm extends JFrame {
 

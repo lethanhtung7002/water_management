@@ -38,7 +38,6 @@ import model.LoaiCustomer;
  * - Sửa, xóa hộ sử dụng
  * - Xem thông tin chi tiết hộ sử dụng
  * 
- * @version 1.0
  */
 public class HoSuDungPage extends JPanel {
 

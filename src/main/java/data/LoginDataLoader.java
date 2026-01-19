@@ -14,8 +14,6 @@ import java.util.Scanner;
  * 
  * File lưu trữ: src/main/java/data/login.txt
  * 
- * @author Lê Thanh Tùng
- * @version 1.0
  */
 public class LoginDataLoader {
 

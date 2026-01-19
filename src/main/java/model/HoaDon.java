@@ -1,17 +1,11 @@
 package model;
 
-/**
- * Model cho hóa đơn - theo database schema thực tế
- * 
- * Bảng: HoaDon
- * Lưu trữ thông tin hóa đơn tiền nước
- */
 public class HoaDon {
     private int idHoaDon;
     private int idChiSo;
-    private int sanLuongTieuThu; // Số m³ nước tiêu thụ
+    private int sanLuongTieuThu;
     private double tongTienThanhToan; // Tổng tiền phải trả
-    private String ngayLapHoaDon; // Ngày lập hóa đơn
+    private String ngayLapHoaDon; 
     private int trangThaiHoaDon; // 0: Chưa thanh toán, 1: Đã thanh toán
     private int idDonGia; // ID bảng giá áp dụng
 
@@ -27,7 +21,6 @@ public class HoaDon {
         this.tongTienThanhToan = tongTienThanhToan;
         this.ngayLapHoaDon = ngayLapHoaDon;
         this.trangThaiHoaDon = trangThaiHoaDon;
-        this.idDonGia = idDonGia;
     }
 
     // Getters and Setters

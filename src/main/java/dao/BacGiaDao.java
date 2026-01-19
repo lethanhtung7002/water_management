@@ -20,8 +20,6 @@ import static dao.MySQLConnect.ConnectQLN;
  * - DenMucNuoc: Đến mức nước (m³)
  * - Gia: Giá tiền (VNĐ/m³)
  * 
- * @author Lê Thanh Tùng
- * @version 1.0
  */
 public class BacGiaDao {
 

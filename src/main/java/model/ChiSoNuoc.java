@@ -1,19 +1,13 @@
 package model;
 
-/**
- * Model cho chỉ số nước - theo database schema thực tế
- * 
- * Bảng: ChiSoNuoc
- * Lưu trữ thông tin về chỉ số nước của một hộ sử dụng
- */
 public class ChiSoNuoc {
     private int idChiSo;
     private int idHoSuDung;
-    private int namGhi; // Năm ghi (2024, 2025...)
-    private int thangGhi; // Tháng ghi (1-12)
-    private int ngayGhi; // Ngày ghi (1-31)
-    private int chiSoMoi; // Chỉ số mới
-    private int chiSoCu; // Chỉ số cũ (đã có trong DB)
+    private int namGhi; 
+    private int thangGhi; 
+    private int ngayGhi; 
+    private int chiSoMoi; 
+    private int chiSoCu; 
 
     public ChiSoNuoc() {
     }
@@ -29,7 +23,6 @@ public class ChiSoNuoc {
         this.chiSoCu = chiSoCu;
     }
 
-    // Getters and Setters
     public int getIdChiSo() {
         return idChiSo;
     }
@@ -92,7 +85,7 @@ public class ChiSoNuoc {
      * @return Chỉ số mới - Chỉ số cũ
      */
     public int getTieuThu() {
-        return chiSoMoi - chiSoCu;
+        return chiSoCu - chiSoMoi;
     }
 
     /**

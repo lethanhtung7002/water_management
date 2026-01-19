@@ -4,8 +4,6 @@
  * Chứa tên database, bảng và cột để tránh hard-code trong SQL queries.
  * CẬP NHẬT: Thêm column names cho ChiSoNuoc và HoaDon
  * 
- * @author Lê Thanh Tùng
- * @version 2.0 - Updated with ChiSoNuoc and HoaDon columns
  */
 
 package dao;

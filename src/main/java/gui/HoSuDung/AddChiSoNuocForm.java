@@ -21,8 +21,6 @@ import calc.WaterBill;
  * - Tự động tính tiền theo bậc thang
  * - Tự động tạo hóa đơn
  * 
- * @author Lê Thanh Tùng
- * @version 1.0
  */
 public class AddChiSoNuocForm extends JFrame {
 
@@ -500,28 +498,11 @@ public class AddChiSoNuocForm extends JFrame {
                 JOptionPane.INFORMATION_MESSAGE);
     }
 
-    // ===== HELPER METHODS =====
-
     private void showError(String message) {
         JOptionPane.showMessageDialog(this, message, "Lỗi", JOptionPane.ERROR_MESSAGE);
     }
 
     private void showWarning(String message) {
         JOptionPane.showMessageDialog(this, message, "Cảnh báo", JOptionPane.WARNING_MESSAGE);
-    }
-
-    // ===== MAIN METHOD FOR TESTING =====
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            // Test data
-            HoSuDung testHoSuDung = new HoSuDung();
-            testHoSuDung.setID_HoSuDung(1);
-            testHoSuDung.setID_Customer(1);
-            testHoSuDung.setDiaChi("123 Nguyễn Văn Linh");
-            testHoSuDung.setKhuVuc("Đà Nẵng");
-            testHoSuDung.setTrangThai(1);
-
-            new AddChiSoNuocForm(testHoSuDung);
-        });
     }
 }

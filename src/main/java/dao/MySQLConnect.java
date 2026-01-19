@@ -20,8 +20,6 @@ import java.sql.Statement;
  * - MySQLConnect.ConnectQLN.executeQuery("SELECT * FROM khachhang")
  * - MySQLConnect.ConnectQLN.executeUpdate("INSERT INTO ...")
  * 
- * @author ltt
- * @version 1.0
  */
 public class MySQLConnect {
 

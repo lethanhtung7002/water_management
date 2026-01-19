@@ -15,12 +15,10 @@ import model.*;
  * Chức năng:
  * - Hiển thị thông tin hộ sử dụng
  * - Hiển thị danh sách các lần ghi chỉ số
- * - Thêm/Sửa/Xóa chỉ số nước
+ * - Thêm/Xóa chỉ số nước
  * - Xem hóa đơn
  * - Thanh toán hóa đơn
  * 
- * @author Lê Thanh Tùng
- * @version 1.0
  */
 public class ChiSoVaThanhToan extends JFrame {
 
@@ -89,33 +87,28 @@ public class ChiSoVaThanhToan extends JFrame {
     private JPanel createInfoPanel() {
         JPanel panel = new JPanel(new GridLayout(2, 4, 10, 10));
         panel.setBorder(BorderFactory.createTitledBorder("Thông tin hộ sử dụng"));
-        panel.setBackground(GUIConstants.Colors.BACKGROUND);
 
         // Row 1
         panel.add(createInfoLabel("Tên khách hàng:"));
-        lbTenKH.setText(customer != null ? customer.getNameCustomer() : "N/A");
+        lbTenKH.setText(customer.getNameCustomer());
         lbTenKH.setFont(GUIConstants.Fonts.TieuDePhu);
-        lbTenKH.setForeground(Color.WHITE);
         panel.add(lbTenKH);
 
         panel.add(createInfoLabel("Địa chỉ:"));
         lbDiaChi.setText(HoSuDung.getDiaChi());
         lbDiaChi.setFont(GUIConstants.Fonts.TieuDePhu);
-        lbDiaChi.setForeground(Color.WHITE);
         panel.add(lbDiaChi);
 
         // Row 2
         panel.add(createInfoLabel("Khu vực:"));
         lbKhuVuc.setText(HoSuDung.getKhuVuc());
         lbKhuVuc.setFont(GUIConstants.Fonts.TieuDePhu);
-        lbKhuVuc.setForeground(Color.WHITE);
         panel.add(lbKhuVuc);
 
         panel.add(createInfoLabel("Trạng thái:"));
         String trangThai = HoSuDung.getTrangThai() == 1 ? "Đang sử dụng" : "Ngừng sử dụng";
         lbTrangThai.setText(trangThai);
         lbTrangThai.setFont(GUIConstants.Fonts.TieuDePhu);
-        lbTrangThai.setForeground(HoSuDung.getTrangThai() == 1 ? Color.GREEN : Color.RED);
         panel.add(lbTrangThai);
 
         return panel;
@@ -126,8 +119,7 @@ public class ChiSoVaThanhToan extends JFrame {
      */
     private JLabel createInfoLabel(String text) {
         JLabel label = new JLabel(text);
-        label.setFont(new Font("Arial", Font.BOLD, 14));
-        label.setForeground(Color.LIGHT_GRAY);
+        label.setFont(GUIConstants.Fonts.TieuDePhu);
         return label;
     }
 
@@ -136,7 +128,6 @@ public class ChiSoVaThanhToan extends JFrame {
      */
     private JPanel createTablePanel() {
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(GUIConstants.Colors.BACKGROUND);
 
         // Định nghĩa cột
         String[] columns = {
@@ -159,15 +150,7 @@ public class ChiSoVaThanhToan extends JFrame {
         // Tạo table
         table = new JTable(tableModel);
         table.setRowHeight(30);
-        table.setFont(new Font("Arial", Font.PLAIN, 13));
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        // Căn giữa các cột số
-        var centerRenderer = new javax.swing.table.DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        for (int i = 0; i < 6; i++) {
-            table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
-        }
 
         scrollPane = new JScrollPane(table);
         panel.add(scrollPane, BorderLayout.CENTER);
@@ -228,7 +211,7 @@ public class ChiSoVaThanhToan extends JFrame {
             for (ChiSoNuoc cs : chiSoList) {
                 // Lấy hóa đơn để kiểm tra trạng thái thanh toán
                 HoaDon hoaDon = hoaDonDao.getHoaDonByChiSoId(cs.getIdChiSo());
-                String trangThaiTT = hoaDon != null ? hoaDon.getTrangThaiText() : "Chưa lập HĐ";
+                String trangThaiTT = (hoaDon != null) ? hoaDon.getTrangThaiText() : "Chưa lập HĐ";
 
                 Object[] row = {
                         cs.getIdChiSo(),
@@ -285,8 +268,6 @@ public class ChiSoVaThanhToan extends JFrame {
 
             } catch (Exception e) {
                 System.out.println("Lỗi xóa chỉ số: " + e.getMessage());
-                e.printStackTrace();
-                showError("Lỗi: " + e.getMessage());
             }
         }
     }
@@ -345,7 +326,6 @@ public class ChiSoVaThanhToan extends JFrame {
 
             JTextArea textArea = new JTextArea(message);
             textArea.setEditable(false);
-            textArea.setFont(new Font("Monospaced", Font.PLAIN, 13));
 
             JOptionPane.showMessageDialog(this,
                     new JScrollPane(textArea),
@@ -402,6 +382,8 @@ public class ChiSoVaThanhToan extends JFrame {
 
         } catch (Exception e) {
             System.out.println("Lỗi thanh toán: " + e.getMessage());
+            e.printStackTrace();
+            showError("Lỗi: " + e.getMessage());
         }
     }
 
@@ -421,20 +403,5 @@ public class ChiSoVaThanhToan extends JFrame {
 
     private void showInfo(String message) {
         JOptionPane.showMessageDialog(this, message, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    // ===== MAIN METHOD FOR TESTING =====
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            // Test data
-            HoSuDung testHoSuDung = new HoSuDung();
-            testHoSuDung.setID_HoSuDung(1);
-            testHoSuDung.setID_Customer(1);
-            testHoSuDung.setDiaChi("123 Nguyễn Văn Linh");
-            testHoSuDung.setKhuVuc("Đà Nẵng");
-            testHoSuDung.setTrangThai(1);
-
-            new ChiSoVaThanhToan(testHoSuDung);
-        });
     }
 }

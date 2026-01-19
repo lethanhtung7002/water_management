@@ -1,16 +1,10 @@
 package model;
 
-/**
- * Model cho thanh toán - theo database schema thực tế
- * 
- * Bảng: ThanhToan
- * Lưu trữ thông tin thanh toán hóa đơn
- */
 public class ThanhToan {
     private int idThanhToan;
     private int idHoaDon;
-    private String ngayThanhToan; // Ngày thanh toán
-    private String hinhThuc; // Hình thức thanh toán (Tiền mặt, Chuyển khoản...)
+    private String ngayThanhToan; 
+    private String hinhThuc;
 
     public ThanhToan() {
     }
