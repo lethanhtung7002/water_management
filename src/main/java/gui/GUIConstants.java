@@ -22,10 +22,10 @@ public class GUIConstants {
     }
 
     public static class Colors {
-        public static final Color BACKGROUND = rgb(26, 26, 26);
-        public static final Color SELECTED = rgb(60, 60, 60);
+        public static final Color BACKGROUND = rgb(32, 32, 32);
+        public static final Color SELECTED = rgb(41, 35, 102);
         public static final Color HOVER = rgb(50, 50, 50);
-        public static final Color DEFAULT = rgb(32, 32, 32);
+        // public static final Color DEFAULT = rgb(32, 32, 32);
     }
 
     public static Color rgb(int r, int g, int b) {

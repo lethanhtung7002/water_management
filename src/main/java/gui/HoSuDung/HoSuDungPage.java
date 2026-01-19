@@ -1,16 +1,32 @@
-package gui.Customer;
+package gui.HoSuDung;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
-import gui.GUIConstants;
 
-import dao.*;
+import dao.CustomerDao;
+import dao.HoSuDungDao;
 import data.KhuVucLoader;
-import model.*;
+import gui.GUIConstants;
+import gui.Customer.AddHoSuDungForm;
+import model.Customer;
+import model.HoSuDung;
+import model.LoaiCustomer;
 
 /**
  * Trang quản lý Hộ sử dụng.
@@ -324,7 +340,6 @@ public class HoSuDungPage extends JPanel {
 
         } catch (Exception e) {
             System.out.println("Lỗi khi tải/lọc hộ sử dụng: " + e.getMessage());
-            e.printStackTrace();
             showError("Lỗi khi tải dữ liệu: " + e.getMessage());
         }
     }

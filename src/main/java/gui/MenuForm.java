@@ -20,8 +20,8 @@ import javax.swing.SwingConstants;
 import javax.swing.JOptionPane;
 
 import gui.Customer.CustomerPage;
-import gui.Customer.HoSuDungPage;
 import gui.GiaNuoc.waterPricePage;
+import gui.HoSuDung.HoSuDungPage;
 import data.LoginDataLoader;
 
 /**
@@ -96,7 +96,7 @@ public class MenuForm extends JFrame {
          * tạo ra thanh bên trái để chọn các thao tác cần thực hiện
          */
         sidebar = new JPanel(new BorderLayout());
-        sidebar.setBackground(GUIConstants.Colors.DEFAULT);
+        sidebar.setBackground(GUIConstants.Colors.BACKGROUND);
         sidebar.setPreferredSize(new Dimension(250, 0));
 
         /*
@@ -104,7 +104,7 @@ public class MenuForm extends JFrame {
          * tạo ra thanh menu chứa các nút cần nội dung để thực hiện hành động
          */
         JPanel centerBar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        centerBar.setBackground(GUIConstants.Colors.DEFAULT);
+        centerBar.setBackground(GUIConstants.Colors.BACKGROUND);
 
         // Tạo các nút menu và lưu
         btnHome = createMenuButton("Trang chủ", "🏠", Page.HOME);
@@ -125,7 +125,7 @@ public class MenuForm extends JFrame {
          * tạo ra thanh tài khoản ở trên để đăng xuất
          */
         JPanel accountBar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        accountBar.setBackground(GUIConstants.Colors.DEFAULT);
+        accountBar.setBackground(GUIConstants.Colors.BACKGROUND);
         logoutButton.setPreferredSize(new Dimension(230, 40));
         accountBar.add(logoutButton);
         sidebar.add(accountBar, BorderLayout.NORTH);
@@ -219,7 +219,7 @@ public class MenuForm extends JFrame {
         // Bỏ highlight nút cũ
         if (currentSelectedButton != null) {
             currentSelectedButton.setContentAreaFilled(false);
-            currentSelectedButton.setBackground(GUIConstants.Colors.DEFAULT);
+            currentSelectedButton.setBackground(GUIConstants.Colors.BACKGROUND);
         }
 
         // Highlight nút mới
