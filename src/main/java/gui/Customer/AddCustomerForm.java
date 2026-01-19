@@ -201,9 +201,11 @@ public class AddCustomerForm extends JFrame {
 
         gbc.gridx = 0;
         gbc.gridy = row++;
-        JLabel lbTenKH = new JLabel(customer.getNameCustomer());
-        lbTenKH.setFont(GUIConstants.Fonts.TieuDe);
-        panel.add(lbTenKH, gbc);
+        if (b){
+            JLabel lbTenKH = new JLabel(this.customer.getNameCustomer());
+            lbTenKH.setFont(GUIConstants.Fonts.TieuDe);
+            panel.add(lbTenKH, gbc);
+        }
 
         gbc.gridwidth = 1;
 

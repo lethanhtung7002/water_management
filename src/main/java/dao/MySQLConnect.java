@@ -93,6 +93,7 @@ public class MySQLConnect {
                     Lệnh thực hiện: %s
                     """.formatted(sql));
         } catch (SQLException e) {
+            System.out.println("lenh: "+sql);
             System.out.println("Lỗi SQL (Update): " + e.getMessage());
         }
         return result;

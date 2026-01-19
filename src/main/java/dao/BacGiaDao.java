@@ -57,7 +57,6 @@ public class BacGiaDao {
 
         } catch (SQLException e) {
             System.out.println("Lỗi lấy danh sách bậc giá: " + e.getMessage());
-            e.printStackTrace();
         }
 
         return listBac;
@@ -90,7 +89,6 @@ public class BacGiaDao {
 
         } catch (SQLException e) {
             System.out.println("Lỗi lấy bậc giá theo ID: " + e.getMessage());
-            e.printStackTrace();
         }
 
         return tier;
@@ -128,7 +126,6 @@ public class BacGiaDao {
 
         } catch (SQLException e) {
             System.out.println("Lỗi lấy bậc giá cuối: " + e.getMessage());
-            e.printStackTrace();
         }
 
         return tier;
@@ -163,7 +160,6 @@ public class BacGiaDao {
 
         } catch (SQLException e) {
             System.out.println("Lỗi lấy số bậc tiếp theo: " + e.getMessage());
-            e.printStackTrace();
         }
 
         return nextTier;
@@ -227,7 +223,6 @@ public class BacGiaDao {
 
         } catch (SQLException e) {
             System.out.println("Lỗi kiểm tra trùng mức nước: " + e.getMessage());
-            e.printStackTrace();
         }
 
         return false;
@@ -294,8 +289,6 @@ public class BacGiaDao {
             System.out.println("Số dòng cập nhật: " + result);
         } catch (Exception e) {
             System.out.println("Lỗi cập nhật bậc giá: " + e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException(e);
         }
 
         return result > 0;
@@ -322,8 +315,6 @@ public class BacGiaDao {
             System.out.println("Số dòng xóa: " + result);
         } catch (Exception e) {
             System.out.println("Lỗi xóa bậc giá: " + e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException(e);
         }
 
         return result > 0;
@@ -346,8 +337,6 @@ public class BacGiaDao {
             System.out.println("Đã xóa " + result + " bậc giá");
         } catch (Exception e) {
             System.out.println("Lỗi xóa tất cả bậc giá: " + e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException(e);
         }
 
         return result >= 0; // >= 0 vì có thể không có bậc giá nào

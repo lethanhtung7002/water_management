@@ -166,6 +166,13 @@ public class ChiSoVaThanhToan extends JFrame {
         table.getTableHeader().setBackground(new Color(70, 130, 180));
         table.getTableHeader().setForeground(Color.WHITE);
 
+        // Căn giữa các cột số
+        var centerRenderer = new javax.swing.table.DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        for (int i = 0; i < 6; i++) {
+            table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
+
         scrollPane = new JScrollPane(table);
         panel.add(scrollPane, BorderLayout.CENTER);
 
@@ -198,11 +205,9 @@ public class ChiSoVaThanhToan extends JFrame {
 
         // Thêm chỉ số
         btnAdd.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this,
-                    "Chức năng thêm chỉ số sẽ được cập nhật sau.\n" +
-                            "Vui lòng tạo form AddChiSoNuocForm.java",
-                    "Thông báo",
-                    JOptionPane.INFORMATION_MESSAGE);
+            new AddChiSoNuocForm(HoSuDung);
+            // Refresh sau khi đóng form
+            loadChiSoData();
         });
 
         // Sửa chỉ số
@@ -302,6 +307,8 @@ public class ChiSoVaThanhToan extends JFrame {
 
             } catch (Exception e) {
                 System.out.println("Lỗi xóa chỉ số: " + e.getMessage());
+                e.printStackTrace();
+                showError("Lỗi: " + e.getMessage());
             }
         }
     }

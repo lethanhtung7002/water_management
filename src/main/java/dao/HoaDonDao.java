@@ -40,7 +40,6 @@ public class HoaDonDao {
 
         } catch (SQLException e) {
             System.out.println("Lỗi lấy hóa đơn theo chỉ số: " + e.getMessage());
-            e.printStackTrace();
         }
 
         return hoaDon;
@@ -57,7 +56,7 @@ public class HoaDonDao {
 
         String query = String.format(java.util.Locale.US,
                 """
-                        INSERT INTO %s (%s, %s, %.2f, '%s', %d, %d)
+                        INSERT INTO %s (%s, %s, %s, %s, %s, %s)
                         VALUES (%d, %d, %.2f, '%s', %d, %d)
                         """,
                 qlnTableName.HoaDon,
@@ -67,6 +66,7 @@ public class HoaDonDao {
                 qlnHoaDonCol.NgayLap,
                 qlnHoaDonCol.TrangThai,
                 qlnIDName.GiaNuocID,
+
                 hoaDon.getIdChiSo(),
                 hoaDon.getSanLuongTieuThu(),
                 hoaDon.getTongTienThanhToan(),
@@ -78,7 +78,6 @@ public class HoaDonDao {
             result = ConnectQLN.executeUpdate(query);
         } catch (Exception e) {
             System.out.println("Lỗi thêm hóa đơn: " + e.getMessage());
-            e.printStackTrace();
         }
 
         return result > 0;
@@ -104,7 +103,6 @@ public class HoaDonDao {
             result = ConnectQLN.executeUpdate(query);
         } catch (Exception e) {
             System.out.println("Lỗi cập nhật trạng thái hóa đơn: " + e.getMessage());
-            e.printStackTrace();
         }
 
         return result > 0;
@@ -126,7 +124,6 @@ public class HoaDonDao {
             result = ConnectQLN.executeUpdate(query);
         } catch (Exception e) {
             System.out.println("Lỗi xóa hóa đơn: " + e.getMessage());
-            e.printStackTrace();
         }
 
         return result > 0;
