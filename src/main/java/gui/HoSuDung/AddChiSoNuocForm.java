@@ -136,7 +136,6 @@ public class AddChiSoNuocForm extends JFrame {
         tfHoSuDung.setPreferredSize(GUIConstants.Sizes.tf);
         tfHoSuDung.setFont(GUIConstants.Fonts.TieuDePhu);
         tfHoSuDung.setEditable(false);
-        tfHoSuDung.setBackground(new Color(240, 240, 240));
         panel.add(tfHoSuDung, gbc);
         row++;
 
@@ -150,7 +149,6 @@ public class AddChiSoNuocForm extends JFrame {
         tfDiaChi.setPreferredSize(GUIConstants.Sizes.tf);
         tfDiaChi.setFont(GUIConstants.Fonts.TieuDePhu);
         tfDiaChi.setEditable(false);
-        tfDiaChi.setBackground(new Color(240, 240, 240));
         panel.add(tfDiaChi, gbc);
         row++;
 
@@ -175,7 +173,6 @@ public class AddChiSoNuocForm extends JFrame {
         tfChiSoCu.setPreferredSize(GUIConstants.Sizes.tf);
         tfChiSoCu.setFont(GUIConstants.Fonts.TieuDePhu);
         tfChiSoCu.setEditable(false);
-        tfChiSoCu.setBackground(new Color(240, 240, 240));
         panel.add(tfChiSoCu, gbc);
         row++;
 
@@ -226,7 +223,7 @@ public class AddChiSoNuocForm extends JFrame {
 
         // Load năm
         int currentYear = today.getYear();
-        for (int i = currentYear - 1; i <= currentYear + 1; i++) {
+        for (int i = currentYear - 4; i <= currentYear + 4; i++) {
             cbNam.addItem(i);
         }
 
@@ -337,6 +334,7 @@ public class AddChiSoNuocForm extends JFrame {
             int thang = (Integer) cbThang.getSelectedItem();
             int nam = (Integer) cbNam.getSelectedItem();
 
+            // debug
             System.out.println("=== LƯU CHỈ SỐ VÀ LẬP HÓA ĐƠN ===");
             System.out.println("Hộ sử dụng: " + HoSuDung.getID_HoSuDung());
             System.out.println("Ngày ghi: " + ngay + "/" + thang + "/" + nam);
@@ -345,20 +343,21 @@ public class AddChiSoNuocForm extends JFrame {
             System.out.println("Tiêu thụ: " + tieuThu);
 
             // ===== BƯỚC 1: LƯU CHỈ SỐ =====
-            ChiSoNuoc chiSo = new ChiSoNuoc();
-            chiSo.setIdHoSuDung(HoSuDung.getID_HoSuDung());
-            chiSo.setNamGhi(nam);
-            chiSo.setThangGhi(thang);
-            chiSo.setNgayGhi(ngay);
-            chiSo.setChiSoMoi(chiSoMoi);
-            chiSo.setChiSoCu(chiSoCu);
+            ChiSoNuoc chiSo = new ChiSoNuoc(
+                    0,
+                    HoSuDung.getID_HoSuDung(),
+                    nam,
+                    thang,
+                    ngay,
+                    chiSoCu,
+                    chiSoMoi);
 
             if (!chiSoDao.addChiSoNuoc(chiSo)) {
                 showError("Lưu chỉ số thất bại!");
                 return;
             }
 
-            System.out.println("✓ Lưu chỉ số thành công!");
+            System.out.println("Lưu chỉ số thành công!");
 
             // ===== BƯỚC 2: LẤY ID CHỈ SỐ VỪA TẠO =====
             ChiSoNuoc latestChiSo = chiSoDao.getLatestChiSo(HoSuDung.getID_HoSuDung());
@@ -368,7 +367,7 @@ public class AddChiSoNuocForm extends JFrame {
             }
 
             int idChiSo = latestChiSo.getIdChiSo();
-            System.out.println("✓ ID chỉ số: " + idChiSo);
+            System.out.println("ID chỉ số: " + idChiSo);
 
             // ===== BƯỚC 3: TÌM BẢNG GIÁ =====
             GiaNuoc giaNuoc = findGiaNuoc();
@@ -485,10 +484,10 @@ public class AddChiSoNuocForm extends JFrame {
         String message = String.format("""
                 ✅ LƯU CHỈ SỐ VÀ LẬP HÓA ĐƠN THÀNH CÔNG!
 
-                📊 Thông tin:
-                • Tiêu thụ: %d m³
-                • Tổng tiền: %,. 0f VNĐ
-                • Trạng thái: Chưa thanh toán
+                == Thông tin ==
+                - Tiêu thụ: %d m³
+                - Tổng tiền: %,.0f VNĐ
+                - Trạng thái: Chưa thanh toán
 
                 Hóa đơn đã được tạo tự động.
                 """,

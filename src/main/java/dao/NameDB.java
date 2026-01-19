@@ -87,8 +87,8 @@ class qlnHoaDonCol {
 
     public static final String SoNuocTieuThu = "SanLuongTieuThu";
     public static final String TongTien = "TongTienThanhToan";
-    public static final String NgayLap = "NgayLapHoaDon";
-    public static final String TrangThai = "TrangThaiHoaDon";
+    public static final String NgayLap = "NgayLap";
+    public static final String TrangThai = "TrangThai";
 }
 
 // Tên cột trong DB_quanlynuoc bảng ThanhToan

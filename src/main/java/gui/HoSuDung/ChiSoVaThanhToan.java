@@ -48,7 +48,6 @@ public class ChiSoVaThanhToan extends JFrame {
     // ===== UI COMPONENTS - Buttons =====
     private JButton btnRefresh = new JButton("Làm mới");
     private JButton btnAdd = new JButton("Thêm chỉ số");
-    private JButton btnEdit = new JButton("Sửa chỉ số");
     private JButton btnDelete = new JButton("Xóa chỉ số");
     private JButton btnViewBill = new JButton("Xem hóa đơn");
     private JButton btnPayment = new JButton("Thanh toán");
@@ -162,9 +161,6 @@ public class ChiSoVaThanhToan extends JFrame {
         table.setRowHeight(30);
         table.setFont(new Font("Arial", Font.PLAIN, 13));
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        table.getTableHeader().setBackground(new Color(70, 130, 180));
-        table.getTableHeader().setForeground(Color.WHITE);
 
         // Căn giữa các cột số
         var centerRenderer = new javax.swing.table.DefaultTableCellRenderer();
@@ -188,7 +184,6 @@ public class ChiSoVaThanhToan extends JFrame {
 
         panel.add(btnRefresh);
         panel.add(btnAdd);
-        panel.add(btnEdit);
         panel.add(btnDelete);
         panel.add(btnViewBill);
         panel.add(btnPayment);
@@ -208,21 +203,6 @@ public class ChiSoVaThanhToan extends JFrame {
             new AddChiSoNuocForm(HoSuDung);
             // Refresh sau khi đóng form
             loadChiSoData();
-        });
-
-        // Sửa chỉ số
-        btnEdit.addActionListener(e -> {
-            int selectedRow = table.getSelectedRow();
-            if (selectedRow == -1) {
-                showWarning("Vui lòng chọn chỉ số cần sửa!");
-                return;
-            }
-
-            JOptionPane.showMessageDialog(this,
-                    "Chức năng sửa chỉ số sẽ được cập nhật sau.\n" +
-                            "Vui lòng tạo form EditChiSoNuocForm.java",
-                    "Thông báo",
-                    JOptionPane.INFORMATION_MESSAGE);
         });
 
         // Xóa chỉ số
@@ -265,8 +245,6 @@ public class ChiSoVaThanhToan extends JFrame {
 
         } catch (Exception e) {
             System.out.println("Lỗi load chỉ số: " + e.getMessage());
-            e.printStackTrace();
-            showError("Lỗi khi tải dữ liệu: " + e.getMessage());
         }
     }
 
@@ -336,7 +314,7 @@ public class ChiSoVaThanhToan extends JFrame {
             ChiSoNuoc chiSo = chiSoList.get(selectedRow);
 
             // Hiển thị dialog chi tiết hóa đơn
-            String message = String.format("""
+            String message = """
                     ========== HÓA ĐƠN TIỀN NƯỚC ==========
 
                     Hộ sử dụng: %s
@@ -353,7 +331,7 @@ public class ChiSoVaThanhToan extends JFrame {
                     Trạng thái: %s
 
                     =====================================
-                    """,
+                    """.formatted(
                     customer.getNameCustomer(),
                     HoSuDung.getDiaChi(),
                     HoSuDung.getKhuVuc(),
@@ -424,8 +402,6 @@ public class ChiSoVaThanhToan extends JFrame {
 
         } catch (Exception e) {
             System.out.println("Lỗi thanh toán: " + e.getMessage());
-            e.printStackTrace();
-            showError("Lỗi: " + e.getMessage());
         }
     }
 
