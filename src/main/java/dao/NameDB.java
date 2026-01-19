@@ -2,16 +2,10 @@
  * Database Constants - Quản lý nước
  * 
  * Chứa tên database, bảng và cột để tránh hard-code trong SQL queries.
- * 
- * Usage:
- * <pre>
- * String sql = "SELECT * FROM " + qlnTableName.Customer 
- *            + " WHERE " + qlnCustomerCol.CCCD + " = ?";
- * </pre>
+ * CẬP NHẬT: Thêm column names cho ChiSoNuoc và HoaDon
  * 
  * @author Lê Thanh Tùng
- * @version 1.0
- * @since 2025-01-15
+ * @version 2.0 - Updated with ChiSoNuoc and HoaDon columns
  */
 
 package dao;
@@ -31,6 +25,7 @@ class qlnTableName {
     public static final String HoaDon = "hoadon";
     public static final String GiaNuoc = "gianuoc";
     public static final String BacGia = "bacgia";
+    public static final String ThanhToan = "thanhtoan";
 }
 
 class qlnIDName {
@@ -41,6 +36,7 @@ class qlnIDName {
     public static final String HoaDonID = "ID_HoaDon";
     public static final String GiaNuocID = "ID_DonGia";
     public static final String BacGiaID = "ID_Bac";
+    public static final String ThanhToanID = "ID_ThanhToan";
 }
 
 // Tên cột trong DB_quanlynuoc bảng khachhang
@@ -77,8 +73,11 @@ class qlnChiSoNuocCol {
     private qlnChiSoNuocCol() {
     }
 
+    public static final String NamGhi = "NamGhi";
+    public static final String ThangGhi = "ThangGhi";
     public static final String NgayGhi = "NgayGhi";
-    public static final String ChiSo = "ChiSo";
+    public static final String ChiSoMoi = "ChiSoMoi";
+    public static final String ChiSoCu = "ChiSoCu";
 }
 
 // Tên cột trong DB_quanlynuoc bảng HoaDon
@@ -87,9 +86,18 @@ class qlnHoaDonCol {
     }
 
     public static final String SoNuocTieuThu = "SanLuongTieuThu";
-    public static final String NgayLap = "NgayLap";
-    public static final String TrangThai = "TrangThai";
-    public static final String Thue = "Thue";
+    public static final String TongTien = "TongTienThanhToan";
+    public static final String NgayLap = "NgayLapHoaDon";
+    public static final String TrangThai = "TrangThaiHoaDon";
+}
+
+// Tên cột trong DB_quanlynuoc bảng ThanhToan
+class qlnThanhToanCol {
+    private qlnThanhToanCol() {
+    }
+
+    public static final String NgayThanhToan = "NgayThanhToan";
+    public static final String HinhThuc = "HinhThuc";
 }
 
 class qlnGiaNuocCol {

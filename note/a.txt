@@ -41,7 +41,6 @@
 │ TongTien                  │
 │ NgayLap                   │
 │ TrangThai                 │
-│ Thue                      │
 └─────────────┬─────────────┘
               │ 1:N
               │
@@ -51,9 +50,7 @@
 │ PK ID_ThanhToan           │
 │ FK ID_HoaDon              │
 │ NgayThanhToan             │
-│ SoTien                    │
 │ HinhThuc                  │
-│ TrangThai                 │
 └───────────────────────────┘
 
 

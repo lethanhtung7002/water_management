@@ -264,6 +264,18 @@ public class HoSuDungPage extends JPanel {
             }
         });
 
+        btnChiSo_HoaDon.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+
+            if (selectedRow == -1) {
+                showWarning("Vui lòng chọn hộ sử dụng!");
+                return;
+            }
+
+            HoSuDung selected = hsdArr.get(selectedRow);
+            new ChiSoVaThanhToan(selected);
+        });
+
         // Enter ở textfield tìm kiếm
         tfSearchCustomerId.addActionListener(e -> showHoSuDung(true));
     }
