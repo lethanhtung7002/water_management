@@ -54,7 +54,12 @@ public class CustomerPage extends JPanel {
 
         // Tạo bảng
         String[] columnNames = { "ID", "Tên Khách hàng", "Loại KH", "CCCD", "Số điện thoại", "Email" };
-        tableModel = new DefaultTableModel(columnNames, 0);
+        tableModel = new DefaultTableModel(columnNames, 0){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         table = new JTable(tableModel);
         table.setRowHeight(25);
         table.setFillsViewportHeight(true);

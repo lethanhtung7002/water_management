@@ -31,12 +31,6 @@ public class LoginDataLoader {
         // Tạo mảng để lưu kết quả
         String[] thongTin = new String[2];
 
-        // Kiểm tra file có tồn tại không
-        if (!file.exists()) {
-            System.out.println("File login.txt chưa tồn tại");
-            return thongTin;
-        }
-
         // Đọc file
         try {
             Scanner sc = new Scanner(file);

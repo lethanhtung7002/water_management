@@ -65,7 +65,7 @@ public class MenuForm extends JFrame {
         setMinimumSize(new Dimension(900, 700));
         setLayout(new BorderLayout());
 
-        initSearch();
+        // initSearch();
         initSideBar();
 
         setLocationRelativeTo(null);

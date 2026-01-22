@@ -79,11 +79,6 @@ public class ChiSoNuoc {
         this.chiSoCu = chiSoCu;
     }
 
-    /**
-     * Tính số nước tiêu thụ
-     * 
-     * @return Chỉ số mới - Chỉ số cũ
-     */
     public int getTieuThu() {
         return chiSoCu - chiSoMoi;
     }

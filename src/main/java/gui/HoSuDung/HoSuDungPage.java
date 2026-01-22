@@ -299,8 +299,8 @@ public class HoSuDungPage extends JPanel {
 
             for (Customer customer : allCustomers) {
                 // Lọc theo loại khách hàng (chỉ khi applyFilter = true)
-                if (applyFilter && selectedType.equals("Tất cả loại KH") &&
-                        customer.getLoaiCustomer() != selectedType.getIdLoaiCustomer()) {
+                if (applyFilter && selectedType.getIdLoaiCustomer() != 0
+                        && customer.getLoaiCustomer() != selectedType.getIdLoaiCustomer()) {
                     continue;
                 }
 

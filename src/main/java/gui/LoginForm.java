@@ -31,7 +31,7 @@ public class LoginForm extends JFrame {
     // ===== CREDENTIALS =====
     private String username = "admin";
     private String password = "password";
-    private final LoginDataLoader loader = new LoginDataLoader();
+    private LoginDataLoader loader = new LoginDataLoader();
 
     /**
      * Khởi tạo LoginForm.
@@ -43,10 +43,10 @@ public class LoginForm extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(20, 20));
 
-        String[] credentials = loader.loginRead();
-        if (checkLogin(credentials[0], credentials[1])) {
+        String[] xac_thuc = loader.loginRead();
+        if (checkLogin(xac_thuc[0], xac_thuc[1])) {
             System.out.println("Đăng nhập tự động thành công\n" +
-                    "Username: " + credentials[0] + "\n");
+                    "Username: " + xac_thuc[0] + "\n");
 
             new MenuForm();
             dispose();
@@ -59,7 +59,9 @@ public class LoginForm extends JFrame {
      * Hiển thị form đăng nhập khi chưa có thông tin lưu.
      */
     private void showLoginForm() {
-        init();
+        add(createLogoPanel(), BorderLayout.NORTH);
+        add(createFormPanel(), BorderLayout.CENTER);
+        add(createButtonPanel(), BorderLayout.SOUTH);
         pack();
         setResizable(false);
         setLocationRelativeTo(null);
@@ -71,16 +73,6 @@ public class LoginForm extends JFrame {
      */
     private boolean checkLogin(String username, String password) {
         return this.username.equals(username) && this.password.equals(password);
-    }
-
-    /**
-     * Khởi tạo các component của form đăng nhập.
-     * Bao gồm: Logo, Form input, Button panel.
-     */
-    private void init() {
-        add(createLogoPanel(), BorderLayout.NORTH);
-        add(createFormPanel(), BorderLayout.CENTER);
-        add(createButtonPanel(), BorderLayout.SOUTH);
     }
 
     /**
@@ -100,8 +92,6 @@ public class LoginForm extends JFrame {
      * Tạo form nhập username, password và checkbox "Remember me".
      * Sử dụng GridBagLayout để căn chỉnh các component.
      * Hỗ trợ phím Enter: Enter ở Username -> Focus vào Password, Enter ở Password
-     * ->
-     * Submit form.
      */
     private JPanel createFormPanel() {
         JPanel formPanel = new JPanel(new GridBagLayout());
@@ -147,7 +137,7 @@ public class LoginForm extends JFrame {
     /**
      * Xử lý sự kiện đăng nhập khi user click nút Login hoặc nhấn Enter.
      * Quy trình:
-     * 1. Validate input (không để trống)
+     * 1. input (không để trống)
      * 2. Kiểm tra username/password
      * 3. Nếu đúng: Lưu thông tin (nếu tick Remember me) -> Mở MenuForm -> Đóng
      * LoginForm
@@ -161,7 +151,7 @@ public class LoginForm extends JFrame {
 
         // Validation: Kiểm tra không để trống
         if (inputUsername.isEmpty() || inputPassword.isEmpty()) {
-            showError("Username and password cannot be empty.");
+            showError("Tên đăng nhập và mật khẩu không được để trống");
             return;
         }
 
@@ -170,16 +160,16 @@ public class LoginForm extends JFrame {
             // Lưu thông tin login nếu checkbox được tick
             if (reMemberMeCheckbox.isSelected()) {
                 if (!loader.loginWrite(inputUsername, inputPassword)) {
-                    showWarning("Failed to save login credentials.");
+                    showWarning("Không thể lưu thông tin đăng nhập.");
                 }
             }
 
             // Mở MenuForm và đóng LoginForm
-            SwingUtilities.invokeLater(MenuForm::new);
+            new MenuForm();
             dispose();
         } else {
             // Sai thông tin đăng nhập
-            showError("Invalid username or password.");
+            showError("Tên người dùng hoặc mật khẩu không hợp lệ.");
             passField.setText("");
             passField.requestFocus();
         }
@@ -197,5 +187,9 @@ public class LoginForm extends JFrame {
      */
     private void showWarning(String message) {
         JOptionPane.showMessageDialog(this, message, "Warning", JOptionPane.WARNING_MESSAGE);
+    }
+
+    public static void main(String[] args) {
+        new LoginForm();
     }
 }

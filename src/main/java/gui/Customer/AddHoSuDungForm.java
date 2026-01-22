@@ -92,7 +92,6 @@ public class AddHoSuDungForm extends JFrame {
 
         // Reset settings
         gbc.gridwidth = 1;
-        gbc.anchor = GridBagConstraints.WEST; // căn lề cho tiêu đề
 
         // === Khu Vuc ===
         gbc.gridx = 0;

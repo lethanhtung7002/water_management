@@ -199,7 +199,7 @@ public class AddCustomerForm extends JFrame {
 
         gbc.gridx = 0;
         gbc.gridy = row++;
-        if (b){
+        if (b) {
             JLabel lbTenKH = new JLabel(this.customer.getNameCustomer());
             lbTenKH.setFont(GUIConstants.Fonts.TieuDe);
             panel.add(lbTenKH, gbc);
@@ -628,13 +628,10 @@ public class AddCustomerForm extends JFrame {
      * Main method để test form.
      */
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            // Test thêm mới
-            // new CustomerForm();
 
-            // Test sửa
-            Customer test = new Customer(1, "Nguyễn Văn A", 1, "123456789", "0901234567", "test@email.com");
-            new AddCustomerForm(test);
-        });
+        Customer test = new Customer(1, "Nguyễn Văn A", 1, "123456789", "0901234567",
+                "test@email.com");
+        new AddCustomerForm(test);
+
     }
 }

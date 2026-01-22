@@ -26,15 +26,9 @@ public class MySQLConnect {
     // ===== DATABASE CONNECTION =====
     /** Đối tượng Connection để kết nối với database */
     private Connection con = null;
-
     /** Statement để thực thi các câu lệnh SQL */
     private Statement stmt = null;
 
-    // ===== SINGLETON INSTANCE =====
-    /**
-     * Instance duy nhất của MySQLConnect (Singleton pattern).
-     * Sử dụng ConnectQLN để truy cập các phương thức kết nối database.
-     */
     public static final MySQLConnect ConnectQLN = new MySQLConnect();
 
     /**
@@ -48,10 +42,6 @@ public class MySQLConnect {
     /**
      * Constructor với tham số tùy chỉnh.
      * 
-     * @param host   Địa chỉ host của MySQL server (vd: localhost, 127.0.0.1)
-     * @param port   Port của MySQL server (mặc định: 3306)
-     * @param dbName Tên database cần kết nối
-     * @throws RuntimeException nếu kết nối thất bại
      */
     public MySQLConnect(String host, String port, String dbName) {
         try {
@@ -59,12 +49,7 @@ public class MySQLConnect {
             String user = "root";
             String password = "1234";
 
-            // Tạo URL kết nối với các tham số:
-            // - useSSL=false: Tắt SSL (chỉ dùng trong development)
-            // - allowPublicKeyRetrieval=true: Cho phép lấy public key từ server
-            // - serverTimezone=UTC: Đặt timezone là UTC
-            String url = "jdbc:mysql://" + host + ":" + port + "/" + dbName
-                    + "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+            String url = "jdbc:mysql://" + host + ":" + port + "/" + dbName;
 
             // Tạo kết nối
             con = DriverManager.getConnection(url, user, password);
@@ -137,28 +122,5 @@ public class MySQLConnect {
         } catch (SQLException e) {
             System.out.println("Lỗi đóng kết nối: " + e.getMessage());
         }
-    }
-
-    /**
-     * Kiểm tra xem kết nối còn hoạt động không.
-     * 
-     * @return true nếu kết nối còn hoạt động, false nếu đã đóng hoặc null
-     */
-    public boolean isConnected() {
-        try {
-            return con != null && !con.isClosed();
-        } catch (SQLException e) {
-            return false;
-        }
-    }
-
-    /**
-     * Lấy đối tượng Connection hiện tại.
-     * Dùng khi cần thực hiện các thao tác phức tạp với Connection.
-     * 
-     * @return Connection object
-     */
-    public Connection getConnection() {
-        return con;
     }
 }
