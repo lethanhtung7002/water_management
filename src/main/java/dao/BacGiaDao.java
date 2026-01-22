@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import model.WaterPriceTier;
 import static dao.MySQLConnect.ConnectQLN;
 import static dao.QLNdbConstants.*;
+import static dao.SharesDao.sharesDao;
 
 /**
  * Data Access Object cho bảng Bậc Giá Nước (bacgia).
@@ -244,16 +245,10 @@ public class BacGiaDao {
                 tier.getIdWaterPrice(), tier.getTier(), tier.getMinConsumption(),
                 tier.getMaxConsumption(), tier.getPrice());
 
-        System.out.println("=== SQL INSERT TIER ===");
-        System.out.println(query);
-        System.out.println("=======================");
-
         try {
             result = ConnectQLN.executeUpdate(query);
-            System.out.println("Số dòng thêm: " + result);
         } catch (Exception e) {
             System.out.println("Lỗi thêm bậc giá: " + e.getMessage());
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
 
@@ -279,13 +274,8 @@ public class BacGiaDao {
                 BacGiaCol.Gia, tier.getPrice(),
                 Id.BacGiaID, tier.getIdWaterPriceTier());
 
-        System.out.println("=== SQL UPDATE TIER ===");
-        System.out.println(query);
-        System.out.println("=======================");
-
         try {
             result = ConnectQLN.executeUpdate(query);
-            System.out.println("Số dòng cập nhật: " + result);
         } catch (Exception e) {
             System.out.println("Lỗi cập nhật bậc giá: " + e.getMessage());
         }
@@ -300,44 +290,6 @@ public class BacGiaDao {
      * @return true nếu thành công, false nếu thất bại
      */
     public boolean deleteBacGiaById(int idBac) {
-        int result = 0;
-
-        String query = "DELETE FROM %s WHERE %s = %d"
-                .formatted(Tables.BacGia, Id.BacGiaID, idBac);
-
-        System.out.println("=== SQL DELETE TIER ===");
-        System.out.println(query);
-        System.out.println("=======================");
-
-        try {
-            result = ConnectQLN.executeUpdate(query);
-            System.out.println("Số dòng xóa: " + result);
-        } catch (Exception e) {
-            System.out.println("Lỗi xóa bậc giá: " + e.getMessage());
-        }
-
-        return result > 0;
-    }
-
-    /**
-     * Xóa tất cả bậc giá của một chính sách giá nước.
-     * 
-     * @param idDonGia ID của chính sách giá nước
-     * @return true nếu thành công, false nếu thất bại
-     */
-    public boolean deleteAllBacGiaByDonGiaId(int idDonGia) {
-        int result = 0;
-
-        String query = "DELETE FROM %s WHERE %s = %d"
-                .formatted(Tables.BacGia, Id.GiaNuocID, idDonGia);
-
-        try {
-            result = ConnectQLN.executeUpdate(query);
-            System.out.println("Đã xóa " + result + " bậc giá");
-        } catch (Exception e) {
-            System.out.println("Lỗi xóa tất cả bậc giá: " + e.getMessage());
-        }
-
-        return result >= 0; // >= 0 vì có thể không có bậc giá nào
+        return sharesDao.deleteByCol(idBac, Tables.BacGia, Id.BacGiaID);
     }
 }

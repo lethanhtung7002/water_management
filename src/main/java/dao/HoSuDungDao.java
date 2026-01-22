@@ -1,12 +1,16 @@
 package dao;
 
+import static dao.MySQLConnect.ConnectQLN;
+import static dao.SharesDao.sharesDao;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import dao.QLNdbConstants.HoSuDungCol;
+import dao.QLNdbConstants.Id;
+import dao.QLNdbConstants.Tables;
 import model.HoSuDung;
-import static dao.MySQLConnect.ConnectQLN;
-import static dao.QLNdbConstants.*;
 
 public class HoSuDungDao {
 
@@ -76,22 +80,6 @@ public class HoSuDungDao {
         return result > 0;
     }
 
-    // xóa hộ sử dụng
-    public boolean delete_HoSuDung(int id_HoSuDung) {
-        int result = 0;
-        String query = "DELETE FROM %s WHERE %s = %d".formatted(
-                Tables.HoSuDung,
-                Id.HoSuDungID,
-                id_HoSuDung);
-        try {
-            result = ConnectQLN.executeUpdate(query);
-        } catch (Exception e) {
-            System.out.println("Lỗi xóa hộ sử dụng: " + e.getMessage());
-            throw new RuntimeException(e);
-        }
-        return result > 0;
-    }
-
     // tìm hộ sử dụng theo ID
     public HoSuDung getHoSuDungById(int idHoSuDung) {
         HoSuDung hoSuDung = null;
@@ -111,5 +99,9 @@ public class HoSuDungDao {
             System.out.println("Lỗi lấy hộ sử dụng: " + e.getMessage());
         }
         return hoSuDung;
+    }
+
+    public boolean delete_HoSuDung(int idHoSuDung) {
+        return sharesDao.deleteByCol(idHoSuDung, Tables.HoSuDung, Id.HoSuDungID);
     }
 }

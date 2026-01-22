@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import model.ChiSoNuoc;
 import static dao.MySQLConnect.ConnectQLN;
 import static dao.QLNdbConstants.*;
+import static dao.SharesDao.sharesDao;
 
 /**
  * Data Access Object cho bảng chỉ số nước - theo schema thực tế
@@ -187,19 +188,7 @@ public class ChiSoNuocDao {
      * @return true nếu thành công, false nếu thất bại
      */
     public boolean deleteChiSoNuoc(int idChiSo) {
-        int result = 0;
-
-        String query = "DELETE FROM %s WHERE %s = %d"
-                .formatted(Tables.ChiSoNuoc, Id.ChiSoNuocID, idChiSo);
-
-        try {
-            result = ConnectQLN.executeUpdate(query);
-        } catch (Exception e) {
-            System.out.println("Lỗi xóa chỉ số nước: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        return result > 0;
+        return sharesDao.deleteByCol(idChiSo, Tables.ChiSoNuoc, Id.ChiSoNuocID);
     }
 
     /**

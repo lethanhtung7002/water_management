@@ -8,6 +8,7 @@ import model.WaterPriceTier;
 
 import static dao.MySQLConnect.ConnectQLN;
 import static dao.QLNdbConstants.*;
+import static dao.SharesDao.sharesDao;
 
 public class GiaNuocDao {
 
@@ -122,15 +123,6 @@ public class GiaNuocDao {
 
     // xóa giá nước
     public boolean deleteGiaNuocById(int id) {
-        int result = 0;
-        String query = "DELETE FROM %s WHERE %s = %d"
-                .formatted(Tables.GiaNuoc, Id.GiaNuocID, id);
-        try {
-            result = ConnectQLN.executeUpdate(query);
-        } catch (Exception e) {
-            System.out.println("Lỗi xóa giá nước: " + e.getMessage());
-            throw new RuntimeException(e);
-        }
-        return result > 0;
+        return sharesDao.deleteByCol(id, Tables.GiaNuoc, Id.GiaNuocID);
     }
 }

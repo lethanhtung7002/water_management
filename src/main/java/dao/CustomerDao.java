@@ -9,6 +9,7 @@ import model.Customer;
 import model.LoaiCustomer;
 import static dao.MySQLConnect.ConnectQLN;
 import static dao.QLNdbConstants.*;
+import static dao.SharesDao.sharesDao;
 
 /**
  * Data Access Object (DAO) cho bảng khách hàng.
@@ -161,16 +162,7 @@ public class CustomerDao {
      * @throws RuntimeException nếu có lỗi khi thực thi câu lệnh SQL
      */
     public boolean deleteUserById(int idUser) {
-        int result = 0;
-        String query = "DELETE FROM %s WHERE %s = %d"
-                .formatted(Tables.Customer, Id.CustomerID, idUser);
-        try {
-            result = ConnectQLN.executeUpdate(query);
-        } catch (Exception e) {
-            System.out.println("Lỗi xóa người dùng: " + e.getMessage());
-            throw new RuntimeException(e);
-        }
-        return result > 0;
+        return sharesDao.deleteByCol(idUser, Tables.Customer, Id.CustomerID);
     }
 
     /**
