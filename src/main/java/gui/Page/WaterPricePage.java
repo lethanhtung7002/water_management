@@ -1,4 +1,4 @@
-package gui.GiaNuoc;
+package gui.Page;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -11,11 +11,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import gui.GUIConstants;
-
+import gui.GiaNuoc.AddWaterPriceForm;
 import dao.GiaNuocDao;
 import model.GiaNuoc;
 
-public class waterPricePage extends JPanel {
+public class WaterPricePage extends JPanel {
 
     private JTable table;
     private DefaultTableModel tableModel;
@@ -29,7 +29,7 @@ public class waterPricePage extends JPanel {
     private ArrayList<GiaNuoc> gnArr = new ArrayList<>();
     private GiaNuocDao giaNuocDao = new GiaNuocDao();
 
-    public waterPricePage() {
+    public WaterPricePage() {
         setLayout(new BorderLayout(5, 5));
         setBackground(GUIConstants.Colors.BACKGROUND); // Thêm màu nền cho phù hợp với MenuForm
 

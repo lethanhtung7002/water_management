@@ -1,4 +1,4 @@
-package gui.HoSuDung;
+package gui.Page;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -24,6 +24,7 @@ import dao.HoSuDungDao;
 import data.KhuVucLoader;
 import gui.GUIConstants;
 import gui.Customer.AddHoSuDungForm;
+import gui.HoSuDung.ChiSoVaThanhToan;
 import model.Customer;
 import model.HoSuDung;
 import model.LoaiCustomer;

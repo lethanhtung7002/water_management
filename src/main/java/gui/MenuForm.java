@@ -19,9 +19,9 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JOptionPane;
 
-import gui.Customer.CustomerPage;
-import gui.GiaNuoc.waterPricePage;
-import gui.HoSuDung.HoSuDungPage;
+import gui.Page.CustomerPage;
+import gui.Page.WaterPricePage;
+import gui.Page.HoSuDungPage;
 import data.LoginDataLoader;
 
 /**
@@ -142,7 +142,7 @@ public class MenuForm extends JFrame {
         contentPanel.add(createPage("Trang chủ để thực hiện các tính năng nhanh nhưng chưa thêm gì cả :))"), Page.HOME);
         contentPanel.add(new HoSuDungPage(), Page.HO_SU_DUNG);
         contentPanel.add(new CustomerPage(), Page.CUSTOMER);
-        contentPanel.add(new waterPricePage(), Page.WATER_PRICRE);
+        contentPanel.add(new WaterPricePage(), Page.WATER_PRICRE);
 
         // ==== GHÉP VÀO FRAME ====
         add(sidebar, BorderLayout.WEST);

@@ -1,4 +1,4 @@
-package gui.Customer;
+package gui.Page;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -11,7 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import gui.GUIConstants;
-
+import gui.Customer.AddCustomerForm;
 import dao.CustomerDao;
 import model.Customer;
 
