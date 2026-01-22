@@ -294,7 +294,7 @@ public class AddChiSoNuocForm extends JFrame {
             String chiSoMoiText = tfChiSoMoi.getText().trim();
             if (!chiSoMoiText.isEmpty()) {
                 int chiSoMoi = Integer.parseInt(chiSoMoiText);
-                int tieuThu = chiSoMoi - chiSoCu;
+                int tieuThu = chiSoCu - chiSoMoi;
 
                 if (tieuThu < 0) {
                     tfTieuThu.setText("Lỗi: Chỉ số mới < chỉ số cũ");

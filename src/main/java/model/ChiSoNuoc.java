@@ -13,7 +13,7 @@ public class ChiSoNuoc {
     }
 
     public ChiSoNuoc(int idChiSo, int idHoSuDung, int namGhi, int thangGhi,
-            int ngayGhi, int chiSoMoi, int chiSoCu) {
+            int ngayGhi, int chiSoCu, int chiSoMoi) {
         this.idChiSo = idChiSo;
         this.idHoSuDung = idHoSuDung;
         this.namGhi = namGhi;
@@ -80,7 +80,7 @@ public class ChiSoNuoc {
     }
 
     public int getTieuThu() {
-        return chiSoCu - chiSoMoi;
+        return chiSoMoi - chiSoCu;
     }
 
     /**
