@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import model.ChiSoNuoc;
 import static dao.MySQLConnect.ConnectQLN;
+import static dao.QLNdbConstants.*;
 
 /**
  * Data Access Object cho bảng chỉ số nước - theo schema thực tế
@@ -30,24 +31,24 @@ public class ChiSoNuocDao {
                     WHERE %s = %d
                     ORDER BY %s DESC, %s DESC, %s DESC
                     """.formatted(
-                    qlnTableName.ChiSoNuoc,
-                    qlnIDName.HoSuDungID,
+                    Tables.ChiSoNuoc,
+                    Id.HoSuDungID,
                     idHoSuDung,
-                    qlnChiSoNuocCol.NamGhi,
-                    qlnChiSoNuocCol.ThangGhi,
-                    qlnChiSoNuocCol.NgayGhi);
+                    ChiSoNuocCol.NamGhi,
+                    ChiSoNuocCol.ThangGhi,
+                    ChiSoNuocCol.NgayGhi);
 
             ResultSet rs = ConnectQLN.executeQuery(query);
 
             while (rs.next()) {
                 ChiSoNuoc chiSo = new ChiSoNuoc();
-                chiSo.setIdChiSo(rs.getInt(qlnIDName.ChiSoNuocID));
-                chiSo.setIdHoSuDung(rs.getInt(qlnIDName.HoSuDungID));
-                chiSo.setNamGhi(rs.getInt(qlnChiSoNuocCol.NamGhi));
-                chiSo.setThangGhi(rs.getInt(qlnChiSoNuocCol.ThangGhi));
-                chiSo.setNgayGhi(rs.getInt(qlnChiSoNuocCol.NgayGhi));
-                chiSo.setChiSoMoi(rs.getInt(qlnChiSoNuocCol.ChiSoMoi));
-                chiSo.setChiSoCu(rs.getInt(qlnChiSoNuocCol.ChiSoCu));
+ chiSo.setIdChiSo(rs.getInt(Id.ChiSoNuocID));
+ chiSo.setIdHoSuDung(rs.getInt(Id.HoSuDungID));
+                chiSo.setNamGhi(rs.getInt(ChiSoNuocCol.NamGhi));
+                chiSo.setThangGhi(rs.getInt(ChiSoNuocCol.ThangGhi));
+                chiSo.setNgayGhi(rs.getInt(ChiSoNuocCol.NgayGhi));
+                chiSo.setChiSoMoi(rs.getInt(ChiSoNuocCol.ChiSoMoi));
+                chiSo.setChiSoCu(rs.getInt(ChiSoNuocCol.ChiSoCu));
 
                 listChiSo.add(chiSo);
             }
@@ -76,24 +77,24 @@ public class ChiSoNuocDao {
                     ORDER BY %s DESC, %s DESC, %s DESC
                     LIMIT 1
                     """.formatted(
-                    qlnTableName.ChiSoNuoc,
-                    qlnIDName.HoSuDungID,
+                    Tables.ChiSoNuoc,
+                    Id.HoSuDungID,
                     idHoSuDung,
-                    qlnChiSoNuocCol.NamGhi,
-                    qlnChiSoNuocCol.ThangGhi,
-                    qlnChiSoNuocCol.NgayGhi);
+                    ChiSoNuocCol.NamGhi,
+                    ChiSoNuocCol.ThangGhi,
+                    ChiSoNuocCol.NgayGhi);
 
             ResultSet rs = ConnectQLN.executeQuery(query);
 
             if (rs.next()) {
                 chiSo = new ChiSoNuoc();
-                chiSo.setIdChiSo(rs.getInt(qlnIDName.ChiSoNuocID));
-                chiSo.setIdHoSuDung(rs.getInt(qlnIDName.HoSuDungID));
-                chiSo.setNamGhi(rs.getInt(qlnChiSoNuocCol.NamGhi));
-                chiSo.setThangGhi(rs.getInt(qlnChiSoNuocCol.ThangGhi));
-                chiSo.setNgayGhi(rs.getInt(qlnChiSoNuocCol.NgayGhi));
-                chiSo.setChiSoMoi(rs.getInt(qlnChiSoNuocCol.ChiSoMoi));
-                chiSo.setChiSoCu(rs.getInt(qlnChiSoNuocCol.ChiSoCu));
+                chiSo.setIdChiSo(rs.getInt(Id.ChiSoNuocID));
+                chiSo.setIdHoSuDung(rs.getInt(Id.HoSuDungID));
+                chiSo.setNamGhi(rs.getInt(ChiSoNuocCol.NamGhi));
+                chiSo.setThangGhi(rs.getInt(ChiSoNuocCol.ThangGhi));
+                chiSo.setNgayGhi(rs.getInt(ChiSoNuocCol.NgayGhi));
+                chiSo.setChiSoMoi(rs.getInt(ChiSoNuocCol.ChiSoMoi));
+                chiSo.setChiSoCu(rs.getInt(ChiSoNuocCol.ChiSoCu));
             }
 
         } catch (SQLException e) {
@@ -117,13 +118,13 @@ public class ChiSoNuocDao {
                 INSERT INTO %s (%s, %s, %s, %s, %s, %s)
                 VALUES (%d, %d, %d, %d, %d, %d)
                 """.formatted(
-                qlnTableName.ChiSoNuoc,
-                qlnIDName.HoSuDungID,
-                qlnChiSoNuocCol.NamGhi,
-                qlnChiSoNuocCol.ThangGhi,
-                qlnChiSoNuocCol.NgayGhi,
-                qlnChiSoNuocCol.ChiSoMoi,
-                qlnChiSoNuocCol.ChiSoCu,
+                Tables.ChiSoNuoc,
+                Id.HoSuDungID,
+                ChiSoNuocCol.NamGhi,
+                ChiSoNuocCol.ThangGhi,
+                ChiSoNuocCol.NgayGhi,
+                ChiSoNuocCol.ChiSoMoi,
+                ChiSoNuocCol.ChiSoCu,
                 chiSo.getIdHoSuDung(),
                 chiSo.getNamGhi(),
                 chiSo.getThangGhi(),
@@ -160,14 +161,14 @@ public class ChiSoNuocDao {
                 SET %s = %d, %s = %d, %s = %d, %s = %d, %s = %d, %s = %d
                 WHERE %s = %d
                 """.formatted(
-                qlnTableName.ChiSoNuoc,
-                qlnIDName.HoSuDungID, chiSo.getIdHoSuDung(),
-                qlnChiSoNuocCol.NamGhi, chiSo.getNamGhi(),
-                qlnChiSoNuocCol.ThangGhi, chiSo.getThangGhi(),
-                qlnChiSoNuocCol.NgayGhi, chiSo.getNgayGhi(),
-                qlnChiSoNuocCol.ChiSoMoi, chiSo.getChiSoMoi(),
-                qlnChiSoNuocCol.ChiSoCu, chiSo.getChiSoCu(),
-                qlnIDName.ChiSoNuocID, chiSo.getIdChiSo());
+                Tables.ChiSoNuoc,
+                Id.HoSuDungID, chiSo.getIdHoSuDung(),
+                ChiSoNuocCol.NamGhi, chiSo.getNamGhi(),
+                ChiSoNuocCol.ThangGhi, chiSo.getThangGhi(),
+                ChiSoNuocCol.NgayGhi, chiSo.getNgayGhi(),
+                ChiSoNuocCol.ChiSoMoi, chiSo.getChiSoMoi(),
+                ChiSoNuocCol.ChiSoCu, chiSo.getChiSoCu(),
+                Id.ChiSoNuocID, chiSo.getIdChiSo());
 
         try {
             result = ConnectQLN.executeUpdate(query);
@@ -189,7 +190,7 @@ public class ChiSoNuocDao {
         int result = 0;
 
         String query = "DELETE FROM %s WHERE %s = %d"
-                .formatted(qlnTableName.ChiSoNuoc, qlnIDName.ChiSoNuocID, idChiSo);
+                .formatted(Tables.ChiSoNuoc, Id.ChiSoNuocID, idChiSo);
 
         try {
             result = ConnectQLN.executeUpdate(query);
@@ -212,19 +213,19 @@ public class ChiSoNuocDao {
 
         try {
             String query = "SELECT * FROM %s WHERE %s = %d"
-                    .formatted(qlnTableName.ChiSoNuoc, qlnIDName.ChiSoNuocID, idChiSo);
+                    .formatted(Tables.ChiSoNuoc, Id.ChiSoNuocID, idChiSo);
 
             ResultSet rs = ConnectQLN.executeQuery(query);
 
             if (rs.next()) {
                 chiSo = new ChiSoNuoc();
-                chiSo.setIdChiSo(rs.getInt(qlnIDName.ChiSoNuocID));
-                chiSo.setIdHoSuDung(rs.getInt(qlnIDName.HoSuDungID));
-                chiSo.setNamGhi(rs.getInt(qlnChiSoNuocCol.NamGhi));
-                chiSo.setThangGhi(rs.getInt(qlnChiSoNuocCol.ThangGhi));
-                chiSo.setNgayGhi(rs.getInt(qlnChiSoNuocCol.NgayGhi));
-                chiSo.setChiSoMoi(rs.getInt(qlnChiSoNuocCol.ChiSoMoi));
-                chiSo.setChiSoCu(rs.getInt(qlnChiSoNuocCol.ChiSoCu));
+ chiSo.setIdChiSo(rs.getInt(Id.ChiSoNuocID));
+ chiSo.setIdHoSuDung(rs.getInt(Id.HoSuDungID));
+                chiSo.setNamGhi(rs.getInt(ChiSoNuocCol.NamGhi));
+                chiSo.setThangGhi(rs.getInt(ChiSoNuocCol.ThangGhi));
+                chiSo.setNgayGhi(rs.getInt(ChiSoNuocCol.NgayGhi));
+                chiSo.setChiSoMoi(rs.getInt(ChiSoNuocCol.ChiSoMoi));
+                chiSo.setChiSoCu(rs.getInt(ChiSoNuocCol.ChiSoCu));
             }
 
         } catch (SQLException e) {

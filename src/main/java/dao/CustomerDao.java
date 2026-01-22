@@ -8,6 +8,7 @@ import java.util.List;
 import model.Customer;
 import model.LoaiCustomer;
 import static dao.MySQLConnect.ConnectQLN;
+import static dao.QLNdbConstants.*;
 
 /**
  * Data Access Object (DAO) cho bảng khách hàng.
@@ -34,18 +35,18 @@ public class CustomerDao {
     public ArrayList<Customer> getCustomers() {
         ArrayList<Customer> customers = new ArrayList<>();
         try {
-            String query = "SELECT * FROM " + qlnTableName.Customer;
+            String query = "SELECT * FROM " + Tables.Customer;
             ResultSet rs = ConnectQLN.executeQuery(query);
 
             // Duyệt qua từng dòng kết quả
             while (rs.next()) {
                 Customer customer = new Customer();
-                customer.setIdCustomer(rs.getInt(qlnIDName.CustomerID));
-                customer.setLoaiCustomer(rs.getInt(qlnIDName.CustomerTypeID));
-                customer.setNameCustomer(rs.getString(qlnCustomerCol.Name));
-                customer.setCCCD(rs.getString(qlnCustomerCol.CCCD));
-                customer.setPhoneCustomer(rs.getString(qlnCustomerCol.PhoneNumber));
-                customer.setEmail(rs.getString(qlnCustomerCol.Email));
+                customer.setIdCustomer(rs.getInt(Id.CustomerID));
+                customer.setLoaiCustomer(rs.getInt(Id.CustomerTypeID));
+                customer.setNameCustomer(rs.getString(CustomerCol.Name));
+                customer.setCCCD(rs.getString(CustomerCol.CCCD));
+                customer.setPhoneCustomer(rs.getString(CustomerCol.PhoneNumber));
+                customer.setEmail(rs.getString(CustomerCol.Email));
                 customers.add(customer);
             }
         } catch (SQLException e) {
@@ -69,9 +70,9 @@ public class CustomerDao {
                 INSERT INTO %s (%s, %s, %s, %s, %s)
                 VALUES ('%d', '%s', '%s', '%s', '%s')
                 """.formatted(
-                qlnTableName.Customer,
-                qlnIDName.CustomerTypeID, qlnCustomerCol.Name, qlnCustomerCol.CCCD,
-                qlnCustomerCol.PhoneNumber, qlnCustomerCol.Email,
+                Tables.Customer,
+                Id.CustomerTypeID, CustomerCol.Name, CustomerCol.CCCD,
+                CustomerCol.PhoneNumber, CustomerCol.Email,
                 user.getLoaiCustomer(), user.getNameCustomer(), user.getCCCD(),
                 user.getPhoneCustomer(), user.getEmail());
 
@@ -103,13 +104,13 @@ public class CustomerDao {
                         %s = '%s',
                         %s = '%s'
                 WHERE %s = %d""".formatted(
-                qlnTableName.Customer,
-                qlnIDName.CustomerTypeID, user.getLoaiCustomer(),
-                qlnCustomerCol.Name, user.getNameCustomer(),
-                qlnCustomerCol.CCCD, user.getCCCD(),
-                qlnCustomerCol.PhoneNumber, user.getPhoneCustomer(),
-                qlnCustomerCol.Email, user.getEmail(),
-                qlnIDName.CustomerID, user.getIdCustomer());
+                Tables.Customer,
+                Id.CustomerTypeID, user.getLoaiCustomer(),
+                CustomerCol.Name, user.getNameCustomer(),
+                CustomerCol.CCCD, user.getCCCD(),
+                CustomerCol.PhoneNumber, user.getPhoneCustomer(),
+                CustomerCol.Email, user.getEmail(),
+                Id.CustomerID, user.getIdCustomer());
 
         try {
             result = ConnectQLN.executeUpdate(query);
@@ -130,18 +131,18 @@ public class CustomerDao {
         Customer user = null;
         try {
             String query = "SELECT * FROM %s WHERE %s = %d"
-                    .formatted(qlnTableName.Customer, qlnIDName.CustomerID, idCustomer);
+                    .formatted(Tables.Customer, Id.CustomerID, idCustomer);
             ResultSet rs = ConnectQLN.executeQuery(query);
 
             // Chỉ lấy kết quả đầu tiên (nếu có)
             if (rs.next()) {
                 user = new Customer();
-                user.setIdCustomer(rs.getInt(qlnIDName.CustomerID));
-                user.setLoaiCustomer(rs.getInt(qlnIDName.CustomerTypeID));
-                user.setNameCustomer(rs.getString(qlnCustomerCol.Name));
-                user.setCCCD(rs.getString(qlnCustomerCol.CCCD));
-                user.setPhoneCustomer(rs.getString(qlnCustomerCol.PhoneNumber));
-                user.setEmail(rs.getString(qlnCustomerCol.Email));
+                user.setIdCustomer(rs.getInt(Id.CustomerID));
+                user.setLoaiCustomer(rs.getInt(Id.CustomerTypeID));
+                user.setNameCustomer(rs.getString(CustomerCol.Name));
+                user.setCCCD(rs.getString(CustomerCol.CCCD));
+                user.setPhoneCustomer(rs.getString(CustomerCol.PhoneNumber));
+                user.setEmail(rs.getString(CustomerCol.Email));
             }
         } catch (SQLException e) {
             System.out.println("Lỗi lấy người dùng theo ID: " + e.getMessage());
@@ -162,7 +163,7 @@ public class CustomerDao {
     public boolean deleteUserById(int idUser) {
         int result = 0;
         String query = "DELETE FROM %s WHERE %s = %d"
-                .formatted(qlnTableName.Customer, qlnIDName.CustomerID, idUser);
+                .formatted(Tables.Customer, Id.CustomerID, idUser);
         try {
             result = ConnectQLN.executeUpdate(query);
         } catch (Exception e) {
@@ -183,14 +184,14 @@ public class CustomerDao {
         List<LoaiCustomer> loaiNguoiDungList = new ArrayList<>();
         try {
             String query = "SELECT * FROM %s"
-                    .formatted(qlnTableName.CustomerType);
+                    .formatted(Tables.CustomerType);
             ResultSet rs = ConnectQLN.executeQuery(query);
 
             // Duyệt qua từng loại khách hàng
             while (rs.next()) {
                 LoaiCustomer loaiNguoiDung = new LoaiCustomer(
-                        rs.getInt(qlnIDName.CustomerTypeID),
-                        rs.getString(qlnCustomerTypeCol.Name));
+                        rs.getInt(Id.CustomerTypeID),
+                        rs.getString(CustomerTypeCol.Name));
                 loaiNguoiDungList.add(loaiNguoiDung);
             }
         } catch (SQLException e) {

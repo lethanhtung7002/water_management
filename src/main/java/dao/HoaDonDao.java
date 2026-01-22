@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import model.HoaDon;
 import static dao.MySQLConnect.ConnectQLN;
+import static dao.QLNdbConstants.*;
 
 /**
  * Data Access Object cho bảng hóa đơn
@@ -22,19 +23,19 @@ public class HoaDonDao {
 
         try {
             String query = "SELECT * FROM %s WHERE %s = %d"
-                    .formatted(qlnTableName.HoaDon, qlnIDName.ChiSoNuocID, idChiSo);
+                    .formatted(Tables.HoaDon, Id.ChiSoNuocID, idChiSo);
 
             ResultSet rs = ConnectQLN.executeQuery(query);
 
             if (rs.next()) {
                 hoaDon = new HoaDon();
-                hoaDon.setIdHoaDon(rs.getInt(qlnIDName.HoaDonID));
-                hoaDon.setIdChiSo(rs.getInt(qlnIDName.ChiSoNuocID));
-                hoaDon.setSanLuongTieuThu(rs.getInt(qlnHoaDonCol.SoNuocTieuThu));
-                hoaDon.setTongTienThanhToan(rs.getDouble(qlnHoaDonCol.TongTien));
-                hoaDon.setNgayLapHoaDon(rs.getString(qlnHoaDonCol.NgayLap));
-                hoaDon.setTrangThaiHoaDon(rs.getInt(qlnHoaDonCol.TrangThai));
-                hoaDon.setIdDonGia(rs.getInt(qlnIDName.GiaNuocID));
+                hoaDon.setIdHoaDon(rs.getInt(Id.HoaDonID));
+                hoaDon.setIdChiSo(rs.getInt(Id.ChiSoNuocID));
+                hoaDon.setSanLuongTieuThu(rs.getInt(HoaDonCol.SoNuocTieuThu));
+                hoaDon.setTongTienThanhToan(rs.getDouble(HoaDonCol.TongTien));
+                hoaDon.setNgayLapHoaDon(rs.getString(HoaDonCol.NgayLap));
+                hoaDon.setTrangThaiHoaDon(rs.getInt(HoaDonCol.TrangThai));
+                hoaDon.setIdDonGia(rs.getInt(Id.GiaNuocID));
             }
 
         } catch (SQLException e) {
@@ -58,13 +59,13 @@ public class HoaDonDao {
                         INSERT INTO %s (%s, %s, %s, %s, %s, %s)
                         VALUES (%d, %d, %.2f, '%s', %d, %d)
                         """,
-                qlnTableName.HoaDon,
-                qlnIDName.ChiSoNuocID,
-                qlnHoaDonCol.SoNuocTieuThu,
-                qlnHoaDonCol.TongTien,
-                qlnHoaDonCol.NgayLap,
-                qlnHoaDonCol.TrangThai,
-                qlnIDName.GiaNuocID,
+                Tables.HoaDon,
+                Id.ChiSoNuocID,
+                HoaDonCol.SoNuocTieuThu,
+                HoaDonCol.TongTien,
+                HoaDonCol.NgayLap,
+                HoaDonCol.TrangThai,
+                Id.GiaNuocID,
 
                 hoaDon.getIdChiSo(),
                 hoaDon.getSanLuongTieuThu(),
@@ -94,9 +95,9 @@ public class HoaDonDao {
 
         String query = "UPDATE %s SET %s = %d WHERE %s = %d"
                 .formatted(
-                        qlnTableName.HoaDon,
-                        qlnHoaDonCol.TrangThai, trangThai,
-                        qlnIDName.HoaDonID, idHoaDon);
+                        Tables.HoaDon,
+                        HoaDonCol.TrangThai, trangThai,
+                        Id.HoaDonID, idHoaDon);
 
         try {
             result = ConnectQLN.executeUpdate(query);
@@ -117,7 +118,7 @@ public class HoaDonDao {
         int result = 0;
 
         String query = "DELETE FROM %s WHERE %s = %d"
-                .formatted(qlnTableName.HoaDon, qlnIDName.HoaDonID, idHoaDon);
+                .formatted(Tables.HoaDon, Id.HoaDonID, idHoaDon);
 
         try {
             result = ConnectQLN.executeUpdate(query);

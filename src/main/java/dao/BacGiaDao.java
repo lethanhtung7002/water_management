@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import model.WaterPriceTier;
 import static dao.MySQLConnect.ConnectQLN;
+import static dao.QLNdbConstants.*;
 
 /**
  * Data Access Object cho bảng Bậc Giá Nước (bacgia).
@@ -35,21 +36,21 @@ public class BacGiaDao {
         try {
             String query = "SELECT * FROM %s WHERE %s = %d ORDER BY %s"
                     .formatted(
-                            QLNdbConstants.Tables.BacGia,
-                            QLNdbConstants.Id.GiaNuocID,
+                            Tables.BacGia,
+                            Id.GiaNuocID,
                             idDonGia,
-                            QLNdbConstants.qlnBacGiaCol.BacGia);
+                            BacGiaCol.BacGia);
 
             ResultSet rs = ConnectQLN.executeQuery(query);
 
             while (rs.next()) {
                 WaterPriceTier tier = new WaterPriceTier();
-                tier.setIdWaterPriceTier(rs.getInt(QLNdbConstants.Id.BacGiaID));
-                tier.setIdWaterPrice(rs.getInt(QLNdbConstants.Id.GiaNuocID));
-                tier.setTier(rs.getInt(QLNdbConstants.qlnBacGiaCol.BacGia));
-                tier.setMinConsumption(rs.getInt(QLNdbConstants.qlnBacGiaCol.TuMucNuoc));
-                tier.setMaxConsumption(rs.getInt(QLNdbConstants.qlnBacGiaCol.DenMucNuoc));
-                tier.setPrice(rs.getDouble(QLNdbConstants.qlnBacGiaCol.Gia));
+                tier.setIdWaterPriceTier(rs.getInt(Id.BacGiaID));
+                tier.setIdWaterPrice(rs.getInt(Id.GiaNuocID));
+                tier.setTier(rs.getInt(BacGiaCol.BacGia));
+                tier.setMinConsumption(rs.getInt(BacGiaCol.TuMucNuoc));
+                tier.setMaxConsumption(rs.getInt(BacGiaCol.DenMucNuoc));
+                tier.setPrice(rs.getDouble(BacGiaCol.Gia));
                 listBac.add(tier);
             }
 
@@ -71,18 +72,18 @@ public class BacGiaDao {
 
         try {
             String query = "SELECT * FROM %s WHERE %s = %d".formatted(
-                    QLNdbConstants.Tables.BacGia, QLNdbConstants.Id.BacGiaID, idBac);
+                    Tables.BacGia, Id.BacGiaID, idBac);
 
             ResultSet rs = ConnectQLN.executeQuery(query);
 
             if (rs.next()) {
                 tier = new WaterPriceTier();
-                tier.setIdWaterPriceTier(rs.getInt(QLNdbConstants.Id.BacGiaID));
-                tier.setIdWaterPrice(rs.getInt(QLNdbConstants.Id.GiaNuocID));
-                tier.setTier(rs.getInt(QLNdbConstants.qlnBacGiaCol.BacGia));
-                tier.setMinConsumption(rs.getInt(QLNdbConstants.qlnBacGiaCol.TuMucNuoc));
-                tier.setMaxConsumption(rs.getInt(QLNdbConstants.qlnBacGiaCol.DenMucNuoc));
-                tier.setPrice(rs.getDouble(QLNdbConstants.qlnBacGiaCol.Gia));
+                tier.setIdWaterPriceTier(rs.getInt(Id.BacGiaID));
+                tier.setIdWaterPrice(rs.getInt(Id.GiaNuocID));
+                tier.setTier(rs.getInt(BacGiaCol.BacGia));
+                tier.setMinConsumption(rs.getInt(BacGiaCol.TuMucNuoc));
+                tier.setMaxConsumption(rs.getInt(BacGiaCol.DenMucNuoc));
+                tier.setPrice(rs.getDouble(BacGiaCol.Gia));
             }
 
         } catch (SQLException e) {
@@ -105,21 +106,21 @@ public class BacGiaDao {
         try {
             String query = "SELECT * FROM %s WHERE %s = %d ORDER BY %s DESC LIMIT 1"
                     .formatted(
-                            QLNdbConstants.Tables.BacGia,
-                            QLNdbConstants.Id.GiaNuocID,
+                            Tables.BacGia,
+                            Id.GiaNuocID,
                             idDonGia,
-                            QLNdbConstants.qlnBacGiaCol.BacGia);
+                            BacGiaCol.BacGia);
 
             ResultSet rs = ConnectQLN.executeQuery(query);
 
             if (rs.next()) {
                 tier = new WaterPriceTier();
-                tier.setIdWaterPriceTier(rs.getInt(QLNdbConstants.Id.BacGiaID));
-                tier.setIdWaterPrice(rs.getInt(QLNdbConstants.Id.GiaNuocID));
-                tier.setTier(rs.getInt(QLNdbConstants.qlnBacGiaCol.BacGia));
-                tier.setMinConsumption(rs.getInt(QLNdbConstants.qlnBacGiaCol.TuMucNuoc));
-                tier.setMaxConsumption(rs.getInt(QLNdbConstants.qlnBacGiaCol.DenMucNuoc));
-                tier.setPrice(rs.getDouble(QLNdbConstants.qlnBacGiaCol.Gia));
+                tier.setIdWaterPriceTier(rs.getInt(Id.BacGiaID));
+                tier.setIdWaterPrice(rs.getInt(Id.GiaNuocID));
+                tier.setTier(rs.getInt(BacGiaCol.BacGia));
+                tier.setMinConsumption(rs.getInt(BacGiaCol.TuMucNuoc));
+                tier.setMaxConsumption(rs.getInt(BacGiaCol.DenMucNuoc));
+                tier.setPrice(rs.getDouble(BacGiaCol.Gia));
             }
 
         } catch (SQLException e) {
@@ -142,9 +143,9 @@ public class BacGiaDao {
         try {
             String query = "SELECT MAX(%s) as maxTier FROM %s WHERE %s = %d"
                     .formatted(
-                            QLNdbConstants.qlnBacGiaCol.BacGia,
-                            QLNdbConstants.Tables.BacGia,
-                            QLNdbConstants.Id.GiaNuocID,
+                            BacGiaCol.BacGia,
+                            Tables.BacGia,
+                            Id.GiaNuocID,
                             idDonGia);
 
             ResultSet rs = ConnectQLN.executeQuery(query);
@@ -187,11 +188,11 @@ public class BacGiaDao {
                             (%s >= %d AND %s <= %d)
                         )
                         """.formatted(
-                        QLNdbConstants.Tables.BacGia,
-                        QLNdbConstants.Id.GiaNuocID, idDonGia,
-                        QLNdbConstants.qlnBacGiaCol.TuMucNuoc, denMucNuoc, QLNdbConstants.qlnBacGiaCol.DenMucNuoc, tuMucNuoc,
-                        QLNdbConstants.qlnBacGiaCol.TuMucNuoc, tuMucNuoc, QLNdbConstants.qlnBacGiaCol.DenMucNuoc, tuMucNuoc,
-                        QLNdbConstants.qlnBacGiaCol.TuMucNuoc, tuMucNuoc, QLNdbConstants.qlnBacGiaCol.DenMucNuoc, denMucNuoc);
+                        Tables.BacGia,
+                        Id.GiaNuocID, idDonGia,
+                        BacGiaCol.TuMucNuoc, denMucNuoc, BacGiaCol.DenMucNuoc, tuMucNuoc,
+                        BacGiaCol.TuMucNuoc, tuMucNuoc, BacGiaCol.DenMucNuoc, tuMucNuoc,
+                        BacGiaCol.TuMucNuoc, tuMucNuoc, BacGiaCol.DenMucNuoc, denMucNuoc);
             } else {
                 // Update: loại trừ chính nó
                 query = """
@@ -204,12 +205,12 @@ public class BacGiaDao {
                             (%s >= %d AND %s <= %d)
                         )
                         """.formatted(
-                        QLNdbConstants.Tables.BacGia,
-                        QLNdbConstants.Id.GiaNuocID, idDonGia,
-                        QLNdbConstants.Id.BacGiaID, excludeId,
-                        QLNdbConstants.qlnBacGiaCol.TuMucNuoc, denMucNuoc, QLNdbConstants.qlnBacGiaCol.DenMucNuoc, tuMucNuoc,
-                        QLNdbConstants.qlnBacGiaCol.TuMucNuoc, tuMucNuoc, QLNdbConstants.qlnBacGiaCol.DenMucNuoc, tuMucNuoc,
-                        QLNdbConstants.qlnBacGiaCol.TuMucNuoc, tuMucNuoc, QLNdbConstants.qlnBacGiaCol.DenMucNuoc, denMucNuoc);
+                        Tables.BacGia,
+                        Id.GiaNuocID, idDonGia,
+                        Id.BacGiaID, excludeId,
+                        BacGiaCol.TuMucNuoc, denMucNuoc, BacGiaCol.DenMucNuoc, tuMucNuoc,
+                        BacGiaCol.TuMucNuoc, tuMucNuoc, BacGiaCol.DenMucNuoc, tuMucNuoc,
+                        BacGiaCol.TuMucNuoc, tuMucNuoc, BacGiaCol.DenMucNuoc, denMucNuoc);
             }
 
             ResultSet rs = ConnectQLN.executeQuery(query);
@@ -237,9 +238,9 @@ public class BacGiaDao {
 
         String query = String.format(java.util.Locale.US,
                 "INSERT INTO %s (%s, %s, %s, %s, %s) VALUES (%d, %d, %d, %d, %.2f)",
-                QLNdbConstants.Tables.BacGia,
-                QLNdbConstants.Id.GiaNuocID, QLNdbConstants.qlnBacGiaCol.BacGia, QLNdbConstants.qlnBacGiaCol.TuMucNuoc,
-                QLNdbConstants.qlnBacGiaCol.DenMucNuoc, QLNdbConstants.qlnBacGiaCol.Gia,
+                Tables.BacGia,
+                Id.GiaNuocID, BacGiaCol.BacGia, BacGiaCol.TuMucNuoc,
+                BacGiaCol.DenMucNuoc, BacGiaCol.Gia,
                 tier.getIdWaterPrice(), tier.getTier(), tier.getMinConsumption(),
                 tier.getMaxConsumption(), tier.getPrice());
 
@@ -270,13 +271,13 @@ public class BacGiaDao {
 
         String query = String.format(java.util.Locale.US,
                 "UPDATE %s SET %s = %d, %s = %d, %s = %d, %s = %d, %s = %.2f WHERE %s = %d",
-                QLNdbConstants.Tables.BacGia,
-                QLNdbConstants.Id.GiaNuocID, tier.getIdWaterPrice(),
-                QLNdbConstants.qlnBacGiaCol.BacGia, tier.getTier(),
-                QLNdbConstants.qlnBacGiaCol.TuMucNuoc, tier.getMinConsumption(),
-                QLNdbConstants.qlnBacGiaCol.DenMucNuoc, tier.getMaxConsumption(),
-                QLNdbConstants.qlnBacGiaCol.Gia, tier.getPrice(),
-                QLNdbConstants.Id.BacGiaID, tier.getIdWaterPriceTier());
+                Tables.BacGia,
+                Id.GiaNuocID, tier.getIdWaterPrice(),
+                BacGiaCol.BacGia, tier.getTier(),
+                BacGiaCol.TuMucNuoc, tier.getMinConsumption(),
+                BacGiaCol.DenMucNuoc, tier.getMaxConsumption(),
+                BacGiaCol.Gia, tier.getPrice(),
+                Id.BacGiaID, tier.getIdWaterPriceTier());
 
         System.out.println("=== SQL UPDATE TIER ===");
         System.out.println(query);
@@ -302,7 +303,7 @@ public class BacGiaDao {
         int result = 0;
 
         String query = "DELETE FROM %s WHERE %s = %d"
-                .formatted(QLNdbConstants.Tables.BacGia, QLNdbConstants.Id.BacGiaID, idBac);
+                .formatted(Tables.BacGia, Id.BacGiaID, idBac);
 
         System.out.println("=== SQL DELETE TIER ===");
         System.out.println(query);
@@ -328,7 +329,7 @@ public class BacGiaDao {
         int result = 0;
 
         String query = "DELETE FROM %s WHERE %s = %d"
-                .formatted(QLNdbConstants.Tables.BacGia, QLNdbConstants.Id.GiaNuocID, idDonGia);
+                .formatted(Tables.BacGia, Id.GiaNuocID, idDonGia);
 
         try {
             result = ConnectQLN.executeUpdate(query);
