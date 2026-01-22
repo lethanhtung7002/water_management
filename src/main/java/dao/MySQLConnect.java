@@ -36,7 +36,7 @@ public class MySQLConnect {
      * Tạo kết nối đến database "quanlynuoc" trên localhost:3306.
      */
     public MySQLConnect() {
-        this("localhost", "3306", NameDB.DB_quanlynuoc);
+        this("localhost", "3306", QLNdbConstants.DATABASE_NAME);
     }
 
     /**

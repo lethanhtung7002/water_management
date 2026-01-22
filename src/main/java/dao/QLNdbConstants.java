@@ -35,17 +35,17 @@ public class QLNdbConstants {
         public static final String Email = "Email";
     }
 
-    public static final class qlnCustomerTypeCol {
+    public static final class CustomerTypeCol {
         public static final String Name = "ten_loai";
     }
 
-    public static final class qlnHoSuDungCol {
+    public static final class HoSuDungCol {
         public static final String DiaChi = "DiaChi";
         public static final String KhuVuc = "KhuVuc";
         public static final String TrangThai = "TrangThai";
     }
 
-    public static final class qlnChiSoNuocCol {
+    public static final class ChiSoNuocCol {
         public static final String NamGhi = "NamGhi";
         public static final String ThangGhi = "ThangGhi";
         public static final String NgayGhi = "NgayGhi";
@@ -53,24 +53,24 @@ public class QLNdbConstants {
         public static final String ChiSoCu = "ChiSoCu";
     }
 
-    public static final class qlnHoaDonCol {
+    public static final class HoaDonCol {
         public static final String SoNuocTieuThu = "SanLuongTieuThu";
         public static final String TongTien = "TongTienThanhToan";
         public static final String NgayLap = "NgayLap";
         public static final String TrangThai = "TrangThai";
     }
 
-    public static final class qlnThanhToanCol {
+    public static final class ThanhToanCol {
         public static final String NgayThanhToan = "NgayThanhToan";
         public static final String HinhThuc = "HinhThuc";
     }
 
-    public static final class qlnGiaNuocCol {
+    public static final class GiaNuocCol {
         public static final String KhuVuc = "KhuVuc";
         public static final String Thue = "Thue";
     }
 
-    public static final class qlnBacGiaCol {
+    public static final class BacGiaCol {
         public static final String BacGia = "BacGia";
         public static final String TuMucNuoc = "TuMucNuoc";
         public static final String DenMucNuoc = "DenMucNuoc";

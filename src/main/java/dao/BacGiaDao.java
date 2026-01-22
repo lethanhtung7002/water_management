@@ -35,21 +35,21 @@ public class BacGiaDao {
         try {
             String query = "SELECT * FROM %s WHERE %s = %d ORDER BY %s"
                     .formatted(
-                            qlnTableName.BacGia,
-                            qlnIDName.GiaNuocID,
+                            QLNdbConstants.Tables.BacGia,
+                            QLNdbConstants.Id.GiaNuocID,
                             idDonGia,
-                            qlnBacGiaCol.BacGia);
+                            QLNdbConstants.qlnBacGiaCol.BacGia);
 
             ResultSet rs = ConnectQLN.executeQuery(query);
 
             while (rs.next()) {
                 WaterPriceTier tier = new WaterPriceTier();
-                tier.setIdWaterPriceTier(rs.getInt(qlnIDName.BacGiaID));
-                tier.setIdWaterPrice(rs.getInt(qlnIDName.GiaNuocID));
-                tier.setTier(rs.getInt(qlnBacGiaCol.BacGia));
-                tier.setMinConsumption(rs.getInt(qlnBacGiaCol.TuMucNuoc));
-                tier.setMaxConsumption(rs.getInt(qlnBacGiaCol.DenMucNuoc));
-                tier.setPrice(rs.getDouble(qlnBacGiaCol.Gia));
+                tier.setIdWaterPriceTier(rs.getInt(QLNdbConstants.Id.BacGiaID));
+                tier.setIdWaterPrice(rs.getInt(QLNdbConstants.Id.GiaNuocID));
+                tier.setTier(rs.getInt(QLNdbConstants.qlnBacGiaCol.BacGia));
+                tier.setMinConsumption(rs.getInt(QLNdbConstants.qlnBacGiaCol.TuMucNuoc));
+                tier.setMaxConsumption(rs.getInt(QLNdbConstants.qlnBacGiaCol.DenMucNuoc));
+                tier.setPrice(rs.getDouble(QLNdbConstants.qlnBacGiaCol.Gia));
                 listBac.add(tier);
             }
 
@@ -70,19 +70,19 @@ public class BacGiaDao {
         WaterPriceTier tier = null;
 
         try {
-            String query = "SELECT * FROM %s WHERE %s = %d"
-                    .formatted(qlnTableName.BacGia, qlnIDName.BacGiaID, idBac);
+            String query = "SELECT * FROM %s WHERE %s = %d".formatted(
+                    QLNdbConstants.Tables.BacGia, QLNdbConstants.Id.BacGiaID, idBac);
 
             ResultSet rs = ConnectQLN.executeQuery(query);
 
             if (rs.next()) {
                 tier = new WaterPriceTier();
-                tier.setIdWaterPriceTier(rs.getInt(qlnIDName.BacGiaID));
-                tier.setIdWaterPrice(rs.getInt(qlnIDName.GiaNuocID));
-                tier.setTier(rs.getInt(qlnBacGiaCol.BacGia));
-                tier.setMinConsumption(rs.getInt(qlnBacGiaCol.TuMucNuoc));
-                tier.setMaxConsumption(rs.getInt(qlnBacGiaCol.DenMucNuoc));
-                tier.setPrice(rs.getDouble(qlnBacGiaCol.Gia));
+                tier.setIdWaterPriceTier(rs.getInt(QLNdbConstants.Id.BacGiaID));
+                tier.setIdWaterPrice(rs.getInt(QLNdbConstants.Id.GiaNuocID));
+                tier.setTier(rs.getInt(QLNdbConstants.qlnBacGiaCol.BacGia));
+                tier.setMinConsumption(rs.getInt(QLNdbConstants.qlnBacGiaCol.TuMucNuoc));
+                tier.setMaxConsumption(rs.getInt(QLNdbConstants.qlnBacGiaCol.DenMucNuoc));
+                tier.setPrice(rs.getDouble(QLNdbConstants.qlnBacGiaCol.Gia));
             }
 
         } catch (SQLException e) {
@@ -105,21 +105,21 @@ public class BacGiaDao {
         try {
             String query = "SELECT * FROM %s WHERE %s = %d ORDER BY %s DESC LIMIT 1"
                     .formatted(
-                            qlnTableName.BacGia,
-                            qlnIDName.GiaNuocID,
+                            QLNdbConstants.Tables.BacGia,
+                            QLNdbConstants.Id.GiaNuocID,
                             idDonGia,
-                            qlnBacGiaCol.BacGia);
+                            QLNdbConstants.qlnBacGiaCol.BacGia);
 
             ResultSet rs = ConnectQLN.executeQuery(query);
 
             if (rs.next()) {
                 tier = new WaterPriceTier();
-                tier.setIdWaterPriceTier(rs.getInt(qlnIDName.BacGiaID));
-                tier.setIdWaterPrice(rs.getInt(qlnIDName.GiaNuocID));
-                tier.setTier(rs.getInt(qlnBacGiaCol.BacGia));
-                tier.setMinConsumption(rs.getInt(qlnBacGiaCol.TuMucNuoc));
-                tier.setMaxConsumption(rs.getInt(qlnBacGiaCol.DenMucNuoc));
-                tier.setPrice(rs.getDouble(qlnBacGiaCol.Gia));
+                tier.setIdWaterPriceTier(rs.getInt(QLNdbConstants.Id.BacGiaID));
+                tier.setIdWaterPrice(rs.getInt(QLNdbConstants.Id.GiaNuocID));
+                tier.setTier(rs.getInt(QLNdbConstants.qlnBacGiaCol.BacGia));
+                tier.setMinConsumption(rs.getInt(QLNdbConstants.qlnBacGiaCol.TuMucNuoc));
+                tier.setMaxConsumption(rs.getInt(QLNdbConstants.qlnBacGiaCol.DenMucNuoc));
+                tier.setPrice(rs.getDouble(QLNdbConstants.qlnBacGiaCol.Gia));
             }
 
         } catch (SQLException e) {
@@ -142,9 +142,9 @@ public class BacGiaDao {
         try {
             String query = "SELECT MAX(%s) as maxTier FROM %s WHERE %s = %d"
                     .formatted(
-                            qlnBacGiaCol.BacGia,
-                            qlnTableName.BacGia,
-                            qlnIDName.GiaNuocID,
+                            QLNdbConstants.qlnBacGiaCol.BacGia,
+                            QLNdbConstants.Tables.BacGia,
+                            QLNdbConstants.Id.GiaNuocID,
                             idDonGia);
 
             ResultSet rs = ConnectQLN.executeQuery(query);
@@ -187,11 +187,11 @@ public class BacGiaDao {
                             (%s >= %d AND %s <= %d)
                         )
                         """.formatted(
-                        qlnTableName.BacGia,
-                        qlnIDName.GiaNuocID, idDonGia,
-                        qlnBacGiaCol.TuMucNuoc, denMucNuoc, qlnBacGiaCol.DenMucNuoc, tuMucNuoc,
-                        qlnBacGiaCol.TuMucNuoc, tuMucNuoc, qlnBacGiaCol.DenMucNuoc, tuMucNuoc,
-                        qlnBacGiaCol.TuMucNuoc, tuMucNuoc, qlnBacGiaCol.DenMucNuoc, denMucNuoc);
+                        QLNdbConstants.Tables.BacGia,
+                        QLNdbConstants.Id.GiaNuocID, idDonGia,
+                        QLNdbConstants.qlnBacGiaCol.TuMucNuoc, denMucNuoc, QLNdbConstants.qlnBacGiaCol.DenMucNuoc, tuMucNuoc,
+                        QLNdbConstants.qlnBacGiaCol.TuMucNuoc, tuMucNuoc, QLNdbConstants.qlnBacGiaCol.DenMucNuoc, tuMucNuoc,
+                        QLNdbConstants.qlnBacGiaCol.TuMucNuoc, tuMucNuoc, QLNdbConstants.qlnBacGiaCol.DenMucNuoc, denMucNuoc);
             } else {
                 // Update: loại trừ chính nó
                 query = """
@@ -204,12 +204,12 @@ public class BacGiaDao {
                             (%s >= %d AND %s <= %d)
                         )
                         """.formatted(
-                        qlnTableName.BacGia,
-                        qlnIDName.GiaNuocID, idDonGia,
-                        qlnIDName.BacGiaID, excludeId,
-                        qlnBacGiaCol.TuMucNuoc, denMucNuoc, qlnBacGiaCol.DenMucNuoc, tuMucNuoc,
-                        qlnBacGiaCol.TuMucNuoc, tuMucNuoc, qlnBacGiaCol.DenMucNuoc, tuMucNuoc,
-                        qlnBacGiaCol.TuMucNuoc, tuMucNuoc, qlnBacGiaCol.DenMucNuoc, denMucNuoc);
+                        QLNdbConstants.Tables.BacGia,
+                        QLNdbConstants.Id.GiaNuocID, idDonGia,
+                        QLNdbConstants.Id.BacGiaID, excludeId,
+                        QLNdbConstants.qlnBacGiaCol.TuMucNuoc, denMucNuoc, QLNdbConstants.qlnBacGiaCol.DenMucNuoc, tuMucNuoc,
+                        QLNdbConstants.qlnBacGiaCol.TuMucNuoc, tuMucNuoc, QLNdbConstants.qlnBacGiaCol.DenMucNuoc, tuMucNuoc,
+                        QLNdbConstants.qlnBacGiaCol.TuMucNuoc, tuMucNuoc, QLNdbConstants.qlnBacGiaCol.DenMucNuoc, denMucNuoc);
             }
 
             ResultSet rs = ConnectQLN.executeQuery(query);
@@ -237,9 +237,9 @@ public class BacGiaDao {
 
         String query = String.format(java.util.Locale.US,
                 "INSERT INTO %s (%s, %s, %s, %s, %s) VALUES (%d, %d, %d, %d, %.2f)",
-                qlnTableName.BacGia,
-                qlnIDName.GiaNuocID, qlnBacGiaCol.BacGia, qlnBacGiaCol.TuMucNuoc,
-                qlnBacGiaCol.DenMucNuoc, qlnBacGiaCol.Gia,
+                QLNdbConstants.Tables.BacGia,
+                QLNdbConstants.Id.GiaNuocID, QLNdbConstants.qlnBacGiaCol.BacGia, QLNdbConstants.qlnBacGiaCol.TuMucNuoc,
+                QLNdbConstants.qlnBacGiaCol.DenMucNuoc, QLNdbConstants.qlnBacGiaCol.Gia,
                 tier.getIdWaterPrice(), tier.getTier(), tier.getMinConsumption(),
                 tier.getMaxConsumption(), tier.getPrice());
 
@@ -270,13 +270,13 @@ public class BacGiaDao {
 
         String query = String.format(java.util.Locale.US,
                 "UPDATE %s SET %s = %d, %s = %d, %s = %d, %s = %d, %s = %.2f WHERE %s = %d",
-                qlnTableName.BacGia,
-                qlnIDName.GiaNuocID, tier.getIdWaterPrice(),
-                qlnBacGiaCol.BacGia, tier.getTier(),
-                qlnBacGiaCol.TuMucNuoc, tier.getMinConsumption(),
-                qlnBacGiaCol.DenMucNuoc, tier.getMaxConsumption(),
-                qlnBacGiaCol.Gia, tier.getPrice(),
-                qlnIDName.BacGiaID, tier.getIdWaterPriceTier());
+                QLNdbConstants.Tables.BacGia,
+                QLNdbConstants.Id.GiaNuocID, tier.getIdWaterPrice(),
+                QLNdbConstants.qlnBacGiaCol.BacGia, tier.getTier(),
+                QLNdbConstants.qlnBacGiaCol.TuMucNuoc, tier.getMinConsumption(),
+                QLNdbConstants.qlnBacGiaCol.DenMucNuoc, tier.getMaxConsumption(),
+                QLNdbConstants.qlnBacGiaCol.Gia, tier.getPrice(),
+                QLNdbConstants.Id.BacGiaID, tier.getIdWaterPriceTier());
 
         System.out.println("=== SQL UPDATE TIER ===");
         System.out.println(query);
@@ -302,7 +302,7 @@ public class BacGiaDao {
         int result = 0;
 
         String query = "DELETE FROM %s WHERE %s = %d"
-                .formatted(qlnTableName.BacGia, qlnIDName.BacGiaID, idBac);
+                .formatted(QLNdbConstants.Tables.BacGia, QLNdbConstants.Id.BacGiaID, idBac);
 
         System.out.println("=== SQL DELETE TIER ===");
         System.out.println(query);
@@ -328,7 +328,7 @@ public class BacGiaDao {
         int result = 0;
 
         String query = "DELETE FROM %s WHERE %s = %d"
-                .formatted(qlnTableName.BacGia, qlnIDName.GiaNuocID, idDonGia);
+                .formatted(QLNdbConstants.Tables.BacGia, QLNdbConstants.Id.GiaNuocID, idDonGia);
 
         try {
             result = ConnectQLN.executeUpdate(query);
