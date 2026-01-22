@@ -43,8 +43,8 @@ public class ChiSoNuocDao {
 
             while (rs.next()) {
                 ChiSoNuoc chiSo = new ChiSoNuoc();
- chiSo.setIdChiSo(rs.getInt(Id.ChiSoNuocID));
- chiSo.setIdHoSuDung(rs.getInt(Id.HoSuDungID));
+                chiSo.setIdChiSo(rs.getInt(Id.ChiSoNuocID));
+                chiSo.setIdHoSuDung(rs.getInt(Id.HoSuDungID));
                 chiSo.setNamGhi(rs.getInt(ChiSoNuocCol.NamGhi));
                 chiSo.setThangGhi(rs.getInt(ChiSoNuocCol.ThangGhi));
                 chiSo.setNgayGhi(rs.getInt(ChiSoNuocCol.NgayGhi));
@@ -208,8 +208,8 @@ public class ChiSoNuocDao {
 
             if (rs.next()) {
                 chiSo = new ChiSoNuoc();
- chiSo.setIdChiSo(rs.getInt(Id.ChiSoNuocID));
- chiSo.setIdHoSuDung(rs.getInt(Id.HoSuDungID));
+                chiSo.setIdChiSo(rs.getInt(Id.ChiSoNuocID));
+                chiSo.setIdHoSuDung(rs.getInt(Id.HoSuDungID));
                 chiSo.setNamGhi(rs.getInt(ChiSoNuocCol.NamGhi));
                 chiSo.setThangGhi(rs.getInt(ChiSoNuocCol.ThangGhi));
                 chiSo.setNgayGhi(rs.getInt(ChiSoNuocCol.NgayGhi));

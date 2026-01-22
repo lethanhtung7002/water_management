@@ -52,7 +52,6 @@ public class AddChiSoNuocForm extends JFrame {
     private JComboBox<Integer> cbNam = new JComboBox<>();
     private JTextField tfChiSoCu = new JTextField();
     private JTextField tfChiSoMoi = new JTextField();
-    private JTextField tfTieuThu = new JTextField();
 
     // ===== BUTTONS =====
     private JButton btnSaveAndBill = new JButton("Lưu và lập hóa đơn");
@@ -186,19 +185,6 @@ public class AddChiSoNuocForm extends JFrame {
         panel.add(tfChiSoMoi, gbc);
         row++;
 
-        // ===== TIÊU THỤ =====
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        lbTieuThu.setFont(GUIConstants.Fonts.TieuDePhu);
-        panel.add(lbTieuThu, gbc);
-
-        gbc.gridx = 1;
-        tfTieuThu.setPreferredSize(GUIConstants.Sizes.tf);
-        tfTieuThu.setFont(GUIConstants.Fonts.TieuDePhu);
-        tfTieuThu.setEditable(false);
-        tfTieuThu.setBackground(Color.WHITE);
-        panel.add(tfTieuThu, gbc);
-
         return panel;
     }
 
@@ -258,26 +244,13 @@ public class AddChiSoNuocForm extends JFrame {
         return panel;
     }
 
-    /**
-     * Điền dữ liệu vào form
-     */
     private void fillData() {
         tfHoSuDung.setText(customer != null ? customer.getNameCustomer() : "N/A");
         tfDiaChi.setText(HoSuDung.getDiaChi() + " - " + HoSuDung.getKhuVuc());
         tfChiSoCu.setText(String.valueOf(chiSoCu));
-        tfTieuThu.setText("0");
     }
 
-    /**
-     * Gắn sự kiện
-     */
     private void attachEventHandlers() {
-        // Tự động tính tiêu thụ khi nhập chỉ số mới
-        tfChiSoMoi.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                calculateTieuThu();
-            }
-        });
 
         // Lưu và lập hóa đơn
         btnSaveAndBill.addActionListener(e -> saveAndCreateBill());
@@ -286,28 +259,6 @@ public class AddChiSoNuocForm extends JFrame {
         btnCancel.addActionListener(e -> dispose());
     }
 
-    /**
-     * Tính tiêu thụ tự động
-     */
-    private void calculateTieuThu() {
-        try {
-            String chiSoMoiText = tfChiSoMoi.getText().trim();
-            if (!chiSoMoiText.isEmpty()) {
-                int chiSoMoi = Integer.parseInt(chiSoMoiText);
-                int tieuThu = chiSoCu - chiSoMoi;
-
-                if (tieuThu < 0) {
-                    tfTieuThu.setText("Lỗi: Chỉ số mới < chỉ số cũ");
-                    tfTieuThu.setForeground(Color.RED);
-                } else {
-                    tfTieuThu.setText(String.valueOf(tieuThu));
-                    tfTieuThu.setForeground(Color.BLACK);
-                }
-            }
-        } catch (NumberFormatException e) {
-            tfTieuThu.setText("0");
-        }
-    }
 
     /**
      * Lưu chỉ số và tự động tạo hóa đơn
