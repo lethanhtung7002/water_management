@@ -62,6 +62,34 @@ public class ChiSoNuocDao {
         return listChiSo;
     }
 
+    public ChiSoNuoc getChiSoNuocById(int idChiSo) {
+        ChiSoNuoc chiSo = null;
+
+        try {
+            String query = "SELECT * FROM %s WHERE %s = %d"
+                    .formatted(Tables.ChiSoNuoc, Id.ChiSoNuocID, idChiSo);
+
+            ResultSet rs = ConnectQLN.executeQuery(query);
+
+            if (rs.next()) {
+                chiSo = new ChiSoNuoc();
+                chiSo.setIdChiSo(rs.getInt(Id.ChiSoNuocID));
+                chiSo.setIdHoSuDung(rs.getInt(Id.HoSuDungID));
+                chiSo.setNamGhi(rs.getInt(ChiSoNuocCol.NamGhi));
+                chiSo.setThangGhi(rs.getInt(ChiSoNuocCol.ThangGhi));
+                chiSo.setNgayGhi(rs.getInt(ChiSoNuocCol.NgayGhi));
+                chiSo.setChiSoMoi(rs.getInt(ChiSoNuocCol.ChiSoMoi));
+                chiSo.setChiSoCu(rs.getInt(ChiSoNuocCol.ChiSoCu));
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Lỗi lấy chỉ số nước theo ID: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return chiSo;
+    }
+
     /**
      * Lấy chỉ số nước mới nhất của một hộ sử dụng
      * 

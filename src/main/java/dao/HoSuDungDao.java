@@ -104,4 +104,6 @@ public class HoSuDungDao {
     public boolean delete_HoSuDung(int idHoSuDung) {
         return sharesDao.deleteByCol(idHoSuDung, Tables.HoSuDung, Id.HoSuDungID);
     }
+
+
 }

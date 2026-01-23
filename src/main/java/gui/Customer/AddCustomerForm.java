@@ -332,7 +332,7 @@ public class AddCustomerForm extends JFrame {
         panel.add(btnAddHoSuDung);
         panel.add(btnEditHoSuDung);
         panel.add(btnDeleteHoSuDung);
-        panel.add(new HoSuDungPage().getBtnChiSo_HoaDon());
+        // panel.add(new HoSuDungPage().getBtnChiSo_HoaDon());
 
         // Gắn sự kiện
         btnRefresh.addActionListener(e -> refreshHoSuDungTable(customerId));

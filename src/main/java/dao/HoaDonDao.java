@@ -3,6 +3,9 @@ package dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import dao.QLNdbConstants.HoaDonCol;
+import dao.QLNdbConstants.Id;
+import dao.QLNdbConstants.Tables;
 import model.HoaDon;
 import static dao.MySQLConnect.ConnectQLN;
 import static dao.QLNdbConstants.*;
@@ -44,6 +47,29 @@ public class HoaDonDao {
         }
 
         return hoaDon;
+    }
+
+    public int getIdChiSoNuocByIdHoaDon(int idHoaDon) {
+        int idChiSo = -1;
+
+        try {
+            String query = "SELECT %s FROM %s WHERE %s = %d"
+                    .formatted(
+                            Id.ChiSoNuocID,
+                            Tables.HoaDon,
+                            Id.HoaDonID, idHoaDon);
+
+            ResultSet rs = ConnectQLN.executeQuery(query);
+
+            if (rs.next()) {
+                idChiSo = rs.getInt(Id.ChiSoNuocID);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Lỗi lấy chỉ số nước theo ID hóa đơn: " + e.getMessage());
+        }
+
+        return idChiSo;
     }
 
     /**
@@ -107,6 +133,39 @@ public class HoaDonDao {
         }
 
         return result > 0;
+    }
+
+    public HoaDon getGiaCaoNhatTrongThang(int thang, int nam) {
+        HoaDon hoaDon = null;
+
+        String query = """
+                SELECT * FROM %s
+                WHERE MONTH(%s) = %d AND YEAR(%s) = %d
+                ORDER BY %s DESC
+                LIMIT 1
+                """.formatted(
+                Tables.HoaDon,
+                HoaDonCol.NgayLap, thang,
+                HoaDonCol.NgayLap, nam,
+                HoaDonCol.TongTien);
+
+        try {
+            ResultSet rs = ConnectQLN.executeQuery(query);
+            if (rs.next()) {
+                hoaDon = new HoaDon();
+                hoaDon.setIdHoaDon(rs.getInt(Id.HoaDonID));
+                hoaDon.setIdChiSo(rs.getInt(Id.ChiSoNuocID));
+                hoaDon.setSanLuongTieuThu(rs.getInt(HoaDonCol.SoNuocTieuThu));
+                hoaDon.setTongTienThanhToan(rs.getDouble(HoaDonCol.TongTien));
+                hoaDon.setNgayLapHoaDon(rs.getString(HoaDonCol.NgayLap));
+                hoaDon.setTrangThaiHoaDon(rs.getInt(HoaDonCol.TrangThai));
+                hoaDon.setIdDonGia(rs.getInt(Id.GiaNuocID));
+            }
+        } catch (SQLException e) {
+            System.out.println("Lỗi lấy hóa đơn có giá cao nhất trong tháng: " + e.getMessage());
+        }
+
+        return hoaDon;
     }
 
     /**

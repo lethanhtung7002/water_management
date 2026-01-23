@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,18 +16,22 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 import dao.CustomerDao;
 import dao.HoSuDungDao;
+import dao.HoaDonDao;
 import data.KhuVucLoader;
 import gui.GUIConstants;
 import gui.Customer.AddHoSuDungForm;
 import gui.HoSuDung.ChiSoVaThanhToan;
+import model.ChiSoNuoc;
 import model.Customer;
 import model.HoSuDung;
+import model.HoaDon;
 import model.LoaiCustomer;
 
 /**
@@ -54,6 +59,7 @@ public class HoSuDungPage extends JPanel {
     private JButton btnAdd = new JButton("Thêm");
     private JButton btnEdit = new JButton("Sửa Thông Tin");
     private JButton btnDelete = new JButton("Xóa");
+    private JButton btnHSDThanhToanNhieuNhat = new JButton("Hộ sử dụng thanh toán nhiều nhất");
     private JButton btnChiSo_HoaDon = new JButton("Chỉ số nước và Hóa đơn");
     private JButton btnRefresh = new JButton("Làm mới và lọc");
 
@@ -66,8 +72,10 @@ public class HoSuDungPage extends JPanel {
     private ArrayList<HoSuDung> hsdArr = new ArrayList<>();
 
     // ===== DAO =====
+    private HoaDonDao hoaDonDao = new HoaDonDao();
     private HoSuDungDao hsdDao = new HoSuDungDao();
     private CustomerDao customerDao = new CustomerDao();
+    private dao.ChiSoNuocDao chiSoDao = new dao.ChiSoNuocDao();
 
     /**
      * Constructor - Khởi tạo trang quản lý hộ sử dụng
@@ -102,6 +110,7 @@ public class HoSuDungPage extends JPanel {
         panelBtn.add(btnEdit);
         panelBtn.add(btnDelete);
         panelBtn.add(btnChiSo_HoaDon);
+        panelBtn.add(btnHSDThanhToanNhieuNhat);
 
         // ===== HÀNG 2: Panel chứa bộ lọc =====
         JPanel panelFilter = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
@@ -275,6 +284,10 @@ public class HoSuDungPage extends JPanel {
             new ChiSoVaThanhToan(selected);
         });
 
+        btnHSDThanhToanNhieuNhat.addActionListener(e -> {
+            viewBillCaoNhat();
+        });
+
         // Enter ở textfield tìm kiếm
         tfSearchCustomerId.addActionListener(e -> showHoSuDung(true));
     }
@@ -349,6 +362,68 @@ public class HoSuDungPage extends JPanel {
         } catch (Exception e) {
             System.out.println("Lỗi khi tải/lọc hộ sử dụng: " + e.getMessage());
             showError("Lỗi khi tải dữ liệu: " + e.getMessage());
+        }
+    }
+
+    private void viewBillCaoNhat() {
+
+        try {
+            LocalDate today = LocalDate.now();
+
+            HoaDon hoaDonCaoNhat = hoaDonDao.getGiaCaoNhatTrongThang(today.getMonthValue(), today.getYear());
+
+            // Lấy thông tin chỉ số
+            int idChiSo = hoaDonDao.getIdChiSoNuocByIdHoaDon(hoaDonCaoNhat.getIdHoaDon());
+            ChiSoNuoc chiSo = chiSoDao.getChiSoNuocById(idChiSo);
+
+            // Lấy thông tin hộ sử dụng
+            HoSuDung HoSuDung = hsdDao.getHoSuDungById(chiSo.getIdHoSuDung());
+
+            // Lấy thông tin khách hàng
+            Customer customer = customerDao.getCustomerById(HoSuDung.getID_Customer());
+
+            // Hiển thị dialog chi tiết hóa đơn
+            String message = """
+                    ========== HÓA ĐƠN TIỀN NƯỚC Cao Nhất ==========
+
+                    Hộ sử dụng: %s
+                    Địa chỉ: %s
+                    Khu vực: %s
+
+                    Kỳ ghi: %s
+                    Chỉ số cũ: %d m³
+                    Chỉ số mới: %d m³
+                    Tiêu thụ: %d m³
+
+                    Ngày lập hóa đơn: %s
+                    Tổng tiền: %s
+                    Trạng thái: %s
+
+                    =====================================
+                    """.formatted(
+                    customer.getNameCustomer(),
+                    HoSuDung.getDiaChi(),
+                    HoSuDung.getKhuVuc(),
+                    chiSo.getNgayGhiFormatted(),
+                    chiSo.getChiSoCu(),
+                    chiSo.getChiSoMoi(),
+                    chiSo.getTieuThu(),
+                    hoaDonCaoNhat.getNgayLapHoaDon(),
+                    hoaDonCaoNhat.getTongTienFormatted(),
+                    hoaDonCaoNhat.getTrangThaiText());
+
+            JTextArea textArea = new JTextArea(message);
+            textArea.setEditable(false);
+
+            JOptionPane.showMessageDialog(this,
+                    new JScrollPane(textArea),
+                    "Chi tiết hóa đơn",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (Exception e) {
+            System.out.println("Lỗi xem hóa đơn: " + e.getMessage());
+            e.printStackTrace();
+            showError("Lỗi: " + e.getMessage());
         }
     }
 

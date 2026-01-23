@@ -60,7 +60,7 @@ public class MenuForm extends JFrame {
     private JButton currentSelectedButton = null; // Nút đang được chọn
 
     public MenuForm() {
-        setTitle("Water Manager");
+        setTitle("Chương trình quản lý việc thu và tính tiền nước");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1200, 800);
         setMinimumSize(new Dimension(900, 700));
