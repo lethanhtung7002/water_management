@@ -352,9 +352,14 @@ public class HoSuDungPage extends JPanel {
         }
     }
 
+    public JButton getBtnChiSo_HoaDon() {
+        return btnChiSo_HoaDon;
+    }
+
     // ========================================
     // HELPER METHODS
     // ========================================
+    
 
     private void showError(String message) {
         JOptionPane.showMessageDialog(this, message, "Lỗi", JOptionPane.ERROR_MESSAGE);

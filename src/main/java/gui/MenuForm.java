@@ -106,12 +106,12 @@ public class MenuForm extends JFrame {
         centerBar.setBackground(GUIConstants.Colors.BACKGROUND);
 
         // Tạo các nút menu và lưu
-        btnHome = createMenuButton("Trang chủ", "🏠", Page.HOME);
+        // btnHome = createMenuButton("Trang chủ", "🏠", Page.HOME);
         btnCustomer = createMenuButton("Khách hàng", "👤", Page.CUSTOMER);
         btnHoSuDung = createMenuButton("Hộ Sủ dụng", "🏘", Page.HO_SU_DUNG);
         btnWaterPrice = createMenuButton("Giá nước", "💧", Page.WATER_PRICRE);
 
-        centerBar.add(btnHome);
+        // centerBar.add(btnHome);
         centerBar.add(btnCustomer);
         centerBar.add(btnHoSuDung);
         centerBar.add(btnWaterPrice);
@@ -140,17 +140,17 @@ public class MenuForm extends JFrame {
         contentPanel = new JPanel(cardLayout);
         contentPanel.setBackground(GUIConstants.Colors.BACKGROUND);
 
-        contentPanel.add(createPage("Trang chủ để thực hiện các tính năng nhanh nhưng chưa thêm gì cả :))"), Page.HOME);
-        contentPanel.add(new HoSuDungPage(), Page.HO_SU_DUNG);
+        // contentPanel.add(createPage("Trang chủ để thực hiện các tính năng nhanh nhưng chưa thêm gì cả :))"), Page.HOME);
         contentPanel.add(new CustomerPage(), Page.CUSTOMER);
+        contentPanel.add(new HoSuDungPage(), Page.HO_SU_DUNG);
         contentPanel.add(new WaterPricePage(), Page.WATER_PRICRE);
 
         // ==== GHÉP VÀO FRAME ====
         add(sidebar, BorderLayout.WEST);
         add(contentPanel);
 
-        // ===== THÊM: Mặc định chọn trang chủ =====
-        setSelectedButton(btnHome);
+        // ===== THÊM: Mặc định =====
+        setSelectedButton(btnCustomer);
     }
 
     /**

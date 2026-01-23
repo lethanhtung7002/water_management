@@ -27,6 +27,7 @@ import gui.GUIConstants;
 import model.Customer;
 import model.HoSuDung;
 import model.LoaiCustomer;
+import gui.Page.HoSuDungPage;
 
 public class AddCustomerForm extends JFrame {
 
@@ -331,6 +332,7 @@ public class AddCustomerForm extends JFrame {
         panel.add(btnAddHoSuDung);
         panel.add(btnEditHoSuDung);
         panel.add(btnDeleteHoSuDung);
+        panel.add(new HoSuDungPage().getBtnChiSo_HoaDon());
 
         // Gắn sự kiện
         btnRefresh.addActionListener(e -> refreshHoSuDungTable(customerId));
