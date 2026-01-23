@@ -8,7 +8,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -48,7 +47,7 @@ import model.WaterPriceTier;
 public class AddChiSoNuocForm extends JFrame {
 
     // ===== DATA =====
-    private HoSuDung HoSuDung;
+    private HoSuDung hoSuDung;
     private Customer customer;
     private int chiSoCu = 0;
 
@@ -85,7 +84,7 @@ public class AddChiSoNuocForm extends JFrame {
      * @param HoSuDung Hộ sử dụng cần ghi chỉ số
      */
     public AddChiSoNuocForm(HoSuDung HoSuDung) {
-        this.HoSuDung = HoSuDung;
+        this.hoSuDung = HoSuDung;
         this.customer = customerDao.getCustomerById(HoSuDung.getID_Customer());
 
         setTitle("Ghi chỉ số nước - Hộ #" + HoSuDung.getID_HoSuDung());
@@ -114,7 +113,7 @@ public class AddChiSoNuocForm extends JFrame {
      * Load chỉ số cũ từ lần ghi trước
      */
     private void loadChiSoCu() {
-        ChiSoNuoc chiSoCu = chiSoDao.getLatestChiSo(HoSuDung.getID_HoSuDung());
+        ChiSoNuoc chiSoCu = chiSoDao.getLatestChiSo(hoSuDung.getID_HoSuDung());
         if (chiSoCu != null) {
             this.chiSoCu = chiSoCu.getChiSoMoi();
         }
@@ -266,7 +265,7 @@ public class AddChiSoNuocForm extends JFrame {
 
     private void fillData() {
         tfHoSuDung.setText(customer != null ? customer.getNameCustomer() : "N/A");
-        tfDiaChi.setText(HoSuDung.getDiaChi() + " - " + HoSuDung.getKhuVuc());
+        tfDiaChi.setText(hoSuDung.getDiaChi() + " - " + hoSuDung.getKhuVuc());
         tfChiSoCu.setText(String.valueOf(chiSoCu));
     }
 
@@ -303,18 +302,10 @@ public class AddChiSoNuocForm extends JFrame {
             int thang = (Integer) cbThang.getSelectedItem();
             int nam = (Integer) cbNam.getSelectedItem();
 
-            // debug
-            System.out.println("=== LƯU CHỈ SỐ VÀ LẬP HÓA ĐƠN ===");
-            System.out.println("Hộ sử dụng: " + HoSuDung.getID_HoSuDung());
-            System.out.println("Ngày ghi: " + ngay + "/" + thang + "/" + nam);
-            System.out.println("Chỉ số cũ: " + chiSoCu);
-            System.out.println("Chỉ số mới: " + chiSoMoi);
-            System.out.println("Tiêu thụ: " + tieuThu);
-
             // ===== BƯỚC 1: LƯU CHỈ SỐ =====
             ChiSoNuoc chiSo = new ChiSoNuoc(
                     0,
-                    HoSuDung.getID_HoSuDung(),
+                    hoSuDung.getID_HoSuDung(),
                     nam,
                     thang,
                     ngay,
@@ -326,10 +317,8 @@ public class AddChiSoNuocForm extends JFrame {
                 return;
             }
 
-            System.out.println("Lưu chỉ số thành công!");
-
             // ===== BƯỚC 2: LẤY ID CHỈ SỐ VỪA TẠO =====
-            ChiSoNuoc latestChiSo = chiSoDao.getLatestChiSo(HoSuDung.getID_HoSuDung());
+            ChiSoNuoc latestChiSo = chiSoDao.getLatestChiSo(hoSuDung.getID_HoSuDung());
             if (latestChiSo == null) {
                 showError("Không lấy được ID chỉ số vừa tạo!");
                 return;
@@ -407,7 +396,7 @@ public class AddChiSoNuocForm extends JFrame {
 
         for (GiaNuoc gn : allGiaNuoc) {
             // Kiểm tra khu vực và loại khách hàng
-            if (gn.getKhuVuc().equals(HoSuDung.getKhuVuc()) &&
+            if (gn.getKhuVuc().equals(hoSuDung.getKhuVuc()) &&
                     gn.getIdLoaiCustomer() == customer.getLoaiCustomer()) {
                 return gn;
             }
@@ -436,11 +425,6 @@ public class AddChiSoNuocForm extends JFrame {
         // Chuyển thuế từ % sang hệ số (ví dụ: 10% → 1.1)
         double thueHeSo = 1 + (thuePercent / 100);
         
-        System.out.println(tieuThu);
-        System.out.println(Arrays.toString(tuMucNuoc));
-        System.out.println(Arrays.toString(denMucNuoc));
-        System.out.println(Arrays.toString(gia));
-        System.out.println(thueHeSo);
 
         // Tính tiền
         double totalMoney = WaterBill.calculateTotalMoney(

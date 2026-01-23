@@ -125,7 +125,6 @@ public class HoSuDungPage extends JPanel {
         JLabel lblIDKH = new JLabel("ID KH:");
         lblIDKH.setForeground(Color.WHITE); // Đổi màu chữ thành trắng
         panelFilter.add(lblIDKH);
-        tfSearchCustomerId.setToolTipText("Nhập ID khách hàng để tìm kiếm");
         panelFilter.add(tfSearchCustomerId);
 
         panelFilter.add(btnRefresh);
@@ -346,9 +345,6 @@ public class HoSuDungPage extends JPanel {
                     hsdArr.add(hsd);
                 }
             }
-
-            String message = applyFilter ? "Đã lọc được " : "Đã load ";
-            System.out.println(message + hsdArr.size() + " hộ sử dụng");
 
         } catch (Exception e) {
             System.out.println("Lỗi khi tải/lọc hộ sử dụng: " + e.getMessage());

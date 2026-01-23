@@ -31,12 +31,6 @@ public class ChiSoVaThanhToan extends JFrame {
     private HoaDonDao hoaDonDao = new HoaDonDao();
     private CustomerDao customerDao = new CustomerDao();
 
-    // ===== UI COMPONENTS - Info Panel =====
-    private JLabel lbTenKH = new JLabel();
-    private JLabel lbDiaChi = new JLabel();
-    private JLabel lbKhuVuc = new JLabel();
-    private JLabel lbTrangThai = new JLabel();
-
     // ===== UI COMPONENTS - Table =====
     private JTable table;
     private DefaultTableModel tableModel;
@@ -90,26 +84,18 @@ public class ChiSoVaThanhToan extends JFrame {
 
         // Row 1
         panel.add(createInfoLabel("Tên khách hàng:"));
-        lbTenKH.setText(customer.getNameCustomer());
-        lbTenKH.setFont(GUIConstants.Fonts.TieuDePhu);
-        panel.add(lbTenKH);
+        panel.add(createInfoLabel(customer.getNameCustomer()));
 
         panel.add(createInfoLabel("Địa chỉ:"));
-        lbDiaChi.setText(HoSuDung.getDiaChi());
-        lbDiaChi.setFont(GUIConstants.Fonts.TieuDePhu);
-        panel.add(lbDiaChi);
+        panel.add(createInfoLabel(HoSuDung.getDiaChi()));
 
         // Row 2
         panel.add(createInfoLabel("Khu vực:"));
-        lbKhuVuc.setText(HoSuDung.getKhuVuc());
-        lbKhuVuc.setFont(GUIConstants.Fonts.TieuDePhu);
-        panel.add(lbKhuVuc);
+        panel.add(createInfoLabel(HoSuDung.getKhuVuc()));
 
         panel.add(createInfoLabel("Trạng thái:"));
         String trangThai = HoSuDung.getTrangThai() == 1 ? "Đang sử dụng" : "Ngừng sử dụng";
-        lbTrangThai.setText(trangThai);
-        lbTrangThai.setFont(GUIConstants.Fonts.TieuDePhu);
-        panel.add(lbTrangThai);
+        panel.add(createInfoLabel(trangThai));
 
         return panel;
     }
