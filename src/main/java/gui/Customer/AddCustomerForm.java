@@ -1,3 +1,16 @@
+/**
+ * Form quản lý khách hàng và hộ sử dụng.
+ * 
+ * Chức năng:
+ * - Thêm mới khách hàng
+ * - Sửa thông tin khách hàng
+ * - Quản lý hộ sử dụng của khách hàng (khi sửa)
+ * 
+ * Cách sử dụng:
+ * - new AddCustomerForm() → Thêm mới khách hàng
+ * - new AddCustomerForm(Customer) → Sửa khách hàng + quản lý hộ sử dụng
+ * 
+ */
 package gui.Customer;
 
 import java.awt.*;
@@ -15,19 +28,6 @@ import model.Customer;
 import model.HoSuDung;
 import model.LoaiCustomer;
 
-/**
- * Form quản lý khách hàng và hộ sử dụng.
- * 
- * Chức năng:
- * - Thêm mới khách hàng
- * - Sửa thông tin khách hàng
- * - Quản lý hộ sử dụng của khách hàng (khi sửa)
- * 
- * Cách sử dụng:
- * - new AddCustomerForm() → Thêm mới khách hàng
- * - new AddCustomerForm(Customer) → Sửa khách hàng + quản lý hộ sử dụng
- * 
- */
 public class AddCustomerForm extends JFrame {
 
     // ===== LABELS =====

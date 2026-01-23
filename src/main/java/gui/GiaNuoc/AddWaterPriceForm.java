@@ -1,3 +1,16 @@
+/**
+ * Form quản lý chính sách giá nước.
+ * 
+ * Chức năng:
+ * - Thêm mới chính sách giá nước
+ * - Sửa chính sách giá nước hiện có
+ * - Quản lý bậc giá nước (tier pricing)
+ * 
+ * Cách sử dụng:
+ * - new AddWaterPriceForm() → Thêm mới
+ * - new AddWaterPriceForm(GiaNuoc) → Sửa
+ * 
+ */
 package gui.GiaNuoc;
 
 import java.util.ArrayList;
@@ -14,19 +27,6 @@ import data.KhuVucLoader;
 import gui.GUIConstants;
 import model.*;
 
-/**
- * Form quản lý chính sách giá nước.
- * 
- * Chức năng:
- * - Thêm mới chính sách giá nước
- * - Sửa chính sách giá nước hiện có
- * - Quản lý bậc giá nước (tier pricing)
- * 
- * Cách sử dụng:
- * - new AddWaterPriceForm() → Thêm mới
- * - new AddWaterPriceForm(GiaNuoc) → Sửa
- * 
- */
 public class AddWaterPriceForm extends JFrame {
 
     // ===== LABELS =====

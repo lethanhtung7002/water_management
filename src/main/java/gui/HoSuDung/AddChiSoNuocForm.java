@@ -1,3 +1,16 @@
+/**
+ * Form thêm chỉ số nước và tự động lập hóa đơn
+ * 
+ * Chức năng:
+ * - Nhập chỉ số nước mới
+ * - Tự động lấy chỉ số cũ từ lần ghi trước
+ * - Tự động tính tiêu thụ
+ * - Lưu chỉ số vào database
+ * - Tự động tính tiền theo bậc thang
+ * - Tự động tạo hóa đơn
+ * 
+ */
+
 package gui.HoSuDung;
 
 import java.awt.BorderLayout;
@@ -32,18 +45,6 @@ import model.HoSuDung;
 import model.HoaDon;
 import model.WaterPriceTier;
 
-/**
- * Form thêm chỉ số nước và tự động lập hóa đơn
- * 
- * Chức năng:
- * - Nhập chỉ số nước mới
- * - Tự động lấy chỉ số cũ từ lần ghi trước
- * - Tự động tính tiêu thụ
- * - Lưu chỉ số vào database
- * - Tự động tính tiền theo bậc thang
- * - Tự động tạo hóa đơn
- * 
- */
 public class AddChiSoNuocForm extends JFrame {
 
     // ===== DATA =====

@@ -1,3 +1,22 @@
+/**
+ * WaterPricePage.java
+ * 
+ * Trang quản lý giá nước trong ứng dụng quản lý hệ thống nước.
+ * Trang này cung cấp giao diện để xem, thêm, sửa và xóa thông tin giá nước.
+ * 
+ * Chức năng chính:
+ * - Hiển thị danh sách giá nước trong bảng (JTable)
+ * - Thêm giá nước, bậc giá nước mới
+ * - Sửa thông tin giá nước đã có
+ * - Xóa giá nước (có xác nhận trước khi xóa)
+ * - Làm mới danh sách
+ * 
+ * Các thành phần giao diện:
+ * - Bảng hiển thị: Id Đơn giá, Loại khách hàng, Khu vực, Thuế
+ * - Các nút chức năng: Thêm, Sửa, Xóa, Làm mới
+ *
+ */
+
 package gui.Page;
 
 import java.awt.BorderLayout;

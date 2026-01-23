@@ -1,16 +1,8 @@
-package gui.GiaNuoc;
-
-import java.awt.*;
-import javax.swing.*;
-
-import dao.BacGiaDao;
-import gui.GUIConstants;
-import model.WaterPriceTier;
-
 /**
  * Form thêm mới hoặc chỉnh sửa bậc giá nước.
  * 
  * Chức năng:
+ * - sửa bậc giá nươS
  * - Thêm bậc giá nước mới cho một chính sách giá nước
  * - Sửa bậc giá nước đã có
  * - Validate dữ liệu đầu vào
@@ -23,9 +15,16 @@ import model.WaterPriceTier;
  * - DenMucNuoc (đến mức nước - m³)
  * - Gia (giá tiền - VNĐ/m³)
  * 
- * @author Lê Thanh Tùng
- * @version 1.0
  */
+package gui.GiaNuoc;
+
+import java.awt.*;
+import javax.swing.*;
+
+import dao.BacGiaDao;
+import gui.GUIConstants;
+import model.WaterPriceTier;
+
 public class AddWaterPriceTierForm extends JFrame {
 
     // ===== LABELS =====

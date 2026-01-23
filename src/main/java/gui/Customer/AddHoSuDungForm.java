@@ -1,3 +1,11 @@
+/**
+ * Form quản lý khách hàng và hộ sử dụng.
+ * 
+ * Chức năng:
+ * - Thêm mới Hộ sử dụng
+ * - Sửa thông tin hộ sử dungk
+ */
+
 package gui.Customer;
 
 import javax.swing.*;

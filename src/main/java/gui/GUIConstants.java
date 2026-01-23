@@ -1,6 +1,12 @@
+/**
+* chứa thông số chung để thiết kế GUI
+*/
+
 package gui;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 
 public class GUIConstants {
     private GUIConstants() {
