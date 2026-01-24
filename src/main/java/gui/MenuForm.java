@@ -22,6 +22,7 @@ import javax.swing.SwingConstants;
 import data.LoginDataLoader;
 import gui.Page.CustomerPage;
 import gui.Page.HoSuDungPage;
+import gui.Page.HoSuDungPage2;
 import gui.Page.WaterPricePage;
 
 /**
@@ -142,7 +143,7 @@ public class MenuForm extends JFrame {
 
         // contentPanel.add(createPage("Trang chủ để thực hiện các tính năng nhanh nhưng chưa thêm gì cả :))"), Page.HOME);
         contentPanel.add(new CustomerPage(), Page.CUSTOMER);
-        contentPanel.add(new HoSuDungPage(), Page.HO_SU_DUNG);
+        contentPanel.add(new HoSuDungPage2(), Page.HO_SU_DUNG);
         contentPanel.add(new WaterPricePage(), Page.WATER_PRICRE);
 
         // ==== GHÉP VÀO FRAME ====

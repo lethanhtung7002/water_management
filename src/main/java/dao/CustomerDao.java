@@ -28,6 +28,8 @@ import static dao.SharesDao.sharesDao;
  */
 public class CustomerDao {
 
+    public static final CustomerDao customerDao = new CustomerDao();
+
     /**
      * Lấy danh sách tất cả khách hàng từ database.
      * 

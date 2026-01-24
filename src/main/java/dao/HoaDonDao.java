@@ -8,7 +8,6 @@ import dao.QLNdbConstants.Id;
 import dao.QLNdbConstants.Tables;
 import model.HoaDon;
 import static dao.MySQLConnect.ConnectQLN;
-import static dao.QLNdbConstants.*;
 import static dao.SharesDao.sharesDao;
 
 /**

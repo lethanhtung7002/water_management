@@ -14,6 +14,8 @@ import model.HoSuDung;
 
 public class HoSuDungDao {
 
+    public static HoSuDungDao hsdDao = new HoSuDungDao();
+
     // lấy danh sách hộ sử dụng
     public ArrayList<HoSuDung> getHoSuDungByCustomerId(int customerId) {
         ArrayList<HoSuDung> userList = new ArrayList<>();
