@@ -27,7 +27,6 @@ import gui.GUIConstants;
 import model.Customer;
 import model.HoSuDung;
 import model.LoaiCustomer;
-import gui.Page.HoSuDungPage;
 
 public class AddCustomerForm extends JFrame {
 
@@ -57,7 +56,6 @@ public class AddCustomerForm extends JFrame {
     private JButton btnDeleteHoSuDung = new JButton("Xóa hộ sử dụng");
 
     // ===== DAO =====
-    private CustomerDao customerDao = new CustomerDao();
     private HoSuDungDao hoSuDungDao = new HoSuDungDao();
 
     // ===== TABLE =====
@@ -144,7 +142,7 @@ public class AddCustomerForm extends JFrame {
      */
     private void loadCustomerTypes() {
         cbLoaiUser.removeAllItems();
-        List<LoaiCustomer> loaiNguoiDung = customerDao.getLoaiKhachHang();
+        List<LoaiCustomer> loaiNguoiDung = CustomerDao.getLoaiKhachHang();
         for (LoaiCustomer lnd : loaiNguoiDung) {
             cbLoaiUser.addItem(lnd);
         }
@@ -515,7 +513,7 @@ public class AddCustomerForm extends JFrame {
                     email);
 
             // Lưu vào database
-            boolean success = customerDao.addCustomer(customer);
+            boolean success = CustomerDao.addCustomer(customer);
             System.out.println("Kết quả: " + success);
 
             if (success) {
@@ -581,7 +579,7 @@ public class AddCustomerForm extends JFrame {
                     email);
 
             // Cập nhật database
-            boolean success = customerDao.updateCustomer(customer);
+            boolean success = CustomerDao.updateCustomer(customer);
             System.out.println("Kết quả: " + success);
 
             if (success) {

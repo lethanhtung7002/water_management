@@ -52,7 +52,6 @@ public class AddWaterPriceForm extends JFrame {
 
     // ===== DAO =====
     private GiaNuocDao gnDao = new GiaNuocDao();
-    private CustomerDao cDao = new CustomerDao();
 
     // ===== TABLE =====
     private JScrollPane wptScrollPane;
@@ -138,7 +137,7 @@ public class AddWaterPriceForm extends JFrame {
      */
     private void loadCustomerTypes() {
         cbCustomerType.removeAllItems(); // Xóa dữ liệu cũ
-        List<LoaiCustomer> loaiNguoiDung = cDao.getLoaiKhachHang();
+        List<LoaiCustomer> loaiNguoiDung = CustomerDao.getLoaiKhachHang();
         for (LoaiCustomer lnd : loaiNguoiDung) {
             cbCustomerType.addItem(lnd);
         }

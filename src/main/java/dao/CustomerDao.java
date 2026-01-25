@@ -28,14 +28,12 @@ import static dao.SharesDao.sharesDao;
  */
 public class CustomerDao {
 
-    public static final CustomerDao customerDao = new CustomerDao();
-
     /**
      * Lấy danh sách tất cả khách hàng từ database.
      * 
      * @return ArrayList chứa tất cả khách hàng, trả về list rỗng nếu có lỗi
      */
-    public ArrayList<Customer> getCustomers() {
+    public static ArrayList<Customer> getCustomers() {
         ArrayList<Customer> customers = new ArrayList<>();
         try {
             String query = "SELECT * FROM " + Tables.Customer;
@@ -65,7 +63,7 @@ public class CustomerDao {
      * @return true nếu thêm thành công, false nếu thất bại
      * @throws RuntimeException nếu có lỗi khi thực thi câu lệnh SQL
      */
-    public boolean addCustomer(Customer user) {
+    public static boolean addCustomer(Customer user) {
         int result = 0;
 
         // Tạo câu lệnh INSERT với String.formatted() để dễ đọc
@@ -95,7 +93,7 @@ public class CustomerDao {
      * @return true nếu cập nhật thành công, false nếu thất bại
      * @throws RuntimeException nếu có lỗi khi thực thi câu lệnh SQL
      */
-    public boolean updateCustomer(Customer user) {
+    public static boolean updateCustomer(Customer user) {
         int result = 0;
 
         // Tạo câu lệnh UPDATE
@@ -130,7 +128,7 @@ public class CustomerDao {
      * @param idCustomer ID của khách hàng cần tìm
      * @return Đối tượng Customer nếu tìm thấy, null nếu không tìm thấy hoặc có lỗi
      */
-    public Customer getCustomerById(int idCustomer) {
+    public static Customer getCustomerById(int idCustomer) {
         Customer user = null;
         try {
             String query = "SELECT * FROM %s WHERE %s = %d"
@@ -163,7 +161,7 @@ public class CustomerDao {
      * @return true nếu xóa thành công, false nếu thất bại
      * @throws RuntimeException nếu có lỗi khi thực thi câu lệnh SQL
      */
-    public boolean deleteUserById(int idUser) {
+    public static boolean deleteUserById(int idUser) {
         return sharesDao.deleteByCol(idUser, Tables.Customer, Id.CustomerID);
     }
 
@@ -174,7 +172,7 @@ public class CustomerDao {
      * @return List chứa các loại khách hàng
      * @throws RuntimeException nếu có lỗi khi thực thi câu lệnh SQL
      */
-    public List<LoaiCustomer> getLoaiKhachHang() {
+    public static List<LoaiCustomer> getLoaiKhachHang() {
         List<LoaiCustomer> loaiNguoiDungList = new ArrayList<>();
         try {
             String query = "SELECT * FROM %s"

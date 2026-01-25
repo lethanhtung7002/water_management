@@ -1,11 +1,10 @@
 package gui.Page;
 
-import java.awt.BorderLayout;
+import dao.CustomerDao;
+import static dao.HoSuDungDao.hsdDao;
+import static gui.utils.DialogHelper.*;
+
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,25 +12,13 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.table.DefaultTableModel;
 
-import dao.CustomerDao;
-import dao.HoSuDungDao;
-import dao.HoaDonDao;
 import data.KhuVucLoader;
-import gui.GUIConstants;
 import gui.Customer.AddHoSuDungForm;
 import gui.HoSuDung.ChiSoVaThanhToan;
-import model.ChiSoNuoc;
+import gui.utils.DialogHelper;
 import model.Customer;
 import model.HoSuDung;
-import model.HoaDon;
 import model.LoaiCustomer;
 
 /**
@@ -44,275 +31,197 @@ import model.LoaiCustomer;
  * - Sửa, xóa hộ sử dụng
  * - Xem thông tin chi tiết hộ sử dụng
  * 
+ * @author Lê Thanh Tùng
+ * @version 2.1 - Fixed NullPointerException
  */
-public class HoSuDungPage extends JPanel {
+public class HoSuDungPage extends AbstracTabletPage {
 
-    // ===== TABLE =====
-    private JTable table;
-    private DefaultTableModel tableModel;
-    private JScrollPane scrollPane;
+    static String[] columNameHSD = {
+            "Mã HSD",
+            "ID Khách hàng",
+            "Tên Khách hàng",
+            "Khu vực",
+            "Địa Chỉ",
+            "Trạng thái"
+    };
 
-    // ===== PANELS =====
-    private JPanel topPanel = new JPanel();
+    // ===== Data =====
+    private ArrayList<HoSuDung> hoSuDungList = new ArrayList<>();
 
-    // ===== BUTTONS =====
-    private JButton btnAdd = new JButton("Thêm");
-    private JButton btnEdit = new JButton("Sửa Thông Tin");
-    private JButton btnDelete = new JButton("Xóa");
-    private JButton btnHSDThanhToanNhieuNhat = new JButton("Hộ sử dụng thanh toán nhiều nhất");
-    private JButton btnChiSo_HoaDon = new JButton("Chỉ số nước và Hóa đơn");
-    private JButton btnRefresh = new JButton("Làm mới và lọc");
+    // ===== Custom Filters - PHẢI PRIVATE =====
+    private JComboBox<LoaiCustomer> cbCustomerType;
+    private JComboBox<String> cbKhuVuc;
 
-    // ===== FILTERS =====
-    private JComboBox<String> cbKhuVuc = new JComboBox<>();
-    private JComboBox<LoaiCustomer> cbCustomerType = new JComboBox<>();
-    private JTextField tfSearchCustomerId = new JTextField(10);
+    // ==== Customs buttons =====
+    private JButton btnChiSo_HoaDon;
 
-    // ===== DATA =====
-    private ArrayList<HoSuDung> hsdArr = new ArrayList<>();
-
-    // ===== DAO =====
-    private HoaDonDao hoaDonDao = new HoaDonDao();
-    private HoSuDungDao hsdDao = new HoSuDungDao();
-    private CustomerDao customerDao = new CustomerDao();
-    private dao.ChiSoNuocDao chiSoDao = new dao.ChiSoNuocDao();
-
-    /**
-     * Constructor - Khởi tạo trang quản lý hộ sử dụng
-     */
     public HoSuDungPage() {
-        setLayout(new BorderLayout(5, 5));
-        setBackground(GUIConstants.Colors.BACKGROUND);
-
-        // Tạo giao diện
-        initTopPanel();
-        initTable();
-
-        // Load dữ liệu
-        loadFilterData();
-        // showHoSuDung(true);
-
-        // Gắn sự kiện
-        attachEventHandlers();
+        super(columNameHSD);
+        showTableData(false);
     }
 
-    /**
-     * Khởi tạo panel trên cùng chứa buttons và filters
-     */
-    private void initTopPanel() {
-        topPanel.setLayout(new GridLayout(2, 1, 5, 5)); // 2 hàng, 1 cột
-        topPanel.setBackground(GUIConstants.Colors.BACKGROUND);
-
-        // ===== HÀNG 1: Panel chứa các nút thao tác =====
-        JPanel panelBtn = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
-        panelBtn.setBackground(GUIConstants.Colors.BACKGROUND);
-        panelBtn.add(btnAdd);
-        panelBtn.add(btnEdit);
-        panelBtn.add(btnDelete);
-        panelBtn.add(btnChiSo_HoaDon);
-        panelBtn.add(btnHSDThanhToanNhieuNhat);
-
-        // ===== HÀNG 2: Panel chứa bộ lọc =====
-        JPanel panelFilter = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
-        panelFilter.setBackground(GUIConstants.Colors.BACKGROUND);
-
-        // Label và combobox loại khách hàng
-        JLabel lblLoaiKH = new JLabel("Loại KH:");
-        lblLoaiKH.setForeground(Color.WHITE); // Đổi màu chữ thành trắng
-        panelFilter.add(lblLoaiKH);
-        cbCustomerType.setPreferredSize(new Dimension(150, 25));
-        panelFilter.add(cbCustomerType);
-
-        // Label và combobox khu vực
-        JLabel lblKhuVuc = new JLabel("Khu vực:");
-        lblKhuVuc.setForeground(Color.WHITE); // Đổi màu chữ thành trắng
-        panelFilter.add(lblKhuVuc);
-        cbKhuVuc.setPreferredSize(new Dimension(150, 25));
-        panelFilter.add(cbKhuVuc);
-
-        // Textfield tìm theo ID khách hàng
-        JLabel lblIDKH = new JLabel("ID KH:");
-        lblIDKH.setForeground(Color.WHITE); // Đổi màu chữ thành trắng
-        panelFilter.add(lblIDKH);
-        panelFilter.add(tfSearchCustomerId);
-
-        panelFilter.add(btnRefresh);
-
-        // Thêm 2 panel vào topPanel
-        topPanel.add(panelBtn);
-        topPanel.add(panelFilter);
-
-        add(topPanel, BorderLayout.NORTH);
+    @Override
+    protected void handleRefreshAndFilter() {
+        showTableData(true);
     }
 
-    /**
-     * Khởi tạo bảng hiển thị dữ liệu
-     */
-    private void initTable() {
-        // Định nghĩa các cột
-        String[] columnNames = {
-                "Mã HSD",
-                "ID Khách hàng",
-                "Tên Khách hàng",
-                "Khu vực",
-                "Địa Chỉ",
-                "Trạng thái"
-        };
+    @Override
+    protected void handleAdd() {
+        String input = JOptionPane.showInputDialog(
+                this,
+                "Nhập ID Khách hàng:",
+                "Thêm Hộ Sử Dụng",
+                JOptionPane.PLAIN_MESSAGE);
 
-        // Tạo model cho bảng (không cho edit trực tiếp)
-        tableModel = new DefaultTableModel(columnNames, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
+        if (input != null && !input.trim().isEmpty()) {
+            try {
+                int customerId = Integer.parseInt(input.trim());
+
+                // Kiểm tra khách hàng có tồn tại không
+                Customer customer = CustomerDao.getCustomerById(customerId);
+                if (customer != null) {
+                    new AddHoSuDungForm(customerId);
+                } else {
+                    showError("Không tìm thấy khách hàng với ID: " + customerId);
+                }
+            } catch (NumberFormatException ex) {
+                showError("ID khách hàng không hợp lệ!");
             }
-        };
-
-        table = new JTable(tableModel);
-        table.setRowHeight(25);
-        table.setFillsViewportHeight(true);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        scrollPane = new JScrollPane(table);
-        add(scrollPane, BorderLayout.CENTER);
+        }
     }
 
-    /**
-     * Load dữ liệu cho các filter (ComboBox)
-     */
-    private void loadFilterData() {
-        // Load loại khách hàng
-        cbCustomerType.removeAllItems();
-        cbCustomerType.addItem(new AllCustomerTypes()); // Thêm option "Tất cả"
-        List<LoaiCustomer> loaiKHList = customerDao.getLoaiKhachHang();
-        for (LoaiCustomer lkh : loaiKHList) {
-            cbCustomerType.addItem(lkh);
+    @Override
+    protected void handleEdit() {
+        int selectedRow = getSelectedRow();
+        if (selectedRow == -1) {
+            showWarning("Vui lòng chọn một hộ sử dụng để sửa.");
+            return;
         }
+
+        HoSuDung hsdSelected = hoSuDungList.get(selectedRow);
+        new AddHoSuDungForm(hsdSelected);
+    }
+
+    @Override
+    protected void handleDelete() {
+        int selectedRow = getSelectedRow();
+        if (selectedRow == -1) {
+            showWarning("Vui lòng chọn một hộ sử dụng để xóa.");
+            return;
+        }
+
+        boolean confirm = DialogHelper.showDeleteConfirm(
+                this,
+                "Bạn có chắc muốn xóa hộ sử dụng này?",
+                "Lưu ý: Hành động này không thể hoàn tác!");
+
+        if (confirm == true) {
+            HoSuDung selected = hoSuDungList.get(selectedRow);
+
+            if (hsdDao.delete_HoSuDung(selected.getID_HoSuDung())) {
+                showSuccess("Xóa hộ sử dụng thành công!");
+                showTableData(false); // Refresh lại bảng
+            } else {
+                showError("Xóa hộ sử dụng thất bại!");
+            }
+        }
+    }
+
+    @Override
+    protected void addCustomFilters() {
+        // Khởi tạo ComboBox
+        cbCustomerType = new JComboBox<>();
+        cbKhuVuc = new JComboBox<>();
+
+        // Load loại khách hàng
+        loadCustomerTypes();
 
         // Load khu vực
         new KhuVucLoader().loadKhuVuc(cbKhuVuc);
+
+        // Thêm vào filterPanel
+        JLabel lblLoaiKH = new JLabel("Loại KH:");
+        lblLoaiKH.setForeground(Color.WHITE);
+        filterPanel.add(lblLoaiKH);
+        filterPanel.add(cbCustomerType);
+
+        JLabel lblKhuVuc = new JLabel("Khu vực:");
+        lblKhuVuc.setForeground(Color.WHITE);
+        filterPanel.add(lblKhuVuc);
+        filterPanel.add(cbKhuVuc);
     }
 
+    /**
+     * Load danh sách loại khách hàng vào ComboBox
+     */
+    private void loadCustomerTypes() {
+        cbCustomerType.removeAllItems();
+        cbCustomerType.addItem(new AllCustomerTypes());
+
+        List<LoaiCustomer> loaiCustomers = CustomerDao.getLoaiKhachHang();
+        for (LoaiCustomer lc : loaiCustomers) {
+            cbCustomerType.addItem(lc);
+        }
+    }
+
+    /**
+     * Class đại diện cho option "Tất cả loại KH"
+     */
     private static class AllCustomerTypes extends LoaiCustomer {
         public AllCustomerTypes() {
             super(0, "Tất cả loại KH");
         }
     }
 
-    /**
-     * Gắn sự kiện cho các nút và controls
-     */
-    private void attachEventHandlers() {
-        // Nút Refresh/Lọc
-        btnRefresh.addActionListener(e -> showHoSuDung(true));
+    @Override
+    protected void addCustomButtons() {
+        btnChiSo_HoaDon = new JButton("Chỉ số nước và Hóa đơn");
+        buttonPanel.add(btnChiSo_HoaDon);
+    }
 
-        // Nút Thêm
-        btnAdd.addActionListener(e -> {
-            // Yêu cầu nhập ID khách hàng
-            String input = JOptionPane.showInputDialog(
-                    this,
-                    "Nhập ID khách hàng:",
-                    "Thêm hộ sử dụng",
-                    JOptionPane.QUESTION_MESSAGE);
-
-            if (input != null && !input.trim().isEmpty()) {
-                try {
-                    int customerId = Integer.parseInt(input.trim());
-
-                    // Kiểm tra khách hàng có tồn tại không
-                    Customer customer = customerDao.getCustomerById(customerId);
-                    if (customer != null) {
-                        new AddHoSuDungForm(customerId);
-                    } else {
-                        showError("Không tìm thấy khách hàng với ID: " + customerId);
-                    }
-                } catch (NumberFormatException ex) {
-                    showError("ID khách hàng không hợp lệ!");
-                }
-            }
-        });
-
-        // Nút Sửa
-        btnEdit.addActionListener(e -> {
-            int selectedRow = table.getSelectedRow();
-
-            if (selectedRow == -1) {
-                showWarning("Vui lòng chọn hộ sử dụng cần sửa!");
-                return;
-            }
-
-            HoSuDung selected = hsdArr.get(selectedRow);
-            new AddHoSuDungForm(selected);
-        });
-
-        // Nút Xóa
-        btnDelete.addActionListener(e -> {
-            int selectedRow = table.getSelectedRow();
-
-            if (selectedRow == -1) {
-                showWarning("Vui lòng chọn hộ sử dụng cần xóa!");
-                return;
-            }
-
-            int confirm = JOptionPane.showConfirmDialog(
-                    this,
-                    "Bạn có chắc muốn xóa hộ sử dụng này?\nLưu ý: Sẽ xóa cả các dữ liệu liên quan!",
-                    "Xác nhận xóa",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.WARNING_MESSAGE);
-
-            if (confirm == JOptionPane.YES_OPTION) {
-                HoSuDung selected = hsdArr.get(selectedRow);
-
-                if (hsdDao.delete_HoSuDung(selected.getID_HoSuDung())) {
-                    showSuccess("Xóa hộ sử dụng thành công!");
-                    showHoSuDung(false); // Refresh lại bảng
-                } else {
-                    showError("Xóa hộ sử dụng thất bại!");
-                }
-            }
-        });
+    @Override
+    protected void attachCustomEvents() {
 
         btnChiSo_HoaDon.addActionListener(e -> {
-            int selectedRow = table.getSelectedRow();
+            int selectedRow = getSelectedRow();
 
             if (selectedRow == -1) {
                 showWarning("Vui lòng chọn hộ sử dụng!");
                 return;
             }
 
-            HoSuDung selected = hsdArr.get(selectedRow);
+            HoSuDung selected = hoSuDungList.get(selectedRow);
             new ChiSoVaThanhToan(selected);
         });
-
-        btnHSDThanhToanNhieuNhat.addActionListener(e -> {
-            viewBillCaoNhat();
-        });
-
-        // Enter ở textfield tìm kiếm
-        tfSearchCustomerId.addActionListener(e -> showHoSuDung(true));
     }
 
-    /**
-     * Hiển thị danh sách hộ sử dụng với các bộ lọc tùy chọn.
-     * 
-     * @param applyFilter true = áp dụng bộ lọc, false = hiển thị tất cả
-     */
-    public void showHoSuDung(boolean applyFilter) {
+    @Override
+    public void showTableData(boolean applyFilter) {
         tableModel.setRowCount(0);
-        hsdArr.clear();
+        hoSuDungList.clear();
 
         try {
-            // Lấy giá trị filter (chỉ dùng khi applyFilter = true)
-            LoaiCustomer selectedType = applyFilter ? (LoaiCustomer) cbCustomerType.getSelectedItem() : null;
-            String selectedKhuVuc = applyFilter ? (String) cbKhuVuc.getSelectedItem() : null;
-            String searchId = applyFilter ? tfSearchCustomerId.getText().trim() : "";
+            LoaiCustomer selectedType = null;
+            String selectedKhuVuc = null;
+            String searchId = "";
+
+            if (applyFilter) {
+                selectedType = (LoaiCustomer) cbCustomerType.getSelectedItem();
+                selectedKhuVuc = (String) cbKhuVuc.getSelectedItem();
+                searchId = tfSearchId.getText().trim();
+
+                if (selectedType == null) {
+                    selectedType = new AllCustomerTypes();
+                }
+            }
 
             // Lấy tất cả khách hàng
-            ArrayList<Customer> allCustomers = customerDao.getCustomers();
+            ArrayList<Customer> allCustomers = CustomerDao.getCustomers();
 
             for (Customer customer : allCustomers) {
                 // Lọc theo loại khách hàng (chỉ khi applyFilter = true)
-                if (applyFilter && selectedType.getIdLoaiCustomer() != 0
+                if (applyFilter && selectedType != null
+                        && selectedType.getIdLoaiCustomer() != 0
                         && customer.getLoaiCustomer() != selectedType.getIdLoaiCustomer()) {
                     continue;
                 }
@@ -330,20 +239,22 @@ public class HoSuDungPage extends JPanel {
                 }
 
                 // Lấy danh sách hộ sử dụng của khách hàng
-                ArrayList<HoSuDung> hsdList = hsdDao.getHoSuDungByCustomerId(customer.getIdCustomer());
+                ArrayList<HoSuDung> hsdList = hsdDao.getHoSuDungByCustomerId(
+                        customer.getIdCustomer());
 
                 for (HoSuDung hsd : hsdList) {
                     // Lọc theo khu vực (chỉ khi applyFilter = true)
-                    if (applyFilter && selectedKhuVuc != null &&
-                            !selectedKhuVuc.equals("-- Chọn tỉnh ---")) {
-                        if (!hsd.getKhuVuc().equals(selectedKhuVuc)) {
-                            continue;
-                        }
+                    if (applyFilter && selectedKhuVuc != null
+                            && !selectedKhuVuc.equals("-- Chọn tỉnh ---")
+                            && !hsd.getKhuVuc().equals(selectedKhuVuc)) {
+                        continue;
                     }
 
                     hsd.setID_Customer(customer.getIdCustomer());
 
-                    String trangThai = hsd.getTrangThai() == 1 ? "Đang sử dụng" : "Ngừng sử dụng";
+                    String trangThai = hsd.getTrangThai() == 1
+                            ? "Đang sử dụng"
+                            : "Ngừng sử dụng";
 
                     Object[] row = {
                             hsd.getID_HoSuDung(),
@@ -355,96 +266,14 @@ public class HoSuDungPage extends JPanel {
                     };
 
                     tableModel.addRow(row);
-                    hsdArr.add(hsd);
+                    hoSuDungList.add(hsd);
                 }
             }
 
         } catch (Exception e) {
             System.out.println("Lỗi khi tải/lọc hộ sử dụng: " + e.getMessage());
+            e.printStackTrace(); // ✅ Thêm stack trace để debug
             showError("Lỗi khi tải dữ liệu: " + e.getMessage());
         }
-    }
-
-    private void viewBillCaoNhat() {
-
-        try {
-            LocalDate today = LocalDate.now();
-
-            HoaDon hoaDonCaoNhat = hoaDonDao.getGiaCaoNhatTrongThang(today.getMonthValue(), today.getYear());
-
-            // Lấy thông tin chỉ số
-            int idChiSo = hoaDonDao.getIdChiSoNuocByIdHoaDon(hoaDonCaoNhat.getIdHoaDon());
-            ChiSoNuoc chiSo = chiSoDao.getChiSoNuocById(idChiSo);
-
-            // Lấy thông tin hộ sử dụng
-            HoSuDung HoSuDung = hsdDao.getHoSuDungById(chiSo.getIdHoSuDung());
-
-            // Lấy thông tin khách hàng
-            Customer customer = customerDao.getCustomerById(HoSuDung.getID_Customer());
-
-            // Hiển thị dialog chi tiết hóa đơn
-            String message = """
-                    ========== HÓA ĐƠN TIỀN NƯỚC Cao Nhất ==========
-
-                    Hộ sử dụng: %s
-                    Địa chỉ: %s
-                    Khu vực: %s
-
-                    Kỳ ghi: %s
-                    Chỉ số cũ: %d m³
-                    Chỉ số mới: %d m³
-                    Tiêu thụ: %d m³
-
-                    Ngày lập hóa đơn: %s
-                    Tổng tiền: %s
-                    Trạng thái: %s
-
-                    =====================================
-                    """.formatted(
-                    customer.getNameCustomer(),
-                    HoSuDung.getDiaChi(),
-                    HoSuDung.getKhuVuc(),
-                    chiSo.getNgayGhiFormatted(),
-                    chiSo.getChiSoCu(),
-                    chiSo.getChiSoMoi(),
-                    chiSo.getTieuThu(),
-                    hoaDonCaoNhat.getNgayLapHoaDon(),
-                    hoaDonCaoNhat.getTongTienFormatted(),
-                    hoaDonCaoNhat.getTrangThaiText());
-
-            JTextArea textArea = new JTextArea(message);
-            textArea.setEditable(false);
-
-            JOptionPane.showMessageDialog(this,
-                    new JScrollPane(textArea),
-                    "Chi tiết hóa đơn",
-                    JOptionPane.INFORMATION_MESSAGE);
-
-        } catch (Exception e) {
-            System.out.println("Lỗi xem hóa đơn: " + e.getMessage());
-            e.printStackTrace();
-            showError("Lỗi: " + e.getMessage());
-        }
-    }
-
-    public JButton getBtnChiSo_HoaDon() {
-        return btnChiSo_HoaDon;
-    }
-
-    // ========================================
-    // HELPER METHODS
-    // ========================================
-    
-
-    private void showError(String message) {
-        JOptionPane.showMessageDialog(this, message, "Lỗi", JOptionPane.ERROR_MESSAGE);
-    }
-
-    private void showWarning(String message) {
-        JOptionPane.showMessageDialog(this, message, "Cảnh báo", JOptionPane.WARNING_MESSAGE);
-    }
-
-    private void showSuccess(String message) {
-        JOptionPane.showMessageDialog(this, message, "Thành công", JOptionPane.INFORMATION_MESSAGE);
     }
 }

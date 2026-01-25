@@ -22,7 +22,6 @@ import javax.swing.SwingConstants;
 import data.LoginDataLoader;
 import gui.Page.CustomerPage;
 import gui.Page.HoSuDungPage;
-import gui.Page.HoSuDungPage2;
 import gui.Page.WaterPricePage;
 
 /**
@@ -38,7 +37,7 @@ import gui.Page.WaterPricePage;
 public class MenuForm extends JFrame {
 
     // Key cho CardLayout (để tránh phụ thuộc text hiển thị)
-    public static class Page{
+    public static class Page {
         static final String HOME = "0";
         static final String CUSTOMER = "1";
         static final String HO_SU_DUNG = "2";
@@ -46,7 +45,7 @@ public class MenuForm extends JFrame {
     }
 
     private JPanel contentPanel;
-    private CardLayout cardLayout; 
+    private CardLayout cardLayout;
     // CardLayout là cơ chế đổi màn hình trong cùng một cửa sổ.
 
     private JPanel sidebar;
@@ -141,9 +140,10 @@ public class MenuForm extends JFrame {
         contentPanel = new JPanel(cardLayout);
         contentPanel.setBackground(GUIConstants.Colors.BACKGROUND);
 
-        // contentPanel.add(createPage("Trang chủ để thực hiện các tính năng nhanh nhưng chưa thêm gì cả :))"), Page.HOME);
+        // contentPanel.add(createPage("Trang chủ để thực hiện các tính năng nhanh nhưng
+        // chưa thêm gì cả :))"), Page.HOME);
         contentPanel.add(new CustomerPage(), Page.CUSTOMER);
-        contentPanel.add(new HoSuDungPage2(), Page.HO_SU_DUNG);
+        contentPanel.add(new HoSuDungPage(), Page.HO_SU_DUNG);
         contentPanel.add(new WaterPricePage(), Page.WATER_PRICRE);
 
         // ==== GHÉP VÀO FRAME ====
