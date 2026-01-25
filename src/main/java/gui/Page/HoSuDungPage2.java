@@ -1,26 +1,43 @@
 package gui.Page;
 
-import java.awt.*;
+import static dao.CustomerDao.customerDao;
+import static dao.HoSuDungDao.hsdDao;
+import static gui.utils.DialogHelper.showError;
+import static gui.utils.DialogHelper.showSuccess;
+import static gui.utils.DialogHelper.showWarning;
+
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import data.KhuVucLoader;
 import gui.Customer.AddHoSuDungForm;
+import gui.HoSuDung.ChiSoVaThanhToan;
 import model.Customer;
 import model.HoSuDung;
 import model.LoaiCustomer;
-import gui.GUIConstants;
 
-import static gui.utils.DialogHelper.*;
-import static dao.CustomerDao.customerDao;
-import static dao.HoSuDungDao.hsdDao;
+/**
+ * Trang quản lý Hộ sử dụng.
+ * 
+ * Chức năng:
+ * - Hiển thị danh sách toàn bộ hộ sử dụng
+ * - Lọc theo loại khách hàng và khu vực
+ * - Thêm hộ sử dụng dựa trên ID khách hàng
+ * - Sửa, xóa hộ sử dụng
+ * - Xem thông tin chi tiết hộ sử dụng
+ * 
+ * @author Lê Thanh Tùng
+ * @version 2.1 - Fixed NullPointerException
+ */
+public class HoSuDungPage2 extends AbstracTabletPage {
 
-import javax.swing.*;
-
-import data.KhuVucLoader;
-
-public class HoSuDungPage2 extends AbstractPage {
-
-    static String[] columnNames = {
+    static String[] columNameHSD = {
             "Mã HSD",
             "ID Khách hàng",
             "Tên Khách hàng",
@@ -32,12 +49,16 @@ public class HoSuDungPage2 extends AbstractPage {
     // ===== Data =====
     private ArrayList<HoSuDung> hoSuDungList = new ArrayList<>();
 
-    // ===== FILTERS =====
-    private JComboBox<String> cbKhuVuc = new JComboBox<>();
-    private JComboBox<LoaiCustomer> cbCustomerType = new JComboBox<>();
+    // ===== Custom Filters - PHẢI PRIVATE =====
+    private JComboBox<LoaiCustomer> cbCustomerType;
+    private JComboBox<String> cbKhuVuc;
+
+    // ==== Customs buttons =====
+    private JButton btnChiSo_HoaDon;
 
     public HoSuDungPage2() {
-        super(columnNames, "Thêm Hộ Sử Dụng");
+        super(columNameHSD);
+        showTableData(false);
     }
 
     @Override
@@ -110,67 +131,100 @@ public class HoSuDungPage2 extends AbstractPage {
     }
 
     @Override
-    protected void addCustomFilters(){
-        // Label và combobox loại khách hàng
-        JLabel lblLoaiKH = new JLabel("Loại KH:");
-        lblLoaiKH.setForeground(Color.WHITE); // Đổi màu chữ thành trắng
-        filterPanel.add(lblLoaiKH);
-        cbCustomerType.setPreferredSize(new Dimension(150, 25));
-        filterPanel.add(cbCustomerType);
+    protected void addCustomFilters() {
+        // Khởi tạo ComboBox
+        cbCustomerType = new JComboBox<>();
+        cbKhuVuc = new JComboBox<>();
 
-        // Label và combobox khu vực
-        JLabel lblKhuVuc = new JLabel("Khu vực:");
-        lblKhuVuc.setForeground(Color.WHITE); // Đổi màu chữ thành trắng
-        filterPanel.add(lblKhuVuc);
-        cbKhuVuc.setPreferredSize(new Dimension(150, 25));
-        filterPanel.add(cbKhuVuc);
-        loadFilterData();
-    }
-
-        /**
-     * Load dữ liệu cho các filter (ComboBox)
-     */
-    private void loadFilterData() {
         // Load loại khách hàng
-        cbCustomerType.removeAllItems();
-        cbCustomerType.addItem(new AllCustomerTypes()); // Thêm option "Tất cả"
-        List<LoaiCustomer> loaiKHList = customerDao.getLoaiKhachHang();
-        for (LoaiCustomer lkh : loaiKHList) {
-            cbCustomerType.addItem(lkh);
-        }
+        loadCustomerTypes();
 
         // Load khu vực
         new KhuVucLoader().loadKhuVuc(cbKhuVuc);
+
+        // Thêm vào filterPanel
+        JLabel lblLoaiKH = new JLabel("Loại KH:");
+        lblLoaiKH.setForeground(Color.WHITE);
+        filterPanel.add(lblLoaiKH);
+        filterPanel.add(cbCustomerType);
+
+        JLabel lblKhuVuc = new JLabel("Khu vực:");
+        lblKhuVuc.setForeground(Color.WHITE);
+        filterPanel.add(lblKhuVuc);
+        filterPanel.add(cbKhuVuc);
     }
 
+    /**
+     * Load danh sách loại khách hàng vào ComboBox
+     */
+    private void loadCustomerTypes() {
+        cbCustomerType.removeAllItems();
+        cbCustomerType.addItem(new AllCustomerTypes());
+
+        List<LoaiCustomer> loaiCustomers = customerDao.getLoaiKhachHang();
+        for (LoaiCustomer lc : loaiCustomers) {
+            cbCustomerType.addItem(lc);
+        }
+    }
+
+    /**
+     * Class đại diện cho option "Tất cả loại KH"
+     */
     private static class AllCustomerTypes extends LoaiCustomer {
         public AllCustomerTypes() {
             super(0, "Tất cả loại KH");
         }
     }
 
+    @Override
+    protected void addCustomButtons() {
+        btnChiSo_HoaDon = new JButton("Chỉ số nước và Hóa đơn");
+        buttonPanel.add(btnChiSo_HoaDon);
+    }
 
-    /**
-     * Hiển thị danh sách hộ sử dụng với các bộ lọc tùy chọn.
-     * 
-     * @param applyFilter true = áp dụng bộ lọc, false = hiển thị tất cả
-     */
+    @Override
+    protected void attachCustomEvents(){
+
+        btnChiSo_HoaDon.addActionListener(e -> {
+            int selectedRow = getSelectedRow();
+    
+                if (selectedRow == -1) {
+                    showWarning("Vui lòng chọn hộ sử dụng!");
+                    return;
+                }
+    
+                HoSuDung selected = hoSuDungList.get(selectedRow);
+                new ChiSoVaThanhToan(selected);
+        });
+    }
+
+    @Override
     public void showTableData(boolean applyFilter) {
         tableModel.setRowCount(0);
         hoSuDungList.clear();
 
         try {
-            // Lấy giá trị filter (chỉ dùng khi applyFilter = true)
-            LoaiCustomer selectedType = applyFilter ? (LoaiCustomer) cbCustomerType.getSelectedItem() : null;
-            String selectedKhuVuc = applyFilter ? (String) cbKhuVuc.getSelectedItem() : null;
-            String searchId = applyFilter ? tfSearchId.getText().trim() : "";
+            LoaiCustomer selectedType = null;
+            String selectedKhuVuc = null;
+            String searchId = "";
+
+            if (applyFilter) {
+                selectedType = (LoaiCustomer) cbCustomerType.getSelectedItem();
+                selectedKhuVuc = (String) cbKhuVuc.getSelectedItem();
+                searchId = tfSearchId.getText().trim();
+
+                if (selectedType == null) {
+                    selectedType = new AllCustomerTypes();
+                }
+            }
 
             // Lấy tất cả khách hàng
             ArrayList<Customer> allCustomers = customerDao.getCustomers();
 
             for (Customer customer : allCustomers) {
                 // Lọc theo loại khách hàng (chỉ khi applyFilter = true)
-                if (applyFilter && selectedType.getIdLoaiCustomer() != 0
+                if (applyFilter && selectedType != null
+                        && selectedType.getIdLoaiCustomer() != 0
                         && customer.getLoaiCustomer() != selectedType.getIdLoaiCustomer()) {
                     continue;
                 }
@@ -188,20 +242,22 @@ public class HoSuDungPage2 extends AbstractPage {
                 }
 
                 // Lấy danh sách hộ sử dụng của khách hàng
-                ArrayList<HoSuDung> hsdList = hsdDao.getHoSuDungByCustomerId(customer.getIdCustomer());
+                ArrayList<HoSuDung> hsdList = hsdDao.getHoSuDungByCustomerId(
+                        customer.getIdCustomer());
 
                 for (HoSuDung hsd : hsdList) {
                     // Lọc theo khu vực (chỉ khi applyFilter = true)
-                    if (applyFilter && selectedKhuVuc != null &&
-                            !selectedKhuVuc.equals("-- Chọn tỉnh ---")) {
-                        if (!hsd.getKhuVuc().equals(selectedKhuVuc)) {
-                            continue;
-                        }
+                    if (applyFilter && selectedKhuVuc != null
+                            && !selectedKhuVuc.equals("-- Chọn tỉnh ---")
+                            && !hsd.getKhuVuc().equals(selectedKhuVuc)) {
+                        continue;
                     }
 
                     hsd.setID_Customer(customer.getIdCustomer());
 
-                    String trangThai = hsd.getTrangThai() == 1 ? "Đang sử dụng" : "Ngừng sử dụng";
+                    String trangThai = hsd.getTrangThai() == 1
+                            ? "Đang sử dụng"
+                            : "Ngừng sử dụng";
 
                     Object[] row = {
                             hsd.getID_HoSuDung(),
@@ -219,8 +275,8 @@ public class HoSuDungPage2 extends AbstractPage {
 
         } catch (Exception e) {
             System.out.println("Lỗi khi tải/lọc hộ sử dụng: " + e.getMessage());
+            e.printStackTrace(); // ✅ Thêm stack trace để debug
             showError("Lỗi khi tải dữ liệu: " + e.getMessage());
         }
     }
-
 }

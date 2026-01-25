@@ -38,7 +38,7 @@ import gui.Page.WaterPricePage;
 public class MenuForm extends JFrame {
 
     // Key cho CardLayout (để tránh phụ thuộc text hiển thị)
-    private class Page{
+    public static class Page{
         static final String HOME = "0";
         static final String CUSTOMER = "1";
         static final String HO_SU_DUNG = "2";

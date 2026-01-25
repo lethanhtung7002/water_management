@@ -3,18 +3,34 @@ package gui.Page;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-
 import gui.GUIConstants;
 
 /**
  * Abstract class chung cho các trang CRUD trong giao diện người dùng.
  * Các class con chỉ cần implement các phương thức abstract và override
- * addCustomButtons() nếu cần.
+ * 
+ * Các chức năng mặc định:
+ * - Hiển thị bảng với dữ liệu
+ * - Nút Thêm, Sửa, Xóa
+ * - Bộ lọc tìm kiếm theo ID
+ * 
+ * Các Override methods bắt buộc
+ * 
+ * @see #showTableData(boolean) Hiển thị dữ liệu bảng với/không áp dụng bộ lọc
+ * @see #handleAdd() Xử lý sự kiện nút Thêm
+ * @see #handleEdit() Xử lý sự kiện nút Sửa
+ * @see #handleDelete() Xử lý sự kiện nút Xóa
+ * 
+ *      Các Override methods tùy chọn
+ * @see #addCustomButtons() Thêm các nút tùy chỉnh vào buttonPanel
+ * @see #addCustomFilters() Thêm các filters tùy chỉnh vào filterPanel
+ * @see #attachCustomEvents() Gắn sự kiện tùy chỉnh
  * 
  * @author Lê Thanh Tùng
  * @version 1.0
  */
-public abstract class AbstractPage extends JPanel {
+
+public abstract class AbstracTabletPage extends JPanel {
 
     // ===== TABLE =====
     protected JTable table;
@@ -44,7 +60,7 @@ public abstract class AbstractPage extends JPanel {
      * @param addButtonText Text cho nút Thêm (vd: "Thêm Khách Hàng")
      * @since 1.0
      */
-    public AbstractPage(String[] columnNames, String addButtonText) {
+    public AbstracTabletPage(String[] columnNames, String addButtonText) {
         setLayout(new BorderLayout(5, 5));
         setBackground(GUIConstants.Colors.BACKGROUND);
 
@@ -62,10 +78,11 @@ public abstract class AbstractPage extends JPanel {
 
     /**
      * Constructor đơn giản - dùng text mặc định
+     * 
      * @since 1.0
      */
-    public AbstractPage(String[] columnNames) {
-        this(columnNames, "");
+    public AbstracTabletPage(String[] columnNames) {
+        this(columnNames, "Thêm");
     }
 
     /**
@@ -80,6 +97,7 @@ public abstract class AbstractPage extends JPanel {
 
     /**
      * Khởi tạo panel chứa buttons và filters
+     * 
      * @since 1.0
      */
     private void initTopPanel() {
@@ -106,14 +124,14 @@ public abstract class AbstractPage extends JPanel {
         tfSearchId = new JTextField(15);
 
         JLabel searchLabel = new JLabel("Tìm theo ID:");
-        // Cho phép class con thêm filters tùy chỉnh
-        addCustomFilters();
-        searchLabel.setFont(GUIConstants.Fonts.TieuDe);
+        
+        searchLabel.setForeground(Color.WHITE);
+        filterPanel.add(btnRefreshAndFilter);
         filterPanel.add(searchLabel);
         filterPanel.add(tfSearchId);
-        filterPanel.add(btnRefreshAndFilter);
-
-
+        // Cho phép class con thêm filters tùy chỉnh
+        addCustomFilters();
+        
         // Thêm cả 2 panel vào topPanel
         JPanel containerPanel = new JPanel();
         containerPanel.setLayout(new BorderLayout());
@@ -160,15 +178,19 @@ public abstract class AbstractPage extends JPanel {
         btnAdd.addActionListener(e -> handleAdd());
         btnEdit.addActionListener(e -> handleEdit());
         btnDelete.addActionListener(e -> handleDelete());
+        tfSearchId.addActionListener(e -> showTableData(true));
     }
 
-    // ========================================
-    // ABSTRACT METHODS - Class con phải implement
-    // ========================================
+    /***********************************************
+     * ABSTRACT METHODS - Class con phải implement *
+     ***********************************************/
 
     protected abstract void handleAdd();
+
     protected abstract void handleEdit();
+
     protected abstract void handleDelete();
+
     /**
      * Xử lý sự kiện nút Làm mới / Lọc
      */
@@ -185,6 +207,7 @@ public abstract class AbstractPage extends JPanel {
     protected void addCustomButtons() {
         // Mặc định không làm gì
         // Class con override để thêm nút
+        // dùng buttonPanel.add(...) để thêm nút
     }
 
     /**
@@ -194,6 +217,7 @@ public abstract class AbstractPage extends JPanel {
     protected void addCustomFilters() {
         // Mặc định không làm gì
         // Class con override để thêm filter
+        // dùng filterPanel.add(...) để thêm filter
     }
 
     /**
@@ -299,7 +323,6 @@ public abstract class AbstractPage extends JPanel {
     protected void clearFilters() {
         tfSearchId.setText("");
     }
-
 
     // ========================================
     // GETTERS & SETTERS
