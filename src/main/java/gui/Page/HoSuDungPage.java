@@ -61,7 +61,7 @@ public class HoSuDungPage extends AbstractTablePage {
     }
 
     @Override
-    protected void handleRefreshAndFilter() {
+    protected void handleFilter() {
         showTableData(true);
     }
 
@@ -208,7 +208,7 @@ public class HoSuDungPage extends AbstractTablePage {
             if (applyFilter) {
                 selectedType = (LoaiCustomer) cbCustomerType.getSelectedItem();
                 selectedKhuVuc = (String) cbKhuVuc.getSelectedItem();
-                searchId = tfSearchId.getText().trim();
+                searchId = tfSearch.getText().trim();
 
                 if (selectedType == null) {
                     selectedType = new AllCustomerTypes();

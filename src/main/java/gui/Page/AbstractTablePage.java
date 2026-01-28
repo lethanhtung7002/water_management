@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import gui.GUIConstants;
+import gui.utils.DialogHelper;
 
 /**
  * Abstract class chung cho các trang CRUD trong giao diện người dùng.
@@ -21,7 +22,7 @@ import gui.GUIConstants;
  * @see #handleEdit() Xử lý sự kiện nút Sửa
  * @see #handleDelete() Xử lý sự kiện nút Xóa
  * 
- *      Các Override methods tùy chọn
+ * Các Override methods tùy chọn
  * @see #addCustomButtons() Thêm các nút tùy chỉnh vào buttonPanel
  * @see #addCustomFilters() Thêm các filters tùy chỉnh vào filterPanel
  * @see #attachCustomEvents() Gắn sự kiện tùy chỉnh
@@ -46,10 +47,11 @@ public abstract class AbstractTablePage extends JPanel {
     protected JButton btnAdd;
     protected JButton btnEdit;
     protected JButton btnDelete;
-    protected JButton btnRefreshAndFilter;
+    protected JButton btnFilter;
+    protected JButton btnRefresh;
 
     // ===== Filters =====
-    protected JTextField tfSearchId;
+    protected JTextField tfSearch;
 
     // ===== Pagination bar =====
     protected JPanel paginationPanel;
@@ -64,43 +66,45 @@ public abstract class AbstractTablePage extends JPanel {
     /**
      * Constructor - Khởi tạo giao diện
      * 
-     * @param columnTableNames   Tên các cột của bảng
-     * @param addButtonText Text cho nút Thêm (vd: "Thêm Khách Hàng")
+     * @param columnTableNames Tên các cột của bảng
+     * @param addButtonText    Text cho nút Thêm (vd: "Thêm Khách Hàng")
      * @since 1.0
      */
     public AbstractTablePage(String[] columnTableNames) {
         initBase();
-        initUI(columnTableNames);        
+        initUI(columnTableNames);
         initEvents();
     }
-    
-    protected void initBase(){
+
+    protected void initBase() {
         setLayout(new BorderLayout(5, 5));
         setBackground(GUIConstants.Colors.BACKGROUND);
     }
-    
+
     protected void initUI(String[] columnTableNames) {
         initButtons();
         initTopPanel();
         initTable(columnTableNames);
         initPaginationBar();
-        
+
         table.setRowHeight(rowHeightTable);
     }
 
-    protected void initEvents(){
+    protected void initEvents() {
         attachDefaultEvents();
         attachCustomEvents();
+        attachPaginationEvents();
     }
 
     /**
      * Khởi tạo các buttons
      */
     private void initButtons() {
+        btnRefresh = new JButton("Làm mới");
         btnAdd = new JButton("Thêm");
         btnEdit = new JButton("Sửa");
         btnDelete = new JButton("Xóa");
-        btnRefreshAndFilter = new JButton("Làm mới / Lọc");
+        btnFilter = new JButton("Lọc");
         btnNextPage = new JButton(">>");
         btnPrevPage = new JButton("<<");
     }
@@ -119,6 +123,7 @@ public abstract class AbstractTablePage extends JPanel {
         buttonPanel = new JPanel();
         buttonPanel.setBackground(GUIConstants.Colors.BACKGROUND);
         buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        buttonPanel.add(btnRefresh);
         buttonPanel.add(btnAdd);
         buttonPanel.add(btnEdit);
         buttonPanel.add(btnDelete);
@@ -131,14 +136,14 @@ public abstract class AbstractTablePage extends JPanel {
         filterPanel.setBackground(GUIConstants.Colors.BACKGROUND);
 
         // Khởi tạo components của filter
-        tfSearchId = new JTextField(15);
+        tfSearch = new JTextField(15);
 
         JLabel searchLabel = new JLabel("Tìm theo ID:");
 
         searchLabel.setForeground(Color.WHITE);
-        filterPanel.add(btnRefreshAndFilter);
+        filterPanel.add(btnFilter);
         filterPanel.add(searchLabel);
-        filterPanel.add(tfSearchId);
+        filterPanel.add(tfSearch);
         // Cho phép class con thêm filters tùy chỉnh
         addCustomFilters();
 
@@ -214,11 +219,39 @@ public abstract class AbstractTablePage extends JPanel {
      * Gắn sự kiện cho các nút mặc định
      */
     private void attachDefaultEvents() {
-        btnRefreshAndFilter.addActionListener(e -> handleRefreshAndFilter());
+        btnRefresh.addActionListener(e -> showTableData(false));
+        btnFilter.addActionListener(e -> handleFilter());
         btnAdd.addActionListener(e -> handleAdd());
-        btnEdit.addActionListener(e -> handleEdit());
-        btnDelete.addActionListener(e -> handleDelete());
-        tfSearchId.addActionListener(e -> showTableData(true));
+        btnEdit.addActionListener(e -> {
+            handleEdit();
+        });
+        btnDelete.addActionListener(e -> {
+            handleDelete();
+        });
+        tfSearch.addActionListener(e -> showTableData(true));
+
+        tfcurrentPage.addActionListener(e -> {
+            int pageNumber;
+            try {
+                pageNumber = getCurrentPage();
+            } catch (NumberFormatException ex) {
+                // Nếu nhập không hợp lệ, đặt lại về trang hiện tại
+                DialogHelper.showWarning(this, "Vui lòng nhập số trang hợp lệ!");
+                return;
+            }
+            goToPage(pageNumber);
+        });
+    }
+
+    private void attachPaginationEvents() {
+        btnNextPage.addActionListener(e -> {
+            int page = getCurrentPage() + 1;
+            goToPage(page);
+        });
+        btnPrevPage.addActionListener(e -> {
+            int page = getCurrentPage() - 1;
+            goToPage(page);
+        });
     }
 
     /***********************************************
@@ -232,9 +265,9 @@ public abstract class AbstractTablePage extends JPanel {
     protected abstract void handleDelete();
 
     /**
-     * Xử lý sự kiện nút Làm mới / Lọc
+     * Xử lý sự kiện nút Lọc
      */
-    protected abstract void handleRefreshAndFilter();
+    protected abstract void handleFilter();
 
     // ========================================
     // OPTIONAL METHODS - Class con có thể override
@@ -267,6 +300,22 @@ public abstract class AbstractTablePage extends JPanel {
     protected void attachCustomEvents() {
         // Mặc định không làm gì
         // Class con override để thêm sự kiện
+    }
+
+    /***********************************************
+     * PAGINATION METHODS *
+     ***********************************************/
+
+    protected void goToPage(int pageNumber) {
+        int currentPage = Integer.parseInt(tfcurrentPage.getText());
+        int totalPages = Integer.parseInt(tftotalPages.getText());
+
+        if (pageNumber < 1 || pageNumber > totalPages || pageNumber == currentPage) {
+            return; // Invalid hoặc đang ở trang đó rồi
+        }
+
+        tfcurrentPage.setText(String.valueOf(pageNumber));
+        showTableData(true);
     }
 
     // ========================================
@@ -352,44 +401,28 @@ public abstract class AbstractTablePage extends JPanel {
         tableModel.removeRow(row);
     }
 
-    /**
-     * Lấy giá trị tìm kiếm theo ID
-     * 
-     * @return Giá trị trong ô tìm kiếm ID
-     */
-    protected String getSearchIdValue() {
-        return tfSearchId.getText().trim();
-    }
-
-    /**
-     * Xóa các filter về giá trị mặc định
-     */
-    protected void clearFilters() {
-        tfSearchId.setText("");
-    }
-
     // ========================================
     // GETTERS & SETTERS
     // ========================================
 
-    public JTextField getTfTotalPages() {
-        return tftotalPages;
+    public int getCurrentPage() {
+        return Integer.parseInt(tfcurrentPage.getText());
     }
 
-    public JTextField getTfCurrentPage() {
-        return tfcurrentPage;
+    public void setCurrentPage(int currentPage) {
+        this.tfcurrentPage.setText(String.valueOf(currentPage));
     }
 
-    public JComboBox<Integer> getCbItemsPerPage() {
-        return cbItemsPerPage;
+    public int getTotalPages() {
+        return Integer.parseInt(tftotalPages.getText());
     }
 
-    public void setTfCurrentPage(JTextField tfcurrentPage) {
-        this.tfcurrentPage = tfcurrentPage;
+    public void setTotalPages(int totalPages) {
+        this.tftotalPages.setText(String.valueOf(totalPages));
     }
 
-    public void setTfTotalPages(JTextField tftotalPages) {
-        this.tftotalPages = tftotalPages;
+    public int getItemsPerPage() {
+        return (Integer) cbItemsPerPage.getSelectedItem();
     }
 
     public void setRowHeightTable(int rowHeightTable) {

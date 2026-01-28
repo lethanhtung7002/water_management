@@ -56,6 +56,7 @@ public class CustomerDao {
         return customers;
     }
 
+
     /**
      * Thêm khách hàng mới vào database.
      * 

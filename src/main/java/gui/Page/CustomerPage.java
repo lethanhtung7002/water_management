@@ -74,7 +74,7 @@ public class CustomerPage extends AbstractTablePage {
     }
 
     @Override
-    protected void handleRefreshAndFilter() {
+    protected void handleFilter() {
         showTableData(true);
     }
 
@@ -85,7 +85,7 @@ public class CustomerPage extends AbstractTablePage {
 
         String searchId = "";
         if (applyFilter) {
-            searchId = tfSearchId.getText().trim().toLowerCase();
+            searchId = tfSearch.getText().trim().toLowerCase();
         }
 
         // Lấy dữ liệu từ DAO
