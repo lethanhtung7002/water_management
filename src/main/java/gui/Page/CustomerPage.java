@@ -83,26 +83,18 @@ public class CustomerPage extends AbstractTablePage {
         // Xóa dữ liệu cũ
         tableModel.setRowCount(0);
 
-        String searchId = "";
-        if (applyFilter) {
-            searchId = tfSearch.getText().trim().toLowerCase();
+        String search = "";
+        if (!applyFilter) {
+            this.customerList = CustomerDao.getCustomers(); 
+        }else {
+            search = tfSearch.getText().trim();
+            // this.customerList = CustomerDao.getCustomers(search);  thêm filter sau
         }
 
-        // Lấy dữ liệu từ DAO
-        this.customerList = CustomerDao.getCustomers();
+
 
         // Thêm từng dòng vào bảng
         for (Customer customer : this.customerList) {
-            if (applyFilter && !searchId.isEmpty()) {
-                try {
-                    if (customer.getIdCustomer() != Integer.parseInt(searchId)) {
-                        continue;
-                    }
-                } catch (NumberFormatException e) {
-                    // Bỏ qua nếu không phải số
-                }
-            }
-
             Object[] rowData = {
                     customer.getIdCustomer(),
                     customer.getNameCustomer(),
