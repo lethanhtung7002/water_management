@@ -19,7 +19,7 @@ import model.Customer;
  * @version 2.0
  */
 
-public class CustomerPage extends AbstracTabletPage {
+public class CustomerPage extends AbstractTablePage {
 
     static String[] columnNames = { "ID", "Tên Khách hàng", "Loại KH", "CCCD", "Số điện thoại", "Email" };
 

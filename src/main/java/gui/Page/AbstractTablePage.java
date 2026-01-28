@@ -30,7 +30,7 @@ import gui.GUIConstants;
  * @version 1.0
  */
 
-public abstract class AbstracTabletPage extends JPanel {
+public abstract class AbstractTablePage extends JPanel {
 
     // ===== TABLE =====
     protected JTable table;
@@ -51,48 +51,58 @@ public abstract class AbstracTabletPage extends JPanel {
     // ===== Filters =====
     protected JTextField tfSearchId;
 
-    private int rowHeightTable = 30;
+    // ===== Pagination bar =====
+    protected JPanel paginationPanel;
+    protected JTextField tfcurrentPage;
+    protected JTextField tftotalPages;
+    protected JComboBox<Integer> cbItemsPerPage;
+    protected JButton btnPrevPage;
+    protected JButton btnNextPage;
+
+    protected int rowHeightTable = 30;
 
     /**
      * Constructor - Khởi tạo giao diện
      * 
-     * @param columnNames   Tên các cột của bảng
+     * @param columnTableNames   Tên các cột của bảng
      * @param addButtonText Text cho nút Thêm (vd: "Thêm Khách Hàng")
      * @since 1.0
      */
-    public AbstracTabletPage(String[] columnNames, String addButtonText) {
+    public AbstractTablePage(String[] columnTableNames) {
+        initBase();
+        initUI(columnTableNames);        
+        initEvents();
+    }
+    
+    protected void initBase(){
         setLayout(new BorderLayout(5, 5));
         setBackground(GUIConstants.Colors.BACKGROUND);
-
-        // Khởi tạo buttons
-        initButtons(addButtonText);
-
-        // Tạo giao diện
+    }
+    
+    protected void initUI(String[] columnTableNames) {
+        initButtons();
         initTopPanel();
-        initTable(columnNames);
+        initTable(columnTableNames);
+        initPaginationBar();
+        
+        table.setRowHeight(rowHeightTable);
+    }
 
-        // Gắn sự kiện
+    protected void initEvents(){
         attachDefaultEvents();
         attachCustomEvents();
     }
 
     /**
-     * Constructor đơn giản - dùng text mặc định
-     * 
-     * @since 1.0
-     */
-    public AbstracTabletPage(String[] columnNames) {
-        this(columnNames, "Thêm");
-    }
-
-    /**
      * Khởi tạo các buttons
      */
-    private void initButtons(String addButtonText) {
-        btnAdd = new JButton(addButtonText);
+    private void initButtons() {
+        btnAdd = new JButton("Thêm");
         btnEdit = new JButton("Sửa");
         btnDelete = new JButton("Xóa");
         btnRefreshAndFilter = new JButton("Làm mới / Lọc");
+        btnNextPage = new JButton(">>");
+        btnPrevPage = new JButton("<<");
     }
 
     /**
@@ -124,14 +134,14 @@ public abstract class AbstracTabletPage extends JPanel {
         tfSearchId = new JTextField(15);
 
         JLabel searchLabel = new JLabel("Tìm theo ID:");
-        
+
         searchLabel.setForeground(Color.WHITE);
         filterPanel.add(btnRefreshAndFilter);
         filterPanel.add(searchLabel);
         filterPanel.add(tfSearchId);
         // Cho phép class con thêm filters tùy chỉnh
         addCustomFilters();
-        
+
         // Thêm cả 2 panel vào topPanel
         JPanel containerPanel = new JPanel();
         containerPanel.setLayout(new BorderLayout());
@@ -155,12 +165,42 @@ public abstract class AbstracTabletPage extends JPanel {
         };
 
         table = new JTable(tableModel);
-        table.setRowHeight(rowHeightTable);
         table.setFillsViewportHeight(true);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
+    }
+
+    private void initPaginationBar() {
+        paginationPanel = new JPanel();
+        paginationPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        paginationPanel.setBackground(GUIConstants.Colors.BACKGROUND);
+        paginationPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+        tfcurrentPage = new JTextField(3);
+        tfcurrentPage.setEditable(true);
+        tftotalPages = new JTextField(3);
+        tftotalPages.setEditable(false);
+
+        cbItemsPerPage = new JComboBox<>(new Integer[] { 100, 150, 200, 250, 300 });
+
+        paginationPanel.add(btnPrevPage);
+        JLabel page = new JLabel("Trang:");
+        page.setForeground(Color.WHITE);
+        paginationPanel.add(page);
+        paginationPanel.add(tfcurrentPage);
+        JLabel of = new JLabel(" / ");
+        of.setForeground(Color.WHITE);
+        paginationPanel.add(of);
+        paginationPanel.add(tftotalPages);
+        paginationPanel.add(btnNextPage);
+        JLabel itemsPerPageLabel = new JLabel("Số hàng mỗi trang:");
+        itemsPerPageLabel.setForeground(Color.WHITE);
+        paginationPanel.add(itemsPerPageLabel);
+        paginationPanel.add(cbItemsPerPage);
+
+        add(paginationPanel, BorderLayout.SOUTH);
     }
 
     /**
@@ -261,7 +301,11 @@ public abstract class AbstracTabletPage extends JPanel {
         if (selectedRow == -1) {
             return -1;
         }
-        return (Integer) tableModel.getValueAt(selectedRow, 0);
+        Object value = tableModel.getValueAt(selectedRow, 0);
+        if (value instanceof Number) {
+            return ((Number) value).intValue();
+        }
+        return -1;
     }
 
     /**
@@ -328,28 +372,24 @@ public abstract class AbstracTabletPage extends JPanel {
     // GETTERS & SETTERS
     // ========================================
 
-    public JTable getTable() {
-        return table;
+    public JTextField getTfTotalPages() {
+        return tftotalPages;
     }
 
-    public DefaultTableModel getTableModel() {
-        return tableModel;
+    public JTextField getTfCurrentPage() {
+        return tfcurrentPage;
     }
 
-    public JPanel getTopPanel() {
-        return topPanel;
+    public JComboBox<Integer> getCbItemsPerPage() {
+        return cbItemsPerPage;
     }
 
-    public JPanel getButtonPanel() {
-        return buttonPanel;
+    public void setTfCurrentPage(JTextField tfcurrentPage) {
+        this.tfcurrentPage = tfcurrentPage;
     }
 
-    public JPanel getFilterPanel() {
-        return filterPanel;
-    }
-
-    public int getRowHeightTable() {
-        return rowHeightTable;
+    public void setTfTotalPages(JTextField tftotalPages) {
+        this.tftotalPages = tftotalPages;
     }
 
     public void setRowHeightTable(int rowHeightTable) {

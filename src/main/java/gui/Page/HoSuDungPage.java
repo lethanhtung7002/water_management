@@ -34,7 +34,7 @@ import model.LoaiCustomer;
  * @author Lê Thanh Tùng
  * @version 2.1 - Fixed NullPointerException
  */
-public class HoSuDungPage extends AbstracTabletPage {
+public class HoSuDungPage extends AbstractTablePage {
 
     static String[] columNameHSD = {
             "Mã HSD",
