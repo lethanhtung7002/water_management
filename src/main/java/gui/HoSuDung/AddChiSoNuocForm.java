@@ -1,14 +1,37 @@
 package gui.HoSuDung;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import javax.swing.*;
+import java.util.Arrays;
 
-import dao.*;
-import gui.GUIConstants;
-import model.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
 import calc.WaterBill;
+import dao.BacGiaDao;
+import dao.ChiSoNuocDao;
+import dao.CustomerDao;
+import dao.GiaNuocDao;
+import dao.HoaDonDao;
+import gui.GUIConstants;
+import model.ChiSoNuoc;
+import model.Customer;
+import model.GiaNuoc;
+import model.HoSuDung;
+import model.HoaDon;
+import model.WaterPriceTier;
 
 /**
  * Form thêm chỉ số nước và tự động lập hóa đơn
@@ -42,7 +65,6 @@ public class AddChiSoNuocForm extends JFrame {
     private JLabel lbNgayGhi = new JLabel("Ngày ghi:");
     private JLabel lbChiSoCu = new JLabel("Chỉ số cũ (m³):");
     private JLabel lbChiSoMoi = new JLabel("Chỉ số mới (m³):");
-    private JLabel lbTieuThu = new JLabel("Tiêu thụ (m³):");
 
     // ===== INPUT FIELDS =====
     private JTextField tfHoSuDung = new JTextField();
@@ -92,11 +114,9 @@ public class AddChiSoNuocForm extends JFrame {
      * Load chỉ số cũ từ lần ghi trước
      */
     private void loadChiSoCu() {
-        ChiSoNuoc latestChiSo = chiSoDao.getLatestChiSo(HoSuDung.getID_HoSuDung());
-        if (latestChiSo != null) {
-            this.chiSoCu = latestChiSo.getChiSoMoi();
-        } else {
-            this.chiSoCu = 0; // Lần đầu ghi
+        ChiSoNuoc chiSoCu = chiSoDao.getLatestChiSo(HoSuDung.getID_HoSuDung());
+        if (chiSoCu != null) {
+            this.chiSoCu = chiSoCu.getChiSoMoi();
         }
     }
 
@@ -340,12 +360,12 @@ public class AddChiSoNuocForm extends JFrame {
                 return;
             }
 
-            System.out.println("✓ Số bậc giá: " + tiers.size());
+            System.out.println("Số bậc giá: " + tiers.size());
 
             // ===== BƯỚC 5: TÍNH TIỀN THEO BẬC THANG =====
             double totalMoney = calculateBill(tieuThu, tiers, giaNuoc.getThue());
 
-            System.out.println("✓ Tổng tiền: " + String.format("%,.0f VNĐ", totalMoney));
+            System.out.println("Tổng tiền: " + String.format("%f VNĐ", totalMoney));
 
             // ===== BƯỚC 6: TẠO HÓA ĐƠN =====
             HoaDon hoaDon = new HoaDon();
@@ -363,7 +383,7 @@ public class AddChiSoNuocForm extends JFrame {
                 return;
             }
 
-            System.out.println("✓ Tạo hóa đơn thành công!");
+            System.out.println("Tạo hóa đơn thành công!");
             System.out.println("===================================");
 
             // ===== THÀNH CÔNG =====
@@ -412,8 +432,15 @@ public class AddChiSoNuocForm extends JFrame {
             gia[i] = tier.getPrice();
         }
 
+        
         // Chuyển thuế từ % sang hệ số (ví dụ: 10% → 1.1)
         double thueHeSo = 1 + (thuePercent / 100);
+        
+        System.out.println(tieuThu);
+        System.out.println(Arrays.toString(tuMucNuoc));
+        System.out.println(Arrays.toString(denMucNuoc));
+        System.out.println(Arrays.toString(gia));
+        System.out.println(thueHeSo);
 
         // Tính tiền
         double totalMoney = WaterBill.calculateTotalMoney(
@@ -435,7 +462,7 @@ public class AddChiSoNuocForm extends JFrame {
 
                 == Thông tin ==
                 - Tiêu thụ: %d m³
-                - Tổng tiền: %,.0f VNĐ
+                - Tổng tiền: %f VNĐ
                 - Trạng thái: Chưa thanh toán
 
                 Hóa đơn đã được tạo tự động.

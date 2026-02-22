@@ -14,15 +14,15 @@ import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.JOptionPane;
 
-import gui.Page.CustomerPage;
-import gui.Page.WaterPricePage;
-import gui.Page.HoSuDungPage;
 import data.LoginDataLoader;
+import gui.Page.CustomerPage;
+import gui.Page.HoSuDungPage;
+import gui.Page.WaterPricePage;
 
 /**
  * Form menu chính của hệ thống quản lý nước.
@@ -45,7 +45,8 @@ public class MenuForm extends JFrame {
     }
 
     private JPanel contentPanel;
-    private CardLayout cardLayout; // CardLayout là cơ chế đổi màn hình trong cùng một container.
+    private CardLayout cardLayout; 
+    // CardLayout là cơ chế đổi màn hình trong cùng một cửa sổ.
 
     private JPanel sidebar;
     private JPanel searchPanel;
@@ -168,7 +169,7 @@ public class MenuForm extends JFrame {
          */
         JButton btn = new JButton(icon + "   " + text);
         btn.setPreferredSize(new Dimension(230, 40));
-        btn.setContentAreaFilled(false);// tắt nền nút
+        btn.setContentAreaFilled(false);// tắt nền nút`
         btn.setForeground(Color.WHITE);
         btn.setHorizontalAlignment(SwingConstants.LEFT); // căn trái
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
